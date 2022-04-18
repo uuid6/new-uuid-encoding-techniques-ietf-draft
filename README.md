@@ -1,8 +1,8 @@
 # Updates
 
 #### Draft 00 Work in Pgoress: 
-- [HTML Draft 00](https://uuid6.github.io/new-uuid-encoding-techniques-ietf-draft/)
-- [Plaintext Draft 00](https://raw.githubusercontent.com/uuid6/new-uuid-encoding-techniques-ietf-draft/master/new-uuid-encoding-techniques-ietf-draft-00.txt)
+- [HTML Draft 00](https://uuid6.github.io/new-uuid-encoding-techniques-ietf-draft/draft-00)
+- [Plaintext Draft 00](https://raw.githubusercontent.com/uuid6/new-uuid-encoding-techniques-ietf-draft/master/draft-00/draft-davis-peabody-dispatch-new-uuid-encoding-techniques-00.txt)
 
 ---
 
