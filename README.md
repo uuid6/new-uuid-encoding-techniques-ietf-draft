@@ -9,6 +9,7 @@
 # New UUID Encoding Techniques
 This is the GitHub repo for the IETF draft surrounding the topic of new UUID encoding techniques.
 Various discussion will need to occur to arrive at a standard and this repo will be used to collect and organize that information.
+
 Note: This was split out of the [New UUID Format draft for UUIDv6, UUIDv7, UUIDv8 and Max UUID](https://github.com/uuid6/uuid6-ietf-draft); some discussions may link to comments on that repo.
 
 ## High Level Overview
@@ -63,6 +64,7 @@ For more information on any of these items refer to the XML, TXT, HTML draft, re
   - PRs will not be accepted for changes to the decision made for the draft without full discussion. 
   - PRs MUST include the updated `.xml` and xml2rfc generated `.txt` and `.html` documents.
   - Draft versions are frozen until submission to the IETF; at which point new work constitutes a new draft version.
+- For any examples UUIDv4 `73e94fe0-e951-4153-aaf3-50e4e6089d9d` MUST be used as the common UUID for describing modifications.
 
 ---
 
