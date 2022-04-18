@@ -29,9 +29,9 @@ In order to keep things on track the following topics have been decided as in-sc
 For more information on any of these items refer to the XML, TXT, HTML draft, research and the issue tracker for a particular discussion (follow hyperlinks below.)
 
 ### In Scope Topics - UUID Generation
-- [URN Modifications]()
-- [Alternative text encoding techniques (Crockfords Base32, Base64, etc)]()
-- [Variable length UUIDs]()
+- [URN Modifications](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/issues/4)
+- [Alternative text encoding techniques (Crockfords Base32, Base64, etc)](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/issues/3)
+- [Variable length UUIDs | UUID Long](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/issues/2)
 
 
 ### In Scope Topics - UUID Best Practices as it relates to the previous topics
@@ -42,7 +42,7 @@ For more information on any of these items refer to the XML, TXT, HTML draft, re
 ---
 
 ### Scoping In Progress
-- [Variant Bit E Usage]()
+- [Variant Bit E Usage](https://github.com/uuid6/uuid6-ietf-draft/issues/26)
 
 ---
 
