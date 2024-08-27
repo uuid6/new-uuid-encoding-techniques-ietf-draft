@@ -4,37 +4,36 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>New UUID Encoding Techniques</title>
-<meta content="Brad G. Peabody" name="author">
+<title>Alternate UUID Encoding Techniques</title>
 <meta content="Kyzer R. Davis" name="author">
+<meta content="Brad G. Peabody" name="author">
 <meta content="
-       
- This document presents new Universally Unique Identifier (UUID) encoding techniques which facilitate greater efficiency in storage or transport versus the unnecessarily verbose text representation from  .
- Furthermore UUID can now be been extended beyond 128 bits to facilitate enhanced collision resistance or for embedding additional data within a given UUID value.
-       
+       This document presents new Universally Unique Identifier (UUID) encoding
+techniques which facilitate greater efficiency in storage or transport versus
+the unnecessarily verbose text representation from  . 
+       This document updates   and provides alternate encoding techniques which perform better on the wire, in a database, or withing various other application logics. 
     " name="description">
-<meta content="xml2rfc 3.12.2" name="generator">
+<meta content="xml2rfc 3.23.0" name="generator">
 <meta content="uuid" name="keyword">
-<meta content="draft-davis-peabody-dispatch-new-uuid-encoding-techniques-00" name="ietf.draft">
+<meta content="draft-davis-uuidrev-alternate-uuid-encoding" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.12.2
-    Python 3.6.9
-    appdirs 1.4.4
-    ConfigArgParse 1.2.3
-    google-i18n-address 2.4.0
-    html5lib 1.1
+  xml2rfc 3.23.0
+    Python 3.10.12
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.0
     intervaltree 3.1.0
-    Jinja2 2.11.2
-    kitchen 1.2.6
-    lxml 4.5.2
-    pycountry 20.7.3
-    pyflakes 2.2.0
-    PyYAML 5.3.1
-    requests 2.24.0
-    setuptools 40.6.2
-    six 1.15.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.2.2
+    pycountry 24.6.1
+    pydyf 0.10.0
+    PyYAML 6.0.2
+    requests 2.32.3
+    setuptools 59.6.0
+    wcwidth 0.2.13
+    weasyprint 61.2
 -->
-<link href="/tmp/QvTERtS8Xo.dir/draft-davis-peabody-dispatch-new-uuid-encoding-techniques-00.xml" rel="alternate" type="application/rfc+xml">
+<link href="/usr/src/app/tmp/94b33ed5-f55c-4fee-b0bb-5badb37bf943/draft-davis-uuidrev-alternate-uuid-encoding.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">/*
 
@@ -44,7 +43,7 @@
   this can be consolidated so that style settings occur only in one place, but
   for now the contents of this file consists first of the initial CSS work as
   provided to the RFC Formatter (xml2rfc) work, followed by itemized and
-  commented changes found necssary during the development of the v3
+  commented changes found necessary during the development of the v3
   formatters.
 
 */
@@ -54,9 +53,14 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Serif'); /* Serif (print) */
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono'); /* Monospace */
 
+:root {
+  --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+  --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+}
+
 @viewport {
   zoom: 1.0;
-  width: extend-to-zoom;
 }
 @-ms-viewport {
   width: extend-to-zoom;
@@ -71,9 +75,10 @@ body {
   color: #222;
   background-color: #fff;
   font-size: 14px;
-  font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.6;
   scroll-behavior: smooth;
+  overflow-wrap: break-word;
 }
 .ears {
   display: none;
@@ -160,6 +165,15 @@ div {
 svg {
   display: block;
 }
+svg[font-family~="serif" i], svg [font-family~="serif" i] {
+  font-family: var(--font-serif);
+}
+svg[font-family~="sans-serif" i], svg [font-family~="sans-serif" i] {
+  font-family: var(--font-sans);
+}
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
 .alignCenter.art-text {
   background-color: #f9f9f9;
   border: 1px solid #eee;
@@ -174,11 +188,8 @@ svg {
   margin: 1em 0;
 }
 .alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
   display: table;
+  border: none;
   margin: 0 auto;
 }
 
@@ -256,9 +267,9 @@ a.selfRef:hover {
 } */
 
 /* Figures */
-tt, code, pre, code {
+tt, code, pre {
   background-color: #f9f9f9;
-  font-family: 'Roboto Mono', monospace;
+  font-family: var(--font-mono);
 }
 pre {
   border: 1px solid #eee;
@@ -298,10 +309,16 @@ blockquote {
   border-radius: 3px;
   margin: 1em 0;
 }
+blockquote > *:last-child {
+  margin-bottom: 0;
+}
 cite {
   display: block;
   text-align: right;
   font-style: italic;
+}
+.xref {
+  overflow-wrap: normal;
 }
 
 /* tables */
@@ -447,6 +464,10 @@ nav.toc li {
   margin-bottom: 1.25em;
 }
 
+.refSubseries {
+  margin-bottom: 1.25em;
+}
+
 .references .ascii {
   margin-bottom: 0.25em;
 }
@@ -495,7 +516,7 @@ address.vcard .nameRole {
   margin-left: 0;
 }
 address.vcard .label {
-  font-family: "Noto Sans",Arial,Helvetica,sans-serif;
+  font-family: var(--font-sans);
   margin: 0.5em 0;
 }
 address.vcard .type {
@@ -635,7 +656,6 @@ hr.addr {
 /* pagination */
 @media print {
   body {
-
     width: 100%;
   }
   p {
@@ -657,6 +677,9 @@ hr.addr {
   }
   figure {
     overflow: scroll;
+  }
+  .breakable pre {
+    break-inside: auto;
   }
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
@@ -725,7 +748,7 @@ hr.addr {
   size: A4;
   margin-bottom: 45mm;
   padding-top: 20px;
-  /* The follwing is commented out here, but set appropriately by in code, as
+  /* The following is commented out here, but set appropriately by in code, as
      the content depends on the document */
   /*
   @top-left {
@@ -825,12 +848,12 @@ section {
 }
 
 /* prevent monospace from becoming overly large */
-tt, code, pre, code {
+tt, code, pre {
   font-size: 95%;
 }
 
 /* Fix the height/width aspect for ascii art*/
-pre.sourcecode,
+.sourcecode pre,
 .art-text pre {
   line-height: 1.12;
 }
@@ -866,7 +889,7 @@ table th.text-right {
   text-align: right;
 }
 
-/* Make the alternative author contact informatio look less like just another
+/* Make the alternative author contact information look less like just another
    author, and group it closer with the primary author contact information */
 .alternative-contact {
   margin: 0.5em 0 0.25em 0;
@@ -1048,6 +1071,7 @@ aside > p {
 /* Sourcecode margin in print, when there's no pilcrow */
 @media print {
   .artwork,
+  .artwork > pre,
   .sourcecode {
     margin-bottom: 1em;
   }
@@ -1060,14 +1084,17 @@ table {
 ol.type-a { list-style-type: lower-alpha; }
 ol.type-A { list-style-type: upper-alpha; }
 ol.type-i { list-style-type: lower-roman; }
-ol.type-I { list-style-type: lower-roman; }
+ol.type-I { list-style-type: upper-roman; }
 /* Apply the print table and row borders in general, on request from the RPC,
-and increase the contrast between border and odd row background sligthtly */
+and increase the contrast between border and odd row background slightly */
 table {
   border: 1px solid #ddd;
 }
 td {
   border-top: 1px solid #ddd;
+}
+tr {
+  break-inside: avoid;
 }
 tr:nth-child(2n+1) > td {
   background-color: #f8f8f8;
@@ -1119,7 +1146,7 @@ span.break, dd.break {
     break-before: auto;
   }
 }
-/* Text in compact lists should not get extra bottim margin space,
+/* Text in compact lists should not get extra bottom margin space,
    since that would makes the list not compact */
 ul.compact p, .ulCompact p,
 ol.compact p, .olCompact p {
@@ -1137,14 +1164,14 @@ section .olCompact {
 tt, code {
   background-color: transparent;
 }
-p tt, p code, li tt, li code {
+p tt, p code, li tt, li code, dt tt, dt code {
   background-color: #f8f8f8;
 }
 /* Tweak the pre margin -- 0px doesn't come out well */
 pre {
    margin-top: 0.5px;
 }
-/* Tweak the comact list text */
+/* Tweak the compact list text */
 ul.compact, .ulCompact,
 ol.compact, .olCompact,
 dl.compact, .dlCompact {
@@ -1162,7 +1189,7 @@ dd > div.artwork:first-child,
 dd > aside:first-child,
 dd > figure:first-child,
 dd > ol:first-child,
-dd > div:first-child > pre.sourcecode,
+dd > div.sourcecode:first-child,
 dd > table:first-child,
 dd > ul:first-child {
   clear: left;
@@ -1176,24 +1203,24 @@ li > p {
   margin-bottom: 0.5em
 }
 /* Don't let p margin spill out from inside list items */
-li > p:last-of-type {
+li > p:last-of-type:only-child {
   margin-bottom: 0;
 }
 </style>
 <link href="rfc-local.css" rel="stylesheet" type="text/css">
 <script type="application/javascript">async function addMetadata(){try{const e=document.styleSheets[0].cssRules;for(let t=0;t<e.length;t++)if(/#identifiers/.exec(e[t].selectorText)){const a=e[t].cssText.replace("#identifiers","#external-updates");document.styleSheets[0].insertRule(a,document.styleSheets[0].cssRules.length)}}catch(e){console.log(e)}const e=document.getElementById("external-metadata");if(e)try{var t,a="",o=function(e){const t=document.getElementsByTagName("meta");for(let a=0;a<t.length;a++)if(t[a].getAttribute("name")===e)return t[a].getAttribute("content");return""}("rfc.number");if(o){t="https://www.rfc-editor.org/rfc/rfc"+o+".json";try{const e=await fetch(t);a=await e.json()}catch(e){t=document.URL.indexOf("html")>=0?document.URL.replace(/html$/,"json"):document.URL+".json";const o=await fetch(t);a=await o.json()}}if(!a)return;e.style.display="block";const s="",d="https://datatracker.ietf.org/doc",n="https://datatracker.ietf.org/ipr/search",c="https://www.rfc-editor.org/info",l=a.doc_id.toLowerCase(),i=a.doc_id.slice(0,3).toLowerCase(),f=a.doc_id.slice(3).replace(/^0+/,""),u={status:"Status",obsoletes:"Obsoletes",obsoleted_by:"Obsoleted By",updates:"Updates",updated_by:"Updated By",see_also:"See Also",errata_url:"Errata"};let h="<dl style='overflow:hidden' id='external-updates'>";["status","obsoletes","obsoleted_by","updates","updated_by","see_also","errata_url"].forEach(e=>{if("status"==e){a[e]=a[e].toLowerCase();var t=a[e].split(" "),o=t.length,w="",p=1;for(let e=0;e<o;e++)p<o?w=w+r(t[e])+" ":w+=r(t[e]),p++;a[e]=w}else if("obsoletes"==e||"obsoleted_by"==e||"updates"==e||"updated_by"==e){var g,m="",b=1;g=a[e].length;for(let t=0;t<g;t++)a[e][t]&&(a[e][t]=String(a[e][t]).toLowerCase(),m=b<g?m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>, ":m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>",b++);a[e]=m}else if("see_also"==e){var y,L="",C=1;y=a[e].length;for(let t=0;t<y;t++)if(a[e][t]){a[e][t]=String(a[e][t]);var _=a[e][t].slice(0,3),v=a[e][t].slice(3).replace(/^0+/,"");L=C<y?"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>, ":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>, ":"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>",C++}a[e]=L}else if("errata_url"==e){var R="";R=a[e]?R+"<a href='"+a[e]+"'>Errata exist</a> | <a href='"+d+"/"+l+"'>Datatracker</a>| <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>":"<a href='"+d+"/"+l+"'>Datatracker</a> | <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>",a[e]=R}""!=a[e]?"Errata"==u[e]?h+=`<dt>More info:</dt><dd>${a[e]}</dd>`:h+=`<dt>${u[e]}:</dt><dd>${a[e]}</dd>`:"Errata"==u[e]&&(h+=`<dt>More info:</dt><dd>${a[e]}</dd>`)}),h+="</dl>",e.innerHTML=h}catch(e){console.log(e)}else console.log("Could not locate metadata <div> element");function r(e){return e.charAt(0).toUpperCase()+e.slice(1)}}window.removeEventListener("load",addMetadata),window.addEventListener("load",addMetadata);</script>
 </head>
-<body>
+<body class="xml2rfc">
 <script src="metadata.min.js"></script>
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">new-uuid-format</td>
-<td class="right">March 2022</td>
+<td class="center">alternate-uuid-encoding</td>
+<td class="right">August 2024</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Peabody &amp; Davis</td>
-<td class="center">Expires 22 September 2022</td>
+<td class="left">Davis &amp; Peabody</td>
+<td class="center">Expires 28 February 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1201,37 +1228,55 @@ li > p:last-of-type {
 <div id="internal-metadata" class="document-information">
 <dl id="identifiers">
 <dt class="label-workgroup">Workgroup:</dt>
-<dd class="workgroup">dispatch</dd>
+<dd class="workgroup">uuidrev</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-davis-peabody-dispatch-new-uuid-encoding-techniques-00</dd>
+<dd class="internet-draft">draft-davis-uuidrev-alternate-uuid-encoding</dd>
 <dt class="label-updates">Updates:</dt>
 <dd class="updates">
-<a href="https://www.rfc-editor.org/rfc/rfc4122" class="eref">4122</a> (if approved)</dd>
+<a href="https://www.rfc-editor.org/rfc/rfc9562" class="eref">9562</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-03-21" class="published">21 March 2022</time>
+<time datetime="2024-08-27" class="published">27 August 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-09-22">22 September 2022</time></dd>
+<dd class="expires"><time datetime="2025-02-28">28 February 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">BGP. Peabody</div>
+      <div class="author-name">K. R. Davis</div>
+<div class="org">Cisco Systems</div>
 </div>
 <div class="author">
-      <div class="author-name">K. Davis</div>
+      <div class="author-name">BGP. Peabody</div>
 </div>
 </dd>
 </dl>
 </div>
-<h1 id="title">New UUID Encoding Techniques</h1>
+<h1 id="title">Alternate UUID Encoding Techniques</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">
- This document presents new Universally Unique Identifier (UUID) encoding techniques which facilitate greater efficiency in storage or transport versus the unnecessarily verbose text representation from <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span>.
- Furthermore UUID can now be been extended beyond 128 bits to facilitate enhanced collision resistance or for embedding additional data within a given UUID value.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document presents new Universally Unique Identifier (UUID) encoding
+techniques which facilitate greater efficiency in storage or transport versus
+the unnecessarily verbose text representation from <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document updates <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> and provides alternate encoding techniques which perform better on the wire, in a database, or withing various other application logics.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/draft-davis-uuidrev-alternate-uuid-encoding.md">https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/draft-davis-uuidrev-alternate-uuid-encoding.md</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid/">https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Revise Universally Unique Identifier Definitions (uuidrev) Working Group mailing list (<span><a href="mailto:uuidrev@ietf.org">mailto:uuidrev@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/uuidrev/">https://mailarchive.ietf.org/arch/browse/uuidrev/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/uuidrev/">https://www.ietf.org/mailman/listinfo/uuidrev/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft">https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1252,7 +1297,7 @@ li > p:last-of-type {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 September 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 February 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1261,7 +1306,7 @@ li > p:last-of-type {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2022 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1282,45 +1327,39 @@ li > p:last-of-type {
         </h2>
 <nav class="toc"><ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-terminology" class="xref">Terminology</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-requirements-language" class="xref">Requirements Language</a></p>
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-requirements-language" class="internal xref">Requirements Language</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="xref">2.2</a>.  <a href="#name-abbreviations" class="xref">Abbreviations</a></p>
+                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-abbreviations" class="internal xref">Abbreviations</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-changelog" class="xref">changelog</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-alternate-encodings" class="internal xref">Alternate Encodings</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-extended-urn-uuid-namespace" class="xref">Extended URN UUID Namespace</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-alternate-encodings" class="xref">Alternate Encodings</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-uuid-long" class="xref">UUID Long</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-changelog" class="internal xref">changelog</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-acknowledgements" class="xref">Acknowledgements</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-normative-references" class="xref">Normative References</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1331,13 +1370,11 @@ li > p:last-of-type {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">
- The original "hex and dash", 8-4-4-4-12, format of UUIDs defined by <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span> represents a 128 bit UUID value as a 288 bit value. 
- While this may be great for human readability; the only available UUID text representation suffers poorly for storage, transmission and application parsing.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">
- Furthermore, UUIDs static length of 128 bits has lead to many alternative, non-standard, Globally Unique Identifiers which aim to pack more information into a larger bit space.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">The original "hex and dash", 8-4-4-4-12, format of UUIDs defined by <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> represents a 128 bit UUID value as a 288 bit value.
+While this may be great for human readability; the only available UUID text representation suffers poorly for storage, transmission and application parsing.<a href="#section-1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="terminology">
 <section id="section-2">
       <h2 id="name-terminology">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
@@ -1347,8 +1384,10 @@ li > p:last-of-type {
         <h3 id="name-requirements-language">
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-requirements-language" class="section-name selfRef">Requirements Language</a>
         </h3>
-<p id="section-2.1-1">
- The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acronyms">
@@ -1359,252 +1398,166 @@ li > p:last-of-type {
 <p id="section-2.2-1">The following abbreviations are used in this document:<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2.2-2">
           <dt id="section-2.2-2.1">UUID</dt>
-          <dd style="margin-left: 7.0em" id="section-2.2-2.2">Universally Unique Identifier <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span><a href="#section-2.2-2.2" class="pilcrow">¶</a>
+          <dd style="margin-left: 7.0em" id="section-2.2-2.2">
+            <p id="section-2.2-2.2.1">Universally Unique Identifier <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span><a href="#section-2.2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.2-2.3">URN</dt>
-          <dd style="margin-left: 7.0em" id="section-2.2-2.4">Uniform Resource Name <span>[<a href="#RFC8141" class="xref">RFC8141</a>]</span><a href="#section-2.2-2.4" class="pilcrow">¶</a>
+          <dd style="margin-left: 7.0em" id="section-2.2-2.4">
+            <p id="section-2.2-2.4.1">Uniform Resource Name <span>[<a href="#RFC8141" class="cite xref">RFC8141</a>]</span><a href="#section-2.2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
 </section>
 </div>
-</section>
-<div id="changelog">
-<section id="section-3">
-      <h2 id="name-changelog">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-changelog" class="section-name selfRef">changelog</a>
-      </h2>
-<p id="section-3-1">RFC EDITOR PLEASE DELETE THIS SECTION.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">draft-00<a href="#section-3-2" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty">
-<li class="compact ulEmpty" id="section-3-3.1">
-          <p id="section-3-3.1.1">- Initial Release<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-</section>
-</div>
-<div id="extended_uuid_namespace">
-<section id="section-4">
-      <h2 id="name-extended-urn-uuid-namespace">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-extended-urn-uuid-namespace" class="section-name selfRef">Extended URN UUID Namespace</a>
-      </h2>
-<p id="section-4-1">
- The Existing UUID URN introduced by <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span> will remain as urn:uuid:{uuid_value} however a new, extended URN structures will be leveraged to convey finer topics introduced by this document.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">
- The UUIDs defined by this document MUST leverage the extended URN UUID namespace such that the encoding technique and length of the UUID are easily parsable using <span>[<a href="#RFC8141" class="xref">RFC8141</a>]</span> compatible logic.
- If an application does not care about parsing, converting, or otherwise ascertaining information from a given UUID value then that application MAY choose to simply store the actual UUID value in the desired format and omit any UUID URN information.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">
- The Extended UUID namespace syntax is composed of the following parts:<a href="#section-4-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlNewline" id="section-4-4">
-        <dt id="section-4-4.1">urn</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.2">Uniform Resource Name as defined by <span>[<a href="#RFC8141" class="xref">RFC8141</a>]</span><a href="#section-4-4.2" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-4-4.3">uuid</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.4">Universally Unique IDentifier as defined by <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span><a href="#section-4-4.4" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-4-4.5">{uuid_value}</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.6">The actual UUID Value which may have been encoded using <a href="#uuid_encoding" class="xref">Section 5</a> or longer than 128 bits as per <a href="#uuid_long" class="xref">Section 6</a>. Any colon character (:) within this field MUST be percent-encoded as "%3A"<a href="#section-4-4.6" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-4-4.7">{uuid_length}</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.8">Variable entry which describes the total length of encoded UUID Value (uuid_value) as an integer value.<a href="#section-4-4.8" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-4-4.9">{uuid_encoding}</dt>
-        <dd style="margin-left: 1.5em" id="section-4-4.10">Variable entry which describes the encoding of the UUID Value (uuid_value). This value MAY include dashes characters thus base32 is the same as base-32.<a href="#section-4-4.10" class="pilcrow">¶</a>
-</dd>
-      <dd class="break"></dd>
-</dl>
-<p id="section-4-5">
- The existing UUID URN is equivalent to an Extended UUID URN via the following syntax where "base16hd" is a shorthand key for the 128 bit, base16 "Hex and Dashes" format introduced by <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span>.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<span id="name-extended-urn-uuid-example"></span><figure id="figure-1">
-        <div class="alignLeft art-text artwork" id="section-4-6.1">
-<pre>
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
-</pre>
-</div>
-<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-extended-urn-uuid-example" class="selfRef">Extended URN UUID Example:</a>
-        </figcaption></figure>
-<p id="section-4-7">
- The next section defines some other Extended UUID URN namespace usage examples for alternate encodings for the same UUID Version 4 example as Base 16 Hex and Dashes (base16hd), Base2 (Binary), and Base10 (Decimal) values.<a href="#section-4-7" class="pilcrow">¶</a></p>
-<span id="name-extended-urn-uuid-example-2"></span><figure id="figure-2">
-        <div class="alignLeft art-text artwork" id="section-4-8.1">
-<pre>
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
-urn:uuid:1110011111010010100111111100000111010010101000101000001010100111010101011110011010100001110010011100110000010001001110110011101:128:base2
-urn:uuid:154072644812979270675542139334331768221:128:base10
-</pre>
-</div>
-<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-extended-urn-uuid-example-2" class="selfRef">Extended URN UUID Example:</a>
-        </figcaption></figure>
 </section>
 </div>
 <div id="uuid_encoding">
-<section id="section-5">
+<section id="section-3">
       <h2 id="name-alternate-encodings">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-alternate-encodings" class="section-name selfRef">Alternate Encodings</a>
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-alternate-encodings" class="section-name selfRef">Alternate Encodings</a>
       </h2>
-<p id="section-5-1">
-                    The existing UUID hex and dash format of 8-4-4-4-12 is retained for both backwards compatibility and human readability. This format MUST be implemented for all UUIDs.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">
-                    Where required, UUIDs defined by this specification and <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span> MAY be encoded utilizing new techniques such as, but not limited to, Base32, Base36, or Base64. 
- Applications MAY also utilize other encoding techniques such as modulo division or alternate alphabets such as Crockford's base32. 
- When selecting an alternate encoding implementations SHOULD take into consideration items such as: uppercase/lowercase/mixed character encoding for application sortability, special character inclusions or omissions, and the exclusion of key letters like "I", "L", "O", and "U" which may impact sortability of UUID values and collision resistance provided by all UUIDs.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">
-                    When utilizing alternate encoding techniques with other applications; 
- the encoded UUID MUST be prefixed with extended "urn:uuid:" to signal that the value therein is that of a UUID. 
- Additionally the UUID MUST and post-fixed with the required extended UUID URN values as defined by <a href="#extended_uuid_namespace" class="xref">Section 4</a> to signal the alternate encoding technique in use and the length of the underlying encoded UUID.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">
-                    The conversion from UUID to a new encoding technique SHOULD be done utilizing the underlying integer or binary value for a given UUID versus converting the hex representation. Two examples for UUIDv4 encoded as base-32 and base-36 are included below.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<span id="name-alternate-encoding-examples"></span><figure id="figure-3">
-        <div class="alignLeft art-text artwork" id="section-5-5.1">
-<pre>
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
+<p id="section-3-1">The existing UUID hex and dash format of 8-4-4-4-12 is retained for both
+backwards compatibility and human readability. This format <span class="bcp14">MUST</span> be implemented
+for all UUIDs.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Where required, UUIDs defined by this specification and <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> <span class="bcp14">MAY</span> be encoded utilizing new techniques such as, but not limited to, Base32,
+Base36, or Base64.
+Applications <span class="bcp14">MAY</span> also utilize other encoding techniques such as modulo division
+or alternate alphabets such as Crockford's base32.
+When selecting an alternate encoding implementations <span class="bcp14">SHOULD</span> take into consideration
+items such as: uppercase/lowercase/mixed character encoding for application
+sortability, special character inclusions or omissions, and the exclusion
+of key letters like "I", "L", "O", and "U" which may impact sortability of
+UUID values and collision resistance provided by all UUIDs.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">When utilizing alternate encoding techniques with other applications;
+the encoded UUID <span class="bcp14">MAY</span> be prefixed with extended "urn:uuid:" to signal that
+the value therein is that of a UUID.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">The conversion from UUID to a new encoding technique <span class="bcp14">SHOULD</span> be done utilizing
+the underlying integer or binary value for a given UUID versus converting
+the hex representation. Two examples for UUIDv4 encoded as base-32 and base-36
+are included below.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<span id="name-alternate-encoding-examples"></span><figure id="figure-1">
+        <div class="alignLeft art-text artwork" id="section-3-5.1">
+<pre>urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
 urn:uuid:3JT57U1QAH859QLSQGSJJ0H7CT:128:base32
 urn:uuid:6V1GDX0NNGFV95EFF5TPJ0TR1:128:base36
 </pre>
 </div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-alternate-encoding-examples" class="selfRef">Alternate Encoding Examples</a>
         </figcaption></figure>
-<p id="section-5-6">
-                    For information on converting a UUID into Base 16, Base 32 or Base 64 refer to <span>[<a href="#RFC4648" class="xref">RFC4648</a>]</span>.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">
- Furthermore, when utilizing alternate encoding techniques along with Extended UUID URN namespaces; remember that disallowed characters MUST be percent-encoded as per <span>[<a href="#RFC8141" class="xref">RFC8141</a>]</span>.<a href="#section-5-7" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="uuid_long">
-<section id="section-6">
-      <h2 id="name-uuid-long">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-uuid-long" class="section-name selfRef">UUID Long</a>
-      </h2>
-<p id="section-6-1">
-                    UUID Long generally references any variable length UUID longer than 128 bits. There are two main driving factors behind extending UUID beyond 128 bits:<a href="#section-6-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlNewline" id="section-6-2">
-        <dt id="section-6-2.1">Increased Entropy:</dt>
-        <dd style="margin-left: 1.5em" id="section-6-2.2">
- While existing UUID formats provide sufficient entropy for most use cases; there exists scenarios where even more entropy is required to further reduce collision probabilities or guessability.<a href="#section-6-2.2" class="pilcrow">¶</a>
-</dd>
-        <dd class="break"></dd>
-<dt id="section-6-2.3">Requirements for additional embedded items:</dt>
-        <dd style="margin-left: 1.5em" id="section-6-2.4">
- Some implementations require more than 128 bits to properly embed all of the application specific data they require. 
- Some examples include database metadata like entity types, checksum values, shard/partition identifiers, and even node identifiers for distributed UUID generation.<a href="#section-6-2.4" class="pilcrow">¶</a>
-</dd>
-      <dd class="break"></dd>
-</dl>
-<p id="section-6-3">
-                    UUID Long is compatible with any UUID specified in this document and <span>[<a href="#RFC4122" class="xref">RFC4122</a>]</span>. 
- UUID long is variable in length and there is no minimum or maximum value for UUID Long; however, UUID Long SHOULD leverage natural byte boundaries. 
- UUID long is defined by appending an additional dash to the existing 8-4-4-4-12 hex and dash format to create 8-4-4-4-12-{variable_length} text format.<a href="#section-6-3" class="pilcrow">¶</a></p>
-<p id="section-6-4">
- The next example shows a UUID Long +32, +64 and +128 example for UUIDv4 with random data filling the values beyond 128 bits.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<span id="name-uuid-long-examples"></span><figure id="figure-4">
-        <div class="alignLeft art-text artwork" id="section-6-5.1">
-<pre>
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d-05fa17aaac4f8954d9fac2df2fce30f6:160:base16hd
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d-02df3f4babc63a3b2775e27804528a6d23c679eed60fe31df3f8b014e7915595:192:base16hd
-urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d-8fe05412f24ca9974637a10c0b372a7109fb810f61068c0074b480f09f18b30fe03ae7bf09c98b241e8c9c0d51516b963ac75abe447dbff34177093b4b781a46:256:base16hd
-</pre>
-</div>
-<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-uuid-long-examples" class="selfRef">UUID Long Examples</a>
-        </figcaption></figure>
-<p id="section-6-6">
-                    Where required, for compatibility with legacy UUID implementations, the most significant, left-most, 128 bits MUST be leveraged to truncate from UUID Long back to a regular UUID.<a href="#section-6-6" class="pilcrow">¶</a></p>
-<p id="section-6-7">
- UUID Long values MAY be coupled with alternate encoding techniques described in this document.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<p id="section-3-6">For information on converting a UUID into Base 16, Base 32 or Base 64 refer
+to <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">Furthermore, when utilizing alternate encoding techniques along with Extended
+UUID URN namespaces; remember that disallowed characters <span class="bcp14">MUST</span> be percent-encoded
+as per <span>[<a href="#RFC8141" class="cite xref">RFC8141</a>]</span>.<a href="#section-3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="IANA">
-<section id="section-7">
+<section id="section-4">
       <h2 id="name-iana-considerations">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-7-1">If Adopted, this document SHOULD be listed in https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">If Adopted, this document <span class="bcp14">SHOULD</span> be listed in https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml.<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="Security">
-<section id="section-8">
+<section id="section-5">
       <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">This document has no security considerations.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">This document has no security considerations.<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="Acknowledgements">
-<section id="section-9">
-      <h2 id="name-acknowledgements">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
-      </h2>
-<p id="section-9-1">The authors gratefully acknowledge the contributions of 
- Ben Campbell,
- Ben Ramsey,
- Fabio Lima,
- Gonzalo Salgueiro, 
- Martin Thomson,
- Murray S. Kucherawy,
- Rick van Rein,
- Rob Wilton,
- Sean Leonard,
- Theodore Y. Ts'o.,
- Robert Kieffer,
- sergeyprokhorenko,
- LiosK
- As well as all of those in the IETF community and on GitHub to who contributed to the discussions which resulted in this document.<a href="#section-9-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<section id="section-10">
+<div id="sec-normative-references">
+<section id="section-6">
       <h2 id="name-normative-references">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
       <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8174">[RFC8174]</dt>
-      <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC4122">[RFC4122]</dt>
-      <dd>
-<span class="refAuthor">Leach, P.</span>, <span class="refAuthor">Mealling, M.</span>, and <span class="refAuthor">R. Salz</span>, <span class="refTitle">"A Universally Unique IDentifier (UUID) URN Namespace"</span>, <span class="seriesInfo">RFC 4122</span>, <span class="seriesInfo">DOI 10.17487/RFC4122</span>, <time datetime="2005-07" class="refDate">July 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4122">https://www.rfc-editor.org/info/rfc4122</a>&gt;</span>. </dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4648">[RFC4648]</dt>
       <dd>
-<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4122">https://www.rfc-editor.org/info/rfc4122</a>&gt;</span>. </dd>
+<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8141">[RFC8141]</dt>
+      <dd>
+<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">J. Klensin</span>, <span class="refTitle">"Uniform Resource Names (URNs)"</span>, <span class="seriesInfo">RFC 8141</span>, <span class="seriesInfo">DOI 10.17487/RFC8141</span>, <time datetime="2017-04" class="refDate">April 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8141">https://www.rfc-editor.org/rfc/rfc8141</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9562">[RFC9562]</dt>
     <dd>
-<span class="refAuthor">Saint-Andre, P.</span> and <span class="refAuthor">J. Klensin</span>, <span class="refTitle">"Uniform Resource Names (URNs)"</span>, <span class="seriesInfo">RFC 8141</span>, <span class="seriesInfo">DOI 10.17487/RFC8141</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8141">https://www.rfc-editor.org/info/rfc8141</a>&gt;</span>. </dd>
+<span class="refAuthor">Davis, K.</span>, <span class="refAuthor">Peabody, B.</span>, and <span class="refAuthor">P. Leach</span>, <span class="refTitle">"Universally Unique IDentifiers (UUIDs)"</span>, <span class="seriesInfo">RFC 9562</span>, <span class="seriesInfo">DOI 10.17487/RFC9562</span>, <time datetime="2024-05" class="refDate">May 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9562">https://www.rfc-editor.org/rfc/rfc9562</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
-<div id="authors-addresses">
+</div>
+<div id="Acknowledgements">
 <section id="appendix-A">
+      <h2 id="name-acknowledgements">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="appendix-A-1">The authors gratefully acknowledge the contributions of
+Ben Campbell,
+Ben Ramsey,
+Fabio Lima,
+Gonzalo Salgueiro,
+Martin Thomson,
+Murray S. Kucherawy,
+Rick van Rein,
+Rob Wilton,
+Sean Leonard,
+Theodore Y. Ts'o.,
+Robert Kieffer,
+sergeyprokhorenko,
+LiosK
+As well as all of those in the IETF community and on GitHub to who contributed
+to the discussions which resulted in this document.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="changelog">
+<section id="appendix-B">
+      <h2 id="name-changelog">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-changelog" class="section-name selfRef">changelog</a>
+      </h2>
+<p id="appendix-B-1">This section is to be removed before publishing as an RFC.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="appendix-B-2">
+        <dt id="appendix-B-2.1">draft-00:</dt>
+        <dd style="margin-left: 1.5em" id="appendix-B-2.2">
+          <ul class="normal">
+<li class="normal" id="appendix-B-2.2.1.1">
+              <p id="appendix-B-2.2.1.1.1">Initial Release<a href="#appendix-B-2.2.1.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</dd>
+      <dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-C">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Kyzer R. Davis</span></div>
+<div dir="auto" class="left"><span class="org">Cisco Systems</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kydavis@cisco.com" class="email">kydavis@cisco.com</a>
+</div>
+</address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Brad G. Peabody</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:brad@peabody.io" class="email">brad@peabody.io</a>
-</div>
-</address>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Kyzer R. Davis</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:kydavis@cisco.com" class="email">kydavis@cisco.com</a>
 </div>
 </address>
 </section>

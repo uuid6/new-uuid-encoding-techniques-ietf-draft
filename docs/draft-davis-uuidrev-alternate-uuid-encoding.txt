@@ -1,0 +1,280 @@
+
+
+
+
+uuidrev                                                      K. R. Davis
+Internet-Draft                                             Cisco Systems
+Updates: 9562 (if approved)                                 BGP. Peabody
+Intended status: Standards Track                          27 August 2024
+Expires: 28 February 2025
+
+
+                   Alternate UUID Encoding Techniques
+              draft-davis-uuidrev-alternate-uuid-encoding
+
+Abstract
+
+   This document presents new Universally Unique Identifier (UUID)
+   encoding techniques which facilitate greater efficiency in storage or
+   transport versus the unnecessarily verbose text representation from
+   [RFC9562].
+
+   This document updates [RFC9562] and provides alternate encoding
+   techniques which perform better on the wire, in a database, or
+   withing various other application logics.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/
+   draft-davis-uuidrev-alternate-uuid-encoding.md.  Status information
+   for this document may be found at https://datatracker.ietf.org/doc/
+   draft-davis-uuidrev-alternate-uuid/.
+
+   Discussion of this document takes place on the Revise Universally
+   Unique Identifier Definitions (uuidrev) Working Group mailing list
+   (mailto:uuidrev@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/uuidrev/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/uuidrev/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+
+
+
+
+
+
+Davis & Peabody         Expires 28 February 2025                [Page 1]
+
+Internet-Draft           alternate-uuid-encoding             August 2024
+
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 28 February 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
+     2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Alternate Encodings . . . . . . . . . . . . . . . . . . . . .   3
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .   5
+   Appendix B.  changelog  . . . . . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   The original "hex and dash", 8-4-4-4-12, format of UUIDs defined by
+   [RFC9562] represents a 128 bit UUID value as a 288 bit value.  While
+   this may be great for human readability; the only available UUID text
+   representation suffers poorly for storage, transmission and
+   application parsing.
+
+
+
+
+Davis & Peabody         Expires 28 February 2025                [Page 2]
+
+Internet-Draft           alternate-uuid-encoding             August 2024
+
+
+2.  Terminology
+
+2.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.2.  Abbreviations
+
+   The following abbreviations are used in this document:
+
+   UUID          Universally Unique Identifier [RFC9562]
+
+   URN           Uniform Resource Name [RFC8141]
+
+3.  Alternate Encodings
+
+   The existing UUID hex and dash format of 8-4-4-4-12 is retained for
+   both backwards compatibility and human readability.  This format MUST
+   be implemented for all UUIDs.
+
+   Where required, UUIDs defined by this specification and [RFC9562] MAY
+   be encoded utilizing new techniques such as, but not limited to,
+   Base32, Base36, or Base64.  Applications MAY also utilize other
+   encoding techniques such as modulo division or alternate alphabets
+   such as Crockford's base32.  When selecting an alternate encoding
+   implementations SHOULD take into consideration items such as:
+   uppercase/lowercase/mixed character encoding for application
+   sortability, special character inclusions or omissions, and the
+   exclusion of key letters like "I", "L", "O", and "U" which may impact
+   sortability of UUID values and collision resistance provided by all
+   UUIDs.
+
+   When utilizing alternate encoding techniques with other applications;
+   the encoded UUID MAY be prefixed with extended "urn:uuid:" to signal
+   that the value therein is that of a UUID.
+
+   The conversion from UUID to a new encoding technique SHOULD be done
+   utilizing the underlying integer or binary value for a given UUID
+   versus converting the hex representation.  Two examples for UUIDv4
+   encoded as base-32 and base-36 are included below.
+
+   urn:uuid:73e94fe0-e951-4153-aaf3-50e4e6089d9d:128:base16hd
+   urn:uuid:3JT57U1QAH859QLSQGSJJ0H7CT:128:base32
+   urn:uuid:6V1GDX0NNGFV95EFF5TPJ0TR1:128:base36
+
+
+
+Davis & Peabody         Expires 28 February 2025                [Page 3]
+
+Internet-Draft           alternate-uuid-encoding             August 2024
+
+
+                   Figure 1: Alternate Encoding Examples
+
+   For information on converting a UUID into Base 16, Base 32 or Base 64
+   refer to [RFC4648].
+
+   Furthermore, when utilizing alternate encoding techniques along with
+   Extended UUID URN namespaces; remember that disallowed characters
+   MUST be percent-encoded as per [RFC8141].
+
+4.  IANA Considerations
+
+   If Adopted, this document SHOULD be listed in
+   https://www.iana.org/assignments/urn-namespaces/urn-namespaces.xhtml.
+
+5.  Security Considerations
+
+   This document has no security considerations.
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
+              <https://www.rfc-editor.org/rfc/rfc4648>.
+
+   [RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names
+              (URNs)", RFC 8141, DOI 10.17487/RFC8141, April 2017,
+              <https://www.rfc-editor.org/rfc/rfc8141>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC9562]  Davis, K., Peabody, B., and P. Leach, "Universally Unique
+              IDentifiers (UUIDs)", RFC 9562, DOI 10.17487/RFC9562, May
+              2024, <https://www.rfc-editor.org/rfc/rfc9562>.
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody         Expires 28 February 2025                [Page 4]
+
+Internet-Draft           alternate-uuid-encoding             August 2024
+
+
+Appendix A.  Acknowledgements
+
+   The authors gratefully acknowledge the contributions of Ben Campbell,
+   Ben Ramsey, Fabio Lima, Gonzalo Salgueiro, Martin Thomson, Murray S.
+   Kucherawy, Rick van Rein, Rob Wilton, Sean Leonard, Theodore Y.
+   Ts'o., Robert Kieffer, sergeyprokhorenko, LiosK As well as all of
+   those in the IETF community and on GitHub to who contributed to the
+   discussions which resulted in this document.
+
+Appendix B.  changelog
+
+   This section is to be removed before publishing as an RFC.
+
+   draft-00:
+      *  Initial Release
+
+Authors' Addresses
+
+   Kyzer R. Davis
+   Cisco Systems
+   Email: kydavis@cisco.com
+
+
+   Brad G. Peabody
+   Email: brad@peabody.io
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody         Expires 28 February 2025                [Page 5]
