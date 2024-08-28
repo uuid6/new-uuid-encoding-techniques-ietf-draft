@@ -63,42 +63,61 @@ Clarify encodings here:
 ### B64
 
 Example: `6iviGd15PaLlRV81f07-0F`
+
 Base64 as specified in RFC4648.
+
 No padding.
+
 This encoding is case sensitive.
+
 This encoding does not sort the same as its underlying binary equivalent.
 
 ### B58
 
 Example: `2xWev4eTWKU6qbpYoevyi`
+
 Base58 as used in BitCoin (TODO: need spec/reference)
+
 This encoding is case sensitive.
+
 This encoding sorts the same as its underlying binary equivalent.
 
 ### B32
 
 Example: `068sdnb1a1tbqe7xsksgygvefo`
+
 Base32 as specified in RFC4648.
+
 No padding.
+
 This encoding is case insensitive.
+
 This encoding does not sort the same as its underlying binary equivalent.
 
 ### CrBR32
 
 Example: `068sdnb1a1tbqe7xsksgygvef0`
+
 Crockford Base 32: https://www.crockford.com/base32.html . With or without the alternate decode symbols `OoIiLl` (TBD if allowing these is worth the added decoder complexity).
+
 No padding.
+
 This encoding is case insensitive.
+
 This encoding sorts the same as its underlying binary equivalent.
 
 ### Multi
 
 Example: `2xWev4eTWKU6qbpYoevyi` OR `068sdnb1a1tbqe7xsksgygvef0`
+
 This is a placeholder encompassing proposals that want to allow multiple encodings without a reliable way to tell the difference between them.
+
 TODO: If someone wants something like this, add the exact spec as a separate entry.
 
 ### Multi+Marker
 
 Example: `2xWev4eTWKU6qbpYoevyi:base58`
+
 This is a placeholder encompassing proposals that want to allow multiple encodings with an indication encoded into the value of which encoding was used.
+
 TODO: If someone wants something like this, add the exact spec as a separate entry.
