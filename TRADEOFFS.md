@@ -44,6 +44,7 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 ### Case Sensitive
 - Fore example: Does `A == a`?
 - This impacts things like sortability.
+- Generally, anything above Base32 includes Uppercase and Lowercase as distinct encoding characters.
 
 ### Sorts the Same as Binary
 - This indicates if values encoded with this encoding sort the same as the raw bytes they represent.
