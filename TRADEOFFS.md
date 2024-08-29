@@ -39,6 +39,7 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 ### Padding
 - Generally if padding is part of the output the maximum length of the output will be fixed
 - Padding characters are usually `=` but may be different in different encoding languages
+- Depending on the algorithm padding may be ommited from the output. This of course  will change the Text Length (Max Chars). 
 
 ### Case Sensitive
 - Fore example: Does `A == a`?
