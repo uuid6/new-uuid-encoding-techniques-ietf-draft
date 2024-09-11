@@ -26,56 +26,56 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 ```
 ---
 
-### Number of New Alphabets
+### Number of New Alphabets [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/14)]
 - This is the number of alphabets or distinct encodings that have to be implemented to support the indicated solution.
 - More alphabets are not necessarily bad, but consider this in relation to the work required by library maintainers that will have to update their libraries to support the new specification.
 
-### Text Length (Max Chars)
+### Text Length (Max Chars) [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/19)]
 - Indicates the maximum number of characters that could be output for a given UUID.
 - To gleam potential the Maximum output of a given encoding use UUID MAX [RFC9562][RFC9562], Section 5.10 as the starting point:
   - Binary: `11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111`
   - Unsigned Integer: `340282366920938463463374607431768211455`
 
-### Padding
+### Padding [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/20)]
 - Generally if padding is part of the output the maximum length of the output will be fixed
 - Padding characters are usually `=` but may be different in different encoding languages
 - Depending on the algorithm padding may be ommited from the output. This of course  will change the Text Length (Max Chars). 
 
-### Case Sensitive
+### Case Sensitive [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/21)]
 - Fore example: Does `A == a`?
 - This impacts things like sortability.
 - Generally, anything above Base32 includes Uppercase and Lowercase as distinct encoding characters.
 
-### Sorts the Same as Binary
+### Sorts the Same as Binary [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/22)]
 - This indicates if values encoded with this encoding sort the same as the raw bytes they represent.
 - This typically depends on the alphabet used, and not all alphabets have this property.
 
-### URL Path
+### URL Path [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/23)]
 - This indicates if a value can be used in the path part of a URL without requiring any [URL Percent Encoding][URL Percent Encoding].
 - This specifically means values must not contain `/`, although other considerations may also apply.
 
-### URL Query Param
+### URL Query Param [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/23)]
 - This indicates if a value can be used in the query string of a URL without requiring any [URL Percent Encoding][URL Percent Encoding].
 - This specifically means values must not contain any of `?=/+`, although other considerations may also apply.
 
-### DNS Record
+### DNS Record [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/23)]
 - For an encoding to be compatible as a DNS record, it just be case insensitive and only contain certain characters.
   - ASCII: https://www.rfc-editor.org/rfc/rfc9499.html#section-2-1.30
   - Non-ASCII: https://www.rfc-editor.org/rfc/rfc9499.html#section-2-1.36 (and https://www.rfc-editor.org/rfc/rfc5892)
 - Note that there's overlap here with other things that might typically be used in a DNS entry: names of hosts, virtual machines, containers, etc.
 
-### Double Click to Copy
+### Double Click to Copy [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/24)]
 - Do we need to "double click" to select the entire encoding or "triple click" to select the entire encoding?
 
-### Supports 128+ bit Inputs
+### Supports 128+ bit Inputs [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/25)]
 - Indicates this encoding is free of any known conflicts from using an input value that is 128+ bits
 - This takes into the account that, at some point, a UUID format of 128+ bits could exist and helps future proof the alternate encoding.
 
-### Parse(uuid_text) Updatable
+### Parse(uuid_text) Updatable [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/categories/general)]
 - This indicates if existing generic `Parse(uuid_text)` functions in UUID libraries can be updated in a reliable and unambiguous way to parse the new format.
 - This specifically means that if this value is Y, then Parse can unambiguously determine just by looking at the input if it is the old UUID hex and dash string format, or the new input (including any and all variations of it).
 
-### Makes Everyone Happy
+### Makes Everyone Happy [[Discussion Thread](https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/discussions/categories/general)]
 - This is of course a light-hearted reminder that nobody is going to get everything they want.
 - The objective is to determine, to the extent possible, which path is most useful to the most number of important use cases to the most people.
 
