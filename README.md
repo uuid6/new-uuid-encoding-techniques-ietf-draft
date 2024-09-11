@@ -139,6 +139,30 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 
 ---
 
+# TIP
+The table above can be quite large, this can help fit more data on one page (or one ultra-wide monitor)
+1. Install Tampermonkey for [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/ )
+   - Chrome Only: Navigate to `Chrome://extensions` in browswer URL. Top right, toggle "Developer mode" switch to on.
+2. Add this script below to make the page fullwidth:
+```javascript
+// ==UserScript==
+// @name         GH Fullwidth
+// @match        https://uuid6.github.io/new-uuid-encoding-techniques-ietf-draft/
+// @match        https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    $(".markdown-body").css({'min-width': '100%'});
+    $(".container-xl").css({'min-width': '100%'});
+    $(".Layout").css({'min-width': '100%'});
+})();
+```
+3. Sortable Markdown Tables can be enabled here: https://stackoverflow.com/questions/42843288/is-there-any-way-to-make-markdown-tables-sortable
+
+---
+
 [RFC9562]: https://www.rfc-editor.org/rfc/rfc9562.html
 [RFC4648]: https://datatracker.ietf.org/doc/html/rfc4648
 [CrB32]: https://www.crockford.com/base32.html
