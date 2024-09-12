@@ -4,7 +4,7 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 # Contributing
 - Note there are many, many encoding types, a quick sample can be seen here: https://en.wikipedia.org/wiki/Binary-to-text_encoding#Encoding_standards
   - The table below includes the encoding that have been suggested in various discussions around the web, compared against various concerns also suggested around the web. 
-  - If you have a suggestion for a new encoding: please open a PR adding the item to the table. If you are adding a 
+  - If you have a suggestion for a new encoding: please open a PR adding the item to the table.
   - If you have a suggestion for a new concern: please open a PR adding the item to the table after opening a discussion thread for linking.
   
 
@@ -142,7 +142,7 @@ This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 # TIP
 The table above can be quite large, this can help fit more data on one page (or one ultra-wide monitor)
 1. Install Tampermonkey for [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/ )
-   - Chrome Only: Navigate to `Chrome://extensions` in browswer URL. Top right, toggle "Developer mode" switch to on.
+   - Chrome Only: Navigate to `Chrome://extensions` in browser URL. Top right, toggle "Developer mode" switch to on.
 2. Add this script below to make the page fullwidth:
 ```javascript
 // ==UserScript==
