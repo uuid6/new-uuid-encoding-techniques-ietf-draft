@@ -175,7 +175,7 @@ The table above can be quite large, this can help fit more data on one page (or 
 [CrB32]: https://www.crockford.com/base32.html
 [URL Percent Encoding]: https://en.wikipedia.org/wiki/Percent-encoding
 [BTC]: https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
-[NCName]: https://datatracker.ietf.org/doc/html/draft-taylor-uuid-ncname-00
+[NCName]: https://datatracker.ietf.org/doc/html/draft-taylor-uuid-ncname-04
 [z-base-32]: https://philzimmermann.com/docs/human-oriented-base-32-encoding.txt
 [py-geohash]: https://github.com/vinsci/geohash/blob/master/Geohash/geohash.py
 [fabiolimace]: https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft/issues/3#issuecomment-1101761083
