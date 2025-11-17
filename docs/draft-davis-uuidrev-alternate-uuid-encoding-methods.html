@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Alternate UUID Encoding Methods</title>
+<meta content="Kyzer R. Davis" name="author">
+<meta content="Brad G. Peabody" name="author">
+<meta content="
+       This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods found in the industry. Many of these methods facilitate greater efficiency in storage or transport versus the unnecessarily verbose text representation from  . 
+       This document updates   to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for our application. 
+       When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics. 
+    " name="description">
+<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="uuid" name="keyword">
+<meta content="encoding" name="keyword">
+<meta content="base02" name="keyword">
+<meta content="base10" name="keyword">
+<meta content="base16" name="keyword">
+<meta content="base32" name="keyword">
+<meta content="base36" name="keyword">
+<meta content="base58" name="keyword">
+<meta content="base64" name="keyword">
+<meta content="draft-davis-uuidrev-alternate-uuid-encoding-methods" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.31.0
+    Python 3.12.3
+    ConfigArgParse 1.7.1
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.6
+    lxml 6.0.2
+    platformdirs 4.5.0
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.32.5
+    wcwidth 0.2.14
+    weasyprint 65.0
+-->
+<link href="draft-davis-uuidrev-alternate-uuid-encoding-methods.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">/*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necessary during the development of the v3
+  formatters.
+
+*/
+
+/* fonts */
+@import url('https://static.ietf.org/fonts/noto-sans/import.css'); /* Sans-serif */
+@import url('https://static.ietf.org/fonts/noto-serif/import.css'); /* Serif (print) */
+@import url('https://static.ietf.org/fonts/roboto-mono/import.css'); /* Monospace */
+
+:root {
+  --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+  --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+}
+
+@viewport {
+  zoom: 1.0;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+/* general and mobile first */
+html {
+}
+body {
+  max-width: 90%;
+  margin: 1.5em auto;
+  color: #222;
+  background-color: #fff;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-wrap: break-word;
+}
+.ears {
+  display: none;
+}
+
+/* headings */
+#title, h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0.5em;
+  font-weight: bold;
+  line-height: 1.3;
+}
+#title {
+  clear: both;
+  border-bottom: 1px solid #ddd;
+  margin: 0 0 0.5em 0;
+  padding: 1em 0 0.5em;
+}
+.author {
+  padding-bottom: 4px;
+}
+h1 {
+  font-size: 26px;
+  margin: 1em 0;
+}
+h2 {
+  font-size: 22px;
+  margin-top: -20px;  /* provide offset for in-page anchors */
+  padding-top: 33px;
+}
+h3 {
+  font-size: 18px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h4 {
+  font-size: 16px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h5, h6 {
+  font-size: 14px;
+}
+#n-copyright-notice {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+/* general structure */
+p {
+  padding: 0;
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+div, span {
+  position: relative;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+@media print {
+  svg {
+    max-height: 850px;
+    max-width: 660px;
+  }
+}
+svg[font-family~="serif" i], svg [font-family~="serif" i] {
+  font-family: var(--font-serif);
+}
+svg[font-family~="sans-serif" i], svg [font-family~="sans-serif" i] {
+  font-family: var(--font-sans);
+}
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  display: table;
+  border: none;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 1em 2em;
+}
+ol ol, ul ul, ol ul, ul ol {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+ul.ulBare, li.ulBare {
+  margin-left: 0em !important;
+}
+ul.compact, .ulCompact,
+ol.compact, .olCompact {
+  line-height: 100%;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+/* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+dl > dd {
+  margin-bottom: .8em;
+  min-height: 1.3em;
+}
+dl.compact > dd, .dlCompact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+
+/* links */
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #22e; /* Arlen: WCAG 2019 */
+}
+a[href]:hover {
+  background-color: #f2f2f2;
+}
+figcaption a[href],
+a[href].selfRef {
+  color: #222;
+}
+/* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+/* Figures */
+tt, code, pre {
+  background-color: #f9f9f9;
+  font-family: var(--font-mono);
+}
+pre {
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 1em;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption {
+  font-style: italic;
+  margin: 0 0 1em 0;
+}
+@media screen {
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+    max-width: calc(100% - 22px);
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 1.2em 2em;
+}
+blockquote {
+  background-color: #f9f9f9;
+  color: #111; /* Arlen: WCAG 2019 */
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 1em 0;
+}
+blockquote > *:last-child {
+  margin-bottom: 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+.xref {
+  overflow-wrap: normal;
+}
+
+/* tables */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border: 1px solid #eee;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+th {
+  text-align: left;
+  background-color: #e9e9e9;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f5f5f5;
+}
+table caption {
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+table p {
+  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  color: #666; /* Arlen: AHDJ 2019 */
+  text-decoration: none;
+  visibility: hidden;
+  user-select: none;
+  -ms-user-select: none;
+  -o-user-select:none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media screen {
+  aside:hover > a.pilcrow,
+  p:hover > a.pilcrow,
+  blockquote:hover > a.pilcrow,
+  div:hover > a.pilcrow,
+  li:hover > a.pilcrow,
+  pre:hover > a.pilcrow {
+    visibility: visible;
+  }
+  a.pilcrow:hover {
+    background-color: transparent;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+.bcp14 {
+  font-variant: small-caps;
+}
+
+.role {
+  font-variant: all-small-caps;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: 0.9em;
+}
+#identifiers dt {
+  width: 3em;
+  clear: left;
+}
+#identifiers dd {
+  float: left;
+  margin-bottom: 0;
+}
+/* Fix PDF info block run off issue */
+@media print {
+  #identifiers dd {
+    max-width: 100%;
+  }
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #666; /* Arlen: WCAG 2019 */
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc  {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+nav.toc ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+nav.toc li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 7em;
+}
+.references dd {
+  margin-left: 8em;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.refSubseries {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+.index ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.index ul ul {
+  margin: 0;
+}
+.index li {
+  margin: 0;
+  text-indent: -2em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+.indexIndex {
+  margin: 0.5em 0 1em;
+}
+.index a {
+  font-weight: 700;
+}
+/* make the index two-column on all but the smallest screens */
+@media (min-width: 600px) {
+  .index ul {
+    -moz-column-count: 2;
+    -moz-column-gap: 20px;
+  }
+  .index ul ul {
+    -moz-column-count: 1;
+    -moz-column-gap: 0;
+  }
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  font-family: var(--font-sans);
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+
+/* temporary notes */
+.rfcEditorRemove::before {
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0.2em;
+  content: "The RFC Editor will remove this note";
+  color: #9e2a00; /* Arlen: WCAG 2019 */
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+}
+.rfcEditorRemove {
+  position: relative;
+  padding-top: 1.8em;
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  border-radius: 3px;
+}
+.cref {
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 1023px) {
+  body {
+    padding-top: 2em;
+  }
+  #title {
+    padding: 1em 0;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+    margin-top: -18px;  /* provide offset for in-page anchors */
+    padding-top: 38px;
+  }
+  #identifiers dd {
+    max-width: 60%;
+  }
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    background-color: inherit;
+    border-bottom: 1px solid #ccc;
+  }
+  #toc h2 {
+    margin: -1px 0 0 0;
+    padding: 4px 0 4px 6px;
+    padding-right: 1em;
+    min-width: 190px;
+    font-size: 1.1em;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 6px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 1024px) {
+  body {
+    max-width: 724px;
+    margin: 42px auto;
+    padding-left: 1.5em;
+    padding-right: 29em;
+  }
+  #toc {
+    position: fixed;
+    top: 42px;
+    right: 42px;
+    width: 25%;
+    margin: 0;
+    padding: 0 1em;
+    z-index: 1;
+  }
+  #toc h2 {
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 0;
+    overflow: auto;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  .breakable pre {
+    break-inside: auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+/* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+/*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+  /* The following is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+  /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+}
+
+/* Changes introduced to fix issues found during implementation */
+/* Make sure links are clickable even if overlapped by following H* */
+a {
+  z-index: 2;
+}
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Leave room in document info to show Internet-Draft on one line */
+#identifiers dt {
+  width: 8em;
+}
+
+/* Don't waste quite as much whitespace between label and value in doc info */
+#identifiers dd {
+  margin-left: 1em;
+}
+
+/* Give floating toc a background color (needed when it's a div inside section */
+#toc {
+  background-color: white;
+}
+
+/* Make the collapsed ToC header render white on gray also when it's a link */
+@media screen and (max-width: 1023px) {
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+}
+
+/* Give the bottom of the ToC some whitespace */
+@media screen and (min-width: 1024px) {
+  #toc {
+    padding: 0 0 1em 1em;
+  }
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* prevent monospace from becoming overly large */
+tt, code, pre {
+  font-size: 95%;
+}
+
+/* Fix the height/width aspect for ascii art*/
+.sourcecode pre,
+.art-text pre {
+  line-height: 1.12;
+}
+
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin-right: 0.5em;
+}
+
+/* Fix the dl styling to match the RFC 7992 attributes */
+dl > dt,
+dl.dlParallel > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+
+/* Provide styling for table cell text alignment */
+table td.text-left,
+table th.text-left {
+  text-align: left;
+}
+table td.text-center,
+table th.text-center {
+  text-align: center;
+}
+table td.text-right,
+table th.text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 30em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+table.right {
+ margin-left: auto;
+ margin-right: 0;
+}
+table.center {
+ margin-left: auto;
+ margin-right: auto;
+}
+table.left {
+ margin-left: 0;
+ margin-right: auto;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+caption a[href] {
+  color: #222;
+}
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+/* Tweak the bcp14 keyword presentation */
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+/* Tweak the invisible space above H* in order not to overlay links in text above */
+ h2 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 31px;
+ }
+ h3 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+ h4 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+/* Float artwork pilcrow to the right */
+@media screen {
+  .artwork a.pilcrow {
+    display: block;
+    line-height: 0.7;
+    margin-top: 0.15em;
+  }
+}
+/* Make pilcrows on dd visible */
+@media screen {
+  dd:hover > a.pilcrow {
+    visibility: visible;
+  }
+}
+/* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+.alignLeft.art-text,
+.alignCenter.art-text,
+.alignRight.art-text {
+   margin-bottom: 0;
+}
+.alignLeft,
+.alignCenter,
+.alignRight {
+  margin: 1em 0 0 0;
+}
+/* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+/* Styling for the external metadata */
+div#external-metadata {
+  background-color: #eee;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  display: none;
+}
+div#internal-metadata {
+  padding: 0.5em;                       /* to match the external-metadata padding */
+}
+/* Styling for title RFC Number */
+h1#rfcnum {
+  clear: both;
+  margin: 0 0 -1em;
+  padding: 1em 0 0 0;
+}
+/* Make .olPercent look the same as <ol><li> */
+dl.olPercent > dd {
+  margin-bottom: 0.25em;
+  min-height: initial;
+}
+/* Give aside some styling to set it apart */
+aside {
+  border-left: 1px solid #ddd;
+  margin: 1em 0 1em 2em;
+  padding: 0.2em 2em;
+}
+aside > dl,
+aside > ol,
+aside > ul,
+aside > table,
+aside > p {
+  margin-bottom: 0.5em;
+}
+/* Additional page break settings */
+@media print {
+  figcaption, table caption {
+    page-break-before: avoid;
+  }
+}
+/* Font size adjustments for print */
+@media print {
+  body  { font-size: 10pt;      line-height: normal; max-width: 96%; }
+  h1    { font-size: 1.72em;    padding-top: 1.5em; } /* 1*1.2*1.2*1.2 */
+  h2    { font-size: 1.44em;    padding-top: 1.5em; } /* 1*1.2*1.2 */
+  h3    { font-size: 1.2em;     padding-top: 1.5em; } /* 1*1.2 */
+  h4    { font-size: 1em;       padding-top: 1.5em; }
+  h5, h6 { font-size: 1em;      margin: initial; padding: 0.5em 0 0.3em; }
+}
+/* Sourcecode margin in print, when there's no pilcrow */
+@media print {
+  .artwork,
+  .artwork > pre,
+  .sourcecode {
+    margin-bottom: 1em;
+  }
+}
+/* Avoid narrow tables forcing too narrow table captions, which may render badly */
+table {
+  min-width: 20em;
+}
+/* ol type a */
+ol.type-a { list-style-type: lower-alpha; }
+ol.type-A { list-style-type: upper-alpha; }
+ol.type-i { list-style-type: lower-roman; }
+ol.type-I { list-style-type: upper-roman; }
+/* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background slightly */
+table {
+  border: 1px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+}
+tr {
+  break-inside: avoid;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f8f8f8;
+}
+/* Use style rules to govern display of the TOC. */
+@media screen and (max-width: 1023px) {
+  #toc nav { display: none; }
+  #toc.active nav { display: block; }
+}
+/* Add support for keepWithNext */
+.keepWithNext {
+  break-after: avoid-page;
+  break-after: avoid-page;
+}
+/* Add support for keepWithPrevious */
+.keepWithPrevious {
+  break-before: avoid-page;
+}
+/* Change the approach to avoiding breaks inside artwork etc. */
+figure, pre, table, .artwork, .sourcecode  {
+  break-before: auto;
+  break-after: auto;
+}
+/* Avoid breaks between <dt> and <dd> */
+dl {
+  break-before: auto;
+  break-inside: auto;
+}
+dt {
+  break-before: auto;
+  break-after: avoid-page;
+}
+dd {
+  break-before: avoid-page;
+  break-after: auto;
+  orphans: 3;
+  widows: 3
+}
+span.break, dd.break {
+  margin-bottom: 0;
+  min-height: 0;
+  break-before: auto;
+  break-inside: auto;
+  break-after: auto;
+}
+/* Undo break-before ToC */
+@media print {
+  #toc {
+    break-before: auto;
+  }
+}
+/* Text in compact lists should not get extra bottom margin space,
+   since that would makes the list not compact */
+ul.compact p, .ulCompact p,
+ol.compact p, .olCompact p {
+ margin: 0;
+}
+/* But the list as a whole needs the extra space at the end */
+section ul.compact,
+section .ulCompact,
+section ol.compact,
+section .olCompact {
+  margin-bottom: 1em;                    /* same as p not within ul.compact etc. */
+}
+/* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+tt, code {
+  background-color: transparent;
+}
+p tt, p code, li tt, li code, dt tt, dt code {
+  background-color: #f8f8f8;
+}
+/* Tweak the pre margin -- 0px doesn't come out well */
+pre {
+   margin-top: 0.5px;
+}
+/* Tweak the compact list text */
+ul.compact, .ulCompact,
+ol.compact, .olCompact,
+dl.compact, .dlCompact {
+  line-height: normal;
+}
+/* Don't add top margin for nested lists */
+li > ul, li > ol, li > dl,
+dd > ul, dd > ol, dd > dl,
+dl > dd > dl {
+  margin-top: initial;
+}
+/* Elements that should not be rendered on the same line as a <dt> */
+/* This should match the element list in writer.text.TextWriter.render_dl() */
+dd > div.artwork:first-child,
+dd > aside:first-child,
+dd > blockquote:first-child,
+dd > figure:first-child,
+dd > ol:first-child,
+dd > div.sourcecode:first-child,
+dd > table:first-child,
+dd > ul:first-child {
+  clear: left;
+}
+/* fix for weird browser behaviour when <dd/> is empty */
+dt+dd:empty::before{
+  content: "\00a0";
+}
+/* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+li > p {
+  margin-bottom: 0.5em
+}
+/* Don't let p margin spill out from inside list items */
+li > p:last-of-type:only-child {
+  margin-bottom: 0;
+}
+</style>
+<link href="rfc-local.css" rel="stylesheet" type="text/css">
+<script type="application/javascript">async function addMetadata(){try{const e=document.styleSheets[0].cssRules;for(let t=0;t<e.length;t++)if(/#identifiers/.exec(e[t].selectorText)){const a=e[t].cssText.replace("#identifiers","#external-updates");document.styleSheets[0].insertRule(a,document.styleSheets[0].cssRules.length)}}catch(e){console.log(e)}const e=document.getElementById("external-metadata");if(e)try{var t,a="",o=function(e){const t=document.getElementsByTagName("meta");for(let a=0;a<t.length;a++)if(t[a].getAttribute("name")===e)return t[a].getAttribute("content");return""}("rfc.number");if(o){t="https://www.rfc-editor.org/rfc/rfc"+o+".json";try{const e=await fetch(t);a=await e.json()}catch(e){t=document.URL.indexOf("html")>=0?document.URL.replace(/html$/,"json"):document.URL+".json";const o=await fetch(t);a=await o.json()}}if(!a)return;e.style.display="block";const s="",d="https://datatracker.ietf.org/doc",n="https://datatracker.ietf.org/ipr/search",c="https://www.rfc-editor.org/info",l=a.doc_id.toLowerCase(),i=a.doc_id.slice(0,3).toLowerCase(),f=a.doc_id.slice(3).replace(/^0+/,""),u={status:"Status",obsoletes:"Obsoletes",obsoleted_by:"Obsoleted By",updates:"Updates",updated_by:"Updated By",see_also:"See Also",errata_url:"Errata"};let h="<dl style='overflow:hidden' id='external-updates'>";["status","obsoletes","obsoleted_by","updates","updated_by","see_also","errata_url"].forEach(e=>{if("status"==e){a[e]=a[e].toLowerCase();var t=a[e].split(" "),o=t.length,w="",p=1;for(let e=0;e<o;e++)p<o?w=w+r(t[e])+" ":w+=r(t[e]),p++;a[e]=w}else if("obsoletes"==e||"obsoleted_by"==e||"updates"==e||"updated_by"==e){var g,m="",b=1;g=a[e].length;for(let t=0;t<g;t++)a[e][t]&&(a[e][t]=String(a[e][t]).toLowerCase(),m=b<g?m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>, ":m+"<a href='"+s+"/rfc/".concat(a[e][t])+"'>"+a[e][t].slice(3)+"</a>",b++);a[e]=m}else if("see_also"==e){var y,L="",C=1;y=a[e].length;for(let t=0;t<y;t++)if(a[e][t]){a[e][t]=String(a[e][t]);var _=a[e][t].slice(0,3),v=a[e][t].slice(3).replace(/^0+/,"");L=C<y?"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>, ":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>, ":"RFC"!=_?L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+_+" "+v+"</a>":L+"<a href='"+s+"/info/"+_.toLowerCase().concat(v.toLowerCase())+"'>"+v+"</a>",C++}a[e]=L}else if("errata_url"==e){var R="";R=a[e]?R+"<a href='"+a[e]+"'>Errata exist</a> | <a href='"+d+"/"+l+"'>Datatracker</a>| <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>":"<a href='"+d+"/"+l+"'>Datatracker</a> | <a href='"+n+"/?"+i+"="+f+"&submit="+i+"'>IPR</a> | <a href='"+c+"/"+l+"'>Info page</a>",a[e]=R}""!=a[e]?"Errata"==u[e]?h+=`<dt>More info:</dt><dd>${a[e]}</dd>`:h+=`<dt>${u[e]}:</dt><dd>${a[e]}</dd>`:"Errata"==u[e]&&(h+=`<dt>More info:</dt><dd>${a[e]}</dd>`)}),h+="</dl>",e.innerHTML=h}catch(e){console.log(e)}else console.log("Could not locate metadata <div> element");function r(e){return e.charAt(0).toUpperCase()+e.slice(1)}}window.removeEventListener("load",addMetadata),window.addEventListener("load",addMetadata);</script>
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">alternate-uuid-encoding</td>
+<td class="right">November 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Davis &amp; Peabody</td>
+<td class="center">Expires 21 May 2026</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">uuidrev</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-davis-uuidrev-alternate-uuid-encoding-methods</dd>
+<dt class="label-updates">Updates:</dt>
+<dd class="updates">
+<a href="https://www.rfc-editor.org/rfc/rfc9562" class="eref">9562</a> (if approved)</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-11-17" class="published">17 November 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2026-05-21">21 May 2026</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">K. R. Davis</div>
+<div class="org">Cisco Systems</div>
+</div>
+<div class="author">
+      <div class="author-name">BGP. Peabody</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Alternate UUID Encoding Methods</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods found in the industry. Many of these methods facilitate greater efficiency in storage or transport versus the unnecessarily verbose text representation from <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document updates <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for our application.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://example.com/LATEST">https://example.com/LATEST</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid-encoding/">https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid-encoding/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Revise Universally Unique Identifier Definitions (uuidrev) Working Group mailing list (<span><a href="mailto:uuidrev@ietf.org">mailto:uuidrev@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/uuidrev/">https://mailarchive.ietf.org/arch/browse/uuidrev/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/uuidrev/">https://www.ietf.org/mailman/listinfo/uuidrev/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft">https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 21 May 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-abbreviations" class="internal xref">Abbreviations</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-alternate-uuid-encoding-met" class="internal xref">Alternate UUID Encoding Methods</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-base32" class="internal xref">Base32</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-base36" class="internal xref">Base36</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-base58" class="internal xref">Base58</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-base62" class="internal xref">Base62</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-base64" class="internal xref">Base64</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-base85" class="internal xref">Base85</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-uuid-encoding-best-practice" class="internal xref">UUID Encoding Best Practices</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-usage" class="internal xref">Usage</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-maximum-character-length" class="internal xref">Maximum Character Length</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-padding" class="internal xref">Padding</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-checksums" class="internal xref">Checksums</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-special-characters" class="internal xref">Special Characters</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-character-exclusions" class="internal xref">Character Exclusions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-case-sensitivity" class="internal xref">Case Sensitivity</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.6">
+                <p id="section-toc.1-1.4.2.6.1"><a href="#section-4.6" class="auto internal xref">4.6</a>.  <a href="#name-sorting-and-ordering" class="internal xref">Sorting and Ordering</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.7">
+                <p id="section-toc.1-1.4.2.7.1"><a href="#section-4.7" class="auto internal xref">4.7</a>.  <a href="#name-encoding-availability" class="internal xref">Encoding Availability</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.8">
+                <p id="section-toc.1-1.4.2.8.1"><a href="#section-4.8" class="auto internal xref">4.8</a>.  <a href="#name-computation" class="internal xref">Computation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9">
+                <p id="section-toc.1-1.4.2.9.1"><a href="#section-4.9" class="auto internal xref">4.9</a>.  <a href="#name-application-specific" class="internal xref">Application Specific</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9.2.1">
+                    <p id="section-toc.1-1.4.2.9.2.1.1"><a href="#section-4.9.1" class="auto internal xref">4.9.1</a>.  <a href="#name-uri-url-urn" class="internal xref">URI, URL, URN</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9.2.2">
+                    <p id="section-toc.1-1.4.2.9.2.2.1"><a href="#section-4.9.2" class="auto internal xref">4.9.2</a>.  <a href="#name-dns-record" class="internal xref">DNS Record</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9.2.3">
+                    <p id="section-toc.1-1.4.2.9.2.3.1"><a href="#section-4.9.3" class="auto internal xref">4.9.3</a>.  <a href="#name-xml-html-css" class="internal xref">XML, HTML, CSS</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.10">
+                <p id="section-toc.1-1.4.2.10.1"><a href="#section-4.10" class="auto internal xref">4.10</a>. <a href="#name-other" class="internal xref">Other</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-changelog" class="internal xref">Changelog</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-example-uuid-base-encodings" class="internal xref">Example UUID Base Encodings</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-base32-base" class="internal xref">Base32, base</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-base32-hex" class="internal xref">Base32, Hex</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
+                <p id="section-toc.1-1.10.2.3.1"><a href="#appendix-C.3" class="auto internal xref">C.3</a>.  <a href="#name-base32-crockford" class="internal xref">Base32, Crockford</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
+                <p id="section-toc.1-1.10.2.4.1"><a href="#appendix-C.4" class="auto internal xref">C.4</a>.  <a href="#name-base32-ncname" class="internal xref">Base32, NCNAME</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.5">
+                <p id="section-toc.1-1.10.2.5.1"><a href="#appendix-C.5" class="auto internal xref">C.5</a>.  <a href="#name-base32-other" class="internal xref">Base32, Other</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.6">
+                <p id="section-toc.1-1.10.2.6.1"><a href="#appendix-C.6" class="auto internal xref">C.6</a>.  <a href="#name-base36-2" class="internal xref">Base36</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.7">
+                <p id="section-toc.1-1.10.2.7.1"><a href="#appendix-C.7" class="auto internal xref">C.7</a>.  <a href="#name-base57" class="internal xref">Base57</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.8">
+                <p id="section-toc.1-1.10.2.8.1"><a href="#appendix-C.8" class="auto internal xref">C.8</a>.  <a href="#name-base58-2" class="internal xref">Base58</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.9">
+                <p id="section-toc.1-1.10.2.9.1"><a href="#appendix-C.9" class="auto internal xref">C.9</a>.  <a href="#name-base62-2" class="internal xref">Base62</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.10">
+                <p id="section-toc.1-1.10.2.10.1"><a href="#appendix-C.10" class="auto internal xref">C.10</a>. <a href="#name-base64-2" class="internal xref">Base64</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.11">
+                <p id="section-toc.1-1.10.2.11.1"><a href="#appendix-C.11" class="auto internal xref">C.11</a>. <a href="#name-base85-2" class="internal xref">Base85</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The original "hex and dash", 8-4-4-4-12, format of UUIDs defined by <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> represents a 128 bit UUID value as a 288 bit value.
+While this may be great for human readability; the only available UUID text representation suffers poorly for storage, transmission and application parsing.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Due to this shortcoming savvy programmers have been leveraging alternate encoding UUIDs for as long as UUIDs have been around. Bespoke implementations within a single application or a myriad of one-off libraries attempt to cover where the original encoding falls short. While these solve the problem in a bubble: most applications, databases, or standard libraries provide UUIDs as a built-in set of functionality which mirror the IETF documents. If a feature is not defined by an applicable specification documents, the implementors and maintainers do not write the code and thus the end users do not see the feature. Thus while the problem of alternate encodings has been known, and solved, for many years; there is no applicable standard document thus no consistent implementation across UUID implementations.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">While overhauling RFC4122 content and creating UUIDv6, UUIDv7, and UUIDv8 for RFC9562; one of the largest topics for discussion was that of alternate encodings. This tremendous show of support for the topic has proven that an update is required. This topic grew in length to the point where it needed to be split out of the revision and into a separate document which focuses solely on the topic of alternate UUID Encoding.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document will cover the most common alternate UUID Encoding methods used in the field while covering the pros and cons for each. The latter half of this document will cover the best practice and considerations that implementations should take into considerations while selecting, implementing and even building new alternate UUID encoding method outside of the items covered in <a href="#alt_encodings" class="auto internal xref">Section 3</a>. These best practices are a result of many years of research, community feedback and inspection of over 55 different alternate UUID encoding implementations across 17 different alphabets. (See <a href="#examples" class="auto internal xref">Appendix C</a>.)<a href="#section-1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<div id="conventions_definitions">
+<section id="section-2.1">
+        <h3 id="name-conventions-and-definitions">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+        </h3>
+<p id="section-2.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="abbreviations">
+<section id="section-2.2">
+        <h3 id="name-abbreviations">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-abbreviations" class="section-name selfRef">Abbreviations</a>
+        </h3>
+<p id="section-2.2-1">The following abbreviations are used in this document:<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.2-2">
+          <dt id="section-2.2-2.1">UUID</dt>
+          <dd style="margin-left: 7.0em" id="section-2.2-2.2">
+            <p id="section-2.2-2.2.1">Universally Unique Identifier <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span><a href="#section-2.2-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.2-2.3">BaseXX</dt>
+          <dd style="margin-left: 7.0em" id="section-2.2-2.4">
+            <p id="section-2.2-2.4.1">Base where XX references two numeric values with any leading 0 kept. For example Base02, Base10, Base16, Base32, Base64, etc.<a href="#section-2.2-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="alt_encodings">
+<section id="section-3">
+      <h2 id="name-alternate-uuid-encoding-met">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-alternate-uuid-encoding-met" class="section-name selfRef">Alternate UUID Encoding Methods</a>
+      </h2>
+<p id="section-3-1"><span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span> details that at its core any given UUID is a 128 bit value which can be represented as Base02 (binary), base10 (integer), base16 (hex) and even a custom "hex-and-dash" string format which is Base16 (hex) with a few extra dash characters added to create a unique UUID string format that is instantly recognizable. Further, the section goes on to discuss other string formats that often use the Hex and Dash format or Integer format.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">While these are the "well known" UUID formats. The truth is that since UUID is a single 128 bit data value. It can be easily transposed and represented by many common BaseXX alphabets.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The sheer number combinations of BaseXX Alphabets coupled with the various considerations found in <a href="#best_practices" class="auto internal xref">Section 4</a> make it impossible to cover every single BaseXX Alphabet combination in a single document. Instead this document will focus on the BaseXX Alphabets that see the most usage in real world implementations.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">UUID standard library implementors <span class="bcp14">SHOULD</span> consider adding support for at least one alternate encoding defined in this document and <span class="bcp14">MAY</span> provide support for more including those not listed in this document. Refer to the various considerations found in <a href="#best_practices" class="auto internal xref">Section 4</a> if creating or implementing a BaseXX Alphabet for UUID that is not covered already in the following sections.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">Note: All UUID examples in this document are alternate encodings of <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span>'s Example UUID starting from either Figure 2 (binary) or Figure 3 (integer).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div id="b32">
+<section id="section-3.1">
+        <h3 id="name-base32">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-base32" class="section-name selfRef">Base32</a>
+        </h3>
+<p id="section-3.1-1">Base32 alphabets generally use 5 bits per character to encode the original value and produce a 26 character output which may or may not have padding present for a 128 bit UUID. These Base32 Alphabets include, but are not limited to, the standards based Base32 and Base32hex from <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>, Douglas Crockford's Base32 <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>, Z-Base-32 <span>[<a href="#ZB32" class="cite xref">ZB32</a>]</span>, and <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">Base32 alphabets tend to have the most variance between the characters used by the various alphabets since the implementors can be a bit more selective in what characters are present. <a href="#best_practice_exclusions" class="internal xref">Character Exclusions</a>, alphabet <a href="#best_practice_sorting" class="internal xref">Sorting and Ordering</a> are almost always present with little overlap between the various implementations.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">Base32 tends to be case insensitive since lowercase character a-z are often treated the same as uppercase A-Z and not required to fill out the underlying alphabet. Finally, <a href="#best_practice_special" class="internal xref">Special Characters</a> are not usually used with Base32 encoding unless for <a href="#best_practice_padding" class="internal xref">Padding</a> or <a href="#best_practice_checksums" class="internal xref">Checksums</a> features which can usually be omitted entirely.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">Base32 is a great choice for implementations where it is available with either Base32hex <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span> or Douglas Crockford's Base32 <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span> being the recommended option for a 26 character UUID that provides a lot of great features for machine or human interactions.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">Z-Base-32 <a href="#ZB32" class="internal xref">human-oriented base-32 encoding</a> makes to many changes to the underlying alphabet for a very custom use-case to be recommend. While <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span> is closer to Base32hex with some characters removed as seen in Douglas Crockford's Base32 <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span> it is possible that the <a href="#best_practice_availability" class="internal xref">Encoding Availability</a> may prove challenging for implementors.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<span id="name-example-uuid-encoded-as-bas"></span><div id="sampleBase32HexUUID">
+<figure id="figure-1">
+          <div class="alignLeft art-text artwork" id="section-3.1-6.1">
+<pre>
+V0EKVBJTTG8T19R502GCI7JBUO
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-example-uuid-encoded-as-bas" class="selfRef">Example UUID encoded as Base32 Hex</a>
+          </figcaption></figure>
+</div>
+<span id="name-example-uuid-encoded-as-dou"></span><div id="sampleBase32Crockford">
+<figure id="figure-2">
+          <div class="alignLeft art-text artwork" id="section-3.1-7.1">
+<pre>
+Z0EMZBKXXG8X19V502GCJ7KBYR
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-example-uuid-encoded-as-dou" class="selfRef">Example UUID encoded as Douglas Crockford's Base32</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.1-8">TODO add NCNAME<a href="#section-3.1-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="b36">
+<section id="section-3.2">
+        <h3 id="name-base36">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-base36" class="section-name selfRef">Base36</a>
+      </h3>
+</section>
+</div>
+<div id="b58">
+<section id="section-3.3">
+        <h3 id="name-base58">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-base58" class="section-name selfRef">Base58</a>
+      </h3>
+</section>
+</div>
+<div id="b62">
+<section id="section-3.4">
+        <h3 id="name-base62">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-base62" class="section-name selfRef">Base62</a>
+      </h3>
+</section>
+</div>
+<div id="b64">
+<section id="section-3.5">
+        <h3 id="name-base64">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-base64" class="section-name selfRef">Base64</a>
+      </h3>
+</section>
+</div>
+<div id="b85">
+<section id="section-3.6">
+        <h3 id="name-base85">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-base85" class="section-name selfRef">Base85</a>
+      </h3>
+</section>
+</div>
+</section>
+</div>
+<div id="best_practices">
+<section id="section-4">
+      <h2 id="name-uuid-encoding-best-practice">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-uuid-encoding-best-practice" class="section-name selfRef">UUID Encoding Best Practices</a>
+      </h2>
+<p id="section-4-1">There are a number of factors which require consideration when choosing the best encoding type for a UUID. What is applicable and important to one use case may not be important to another. As such the authors have compiled all of the various considerations into a set of best practice categories in the upcoming sections.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Each section attempts to discuss the topic in relation to its usage with UUID however many of the topics below can be generalized into considerations for selecting an alternate encoding for any data input.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<div id="best_practice_usage">
+<section id="section-4.1">
+        <h3 id="name-usage">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-usage" class="section-name selfRef">Usage</a>
+        </h3>
+<p id="section-4.1-1">Determining how a UUID will be used is arguably the most important exercise one can do when considering alternate encodings. The result of this analysis will influence all of the following sections in one way or another. UUIDs are used anywhere and everywhere, thus the ubiquitous nature of UUIDs means that there is no single answer to this question and it is one either the implementor or the consumer must both consider.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">Take for example a UUID used in text as a logging prefix to uniquely trace and debug functionality through an app. The frequency and size of these logs leans towards a a smaller, compact UUID encoding being preferred over something overly verbose.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">If a UUID is to be used by humans in verbal or written situations one may want to omit specific characters as to avoid confusion. Similarly a shorter UUID encoding may also preferable when the characters of the UUID needs to be recited one-by-one over the telephone to remote support to perform some operation. Here both a smaller UUID with character exclusions is preferable to decrease the likelihood of mistakes.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">UUIDs used within databases, covered in RFC9562, tend to care about case sensitivity, alphabet ordering and size of the actual encoding which impact both sorting, storage and performance when operating at maximum scale.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">UUIDs sent across the wire between machines may benefit from a more compact overall form which reduces bytes on the wire and thus assists with Maximum Transmission Unit (MTU) on limited bandwidth, highly latent networks.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.1-6">UUIDs used by Internet of Things (IoT) Devices may lean towards an alternate encoding algorithm which is the least computationally expensive as these devices are often limited in that respect.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_length">
+<section id="section-4.2">
+        <h3 id="name-maximum-character-length">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-maximum-character-length" class="section-name selfRef">Maximum Character Length</a>
+        </h3>
+<p id="section-4.2-1">The number of characters in a given encoding alphabet is directly correlated to the size of the alternate UUID encoding output.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">As a starting point the encodings defined by RFC9562 are Binary, Integer, and Hex. Base02 (Binary) version of a UUID is 128 characters in length consisting of 0s and 1s.The Base10 (Integer) version of a UUID is 39 characters consisting of characters 0 through 9 while the Base16 (Hex) version of a UUID shortens this to 32 characters by using characters 0 through 9 and A through F.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">Base32 libraries tend to produce a UUID output of 26 characters in length and base64 drops the output UUID to 22 characters.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">With this trend one may be tempted to simply pick the highest BaseXX encoding available and get the smallest encoding output possible however as the output encoding decreases, the base alphabet increases. At a specific point both numeric values, upper and lowercase values may be present and any number of unique symbols can be present in the base alphabet. The addition and ordering of these can have rippling effects that one must properly consider. Further, some of these alphabets require unique math to properly apply to the fixed-length 128 bit UUID which may increase computational complexity in unfavorable ways along with padding to output a similarly fixed-length value.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2-5">Simply picking the biggest base alphabet to get the smallest encoding only works if the only consideration an implementation cares about is the actual size of the output UUID and nothing else.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.2-6">To gleam the maximum size of a given BaseXX encoding convert the binary form of UUID MAX from <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-5.10" class="relref">Section 5.10</a></span>.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
+<div id="best_practice_padding">
+<section id="section-4.2.1">
+          <h4 id="name-padding">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-padding" class="section-name selfRef">Padding</a>
+          </h4>
+<p id="section-4.2.1-1">Padding and padding characters go hand in hand with the previous section involving the maximum character length of an output alternate UUID encoding.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">The most common padding character is the equal sign (=) however it could theoretically be any character possible. It is recommended to use the equal sign since it is the most well-known padding character among the various BaseXX encodings.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-3">Further, this character is almost always in the least significant, right-most section of a given alternate UUID encoding. The padding <span class="bcp14">SHOULD</span> stay in this position and moving the character can have ramifications for sorting.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-4">The inclusion or removal of the padding character determines if a given alternate encoding is to be fixed-length or a variable-length. If an implementation requires that a given UUID alternate encoding always be the same length then padding characters <span class="bcp14">MUST</span> be used. If fixed-length outputs are not a problem then the padding character <span class="bcp14">MAY</span> be omitted.<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-5">For BaseXX values that do not nicely divide with the 128 bit UUID the padding character may be seen more frequently than others that do have clean byte divisions.<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_checksums">
+<section id="section-4.2.2">
+          <h4 id="name-checksums">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-checksums" class="section-name selfRef">Checksums</a>
+          </h4>
+<p id="section-4.2.2-1">Some newer BaseXX encodings include checksum characters that are used to ensure the input/output encoding and decoding is working as expected.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-2">The actual character and algorithm used varies among BaseXX implementations.<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-3">Including checksums increases both the maximum size of the output encoding and the computation requirements for encoding/decoding alternate UUID formats.<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-4">For alternate UUIDs transmitted among two machines it may be beneficial to include a checksum character to validate the given UUID has not been modified during transport before using it for various operations thus increasing the resiliency of the alternate UUID generation and parsing process.<a href="#section-4.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-5">For applications that simply care about generating UUIDs but do not need to parse, checksums may be omitted entirely.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="best_practice_special">
+<section id="section-4.3">
+        <h3 id="name-special-characters">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-special-characters" class="section-name selfRef">Special Characters</a>
+        </h3>
+<p id="section-4.3-1">After all of the alpha-numeric characters are used a BaseXX alphabet must resort to using special characters such as but not limited to underscore (_), hyphen (-), plus (+), forward slash (/), dollar sign ($), etc. This usually occurs around 62 characters (ten digits 0-9, 26 lowercase english characters, 26 uppercase english characters) but may happen with earlier BaseXX alphabets when specific characters are excluded.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">The inclusion of these characters decrease the overall size of the output UUID but have implications in regards to not just sorting and readability but often application usage. For example Base64 as defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span> has two alphabets which change the special characters to ensure safe usage with URLs and Filenames. When evaluating a baseXX encoding, care must be taken to ensure the special characters are compatible with the desired use case.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_exclusions">
+<section id="section-4.4">
+        <h3 id="name-character-exclusions">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-character-exclusions" class="section-name selfRef">Character Exclusions</a>
+        </h3>
+<p id="section-4.4-1">Newer BaseXX alphabet may exclude characters and keep only one value present.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">This often occurs when multiple characters are similar in shape which which may lead to issues when humans are required to read the characters aloud or manually transpose the characters by hand. Some characters may be excluded for other reasons. For example it may be advantageous to remove 0 as a possible option to eliminate the possibility of leading 0s in the output data which may lead to problems in specific use cases where leading 0s are not permitted or may be inadvertently removed by the application. Finally, in some smaller BaseXX alphabets it is possible to exclude characters because they are not required to fill out the space. The notable example is Base32hex defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span> which only uses A through V because the remaining slots are filled by numeric 0-9.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The following character groupings illustrate some of the problematic characters that are similarly shaped.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-4">
+<pre>
+- 0, O, o
+- 1, I, i, L, l
+- 2, Z, z
+- V, v, U, u
+</pre><a href="#section-4.4-4" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-5">Unfortunately there is no standard for which character is omitted or removed. Some BaseXX alphabets may remove the numeric characters while others may remove one or both of the english characters often replacing them with symbols in larger BaseXX alphabets to fill the gaps.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-6">Implementations should vet BaseXX alphabets with character exclusions thoroughly to ensure any possible inclusion of symbols does not cause problems while also verifying that sorting is not impacted if sorting is a requirement.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_sensitivity">
+<section id="section-4.5">
+        <h3 id="name-case-sensitivity">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-case-sensitivity" class="section-name selfRef">Case Sensitivity</a>
+        </h3>
+<p id="section-4.5-1">Case Sensitivity becomes important when the alphabet is above 32 characters. For alphabets below Base32, such as Base16, uppercase (A-Z) and lowercase (a-z) characters may be used interchangeably however in larger BaseXX alphabets the uppercase and lowercase alphabetic characters represent distinct output encodings.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-2">In most scenarios uppercase are placed before lowercase counterparts in the ordering. This ordering directly impacts sorting since most applications will sort uppercase characters before lowercase characters.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.5-3">The BaseXX alphabet used also changes comparison logics where "aBc does not necessarily qual "AbC" in all output encodings.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_sorting">
+<section id="section-4.6">
+        <h3 id="name-sorting-and-ordering">
+<a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-sorting-and-ordering" class="section-name selfRef">Sorting and Ordering</a>
+        </h3>
+<p id="section-4.6-1">Lexicographical sorting of UUIDs is a very important factor to many applications and the ordering of the BaseXX alphabet directly impacts the sorting of the encoded UUID output.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-2">The alphabets generally consist of two or more of the following 4 components with optional omissions as defined by <a href="#best_practice_exclusions" class="auto internal xref">Section 4.4</a>:<a href="#section-4.6-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.6-3">
+<pre>
+1. Numeric Characters: 0-9
+2. Uppercase Character: A-Z
+3. Lowercase Characters: a-z
+4. Symbols: underscore (_), hyphen (-), plus (+), forward slash (/), dollar sign ($), etc.
+</pre><a href="#section-4.6-3" class="pilcrow">¶</a>
+</div>
+<p id="section-4.6-4">The ordering of these is traditionally Numeric, Uppercase, Lowercase and Symbols.<a href="#section-4.6-4" class="pilcrow">¶</a></p>
+<p id="section-4.6-5">It should be noted that some symbols like the dollar sign ($) may sort before numbers while other special such as an underscore (_) will be sorted after the uppercase characters but before the lowercase characters if sorted via their ASCII values.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
+<p id="section-4.6-6">If an implementation would like to ensure the sort order of the encoded value remains the same as the Base02 (binary) or Base10 (integer) value one should scrutinize the position of the underlying BaseXX alphabets, their ordering and the includes symbols.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
+<p id="section-4.6-7">Some Examples to illustrate the ordering trends:<a href="#section-4.6-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.6-8">
+<pre>
+- Base10: 0123456789
+- Base36: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
+- Base62: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+- Base64: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
+</pre><a href="#section-4.6-8" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="best_practice_availability">
+<section id="section-4.7">
+        <h3 id="name-encoding-availability">
+<a href="#section-4.7" class="section-number selfRef">4.7. </a><a href="#name-encoding-availability" class="section-name selfRef">Encoding Availability</a>
+        </h3>
+<p id="section-4.7-1">The BaseXX alphabet encoding availability may be the second greatest hurdle implementations navigate as they chose a viable alternate encoding for UUID.<a href="#section-4.7-1" class="pilcrow">¶</a></p>
+<p id="section-4.7-2">For example, traditional Base64 url safe sees far more implementations than Base32hex while even fewer have implemented Base62 or even Crockford's Base32 variant.<a href="#section-4.7-2" class="pilcrow">¶</a></p>
+<p id="section-4.7-3">The ability to utilize a given encoding or provide a customized alphabet is often a limiting factor in implementations. Implementors will need to write their own, leverage third-party libraries or select a viable alternative.<a href="#section-4.7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_computation">
+<section id="section-4.8">
+        <h3 id="name-computation">
+<a href="#section-4.8" class="section-number selfRef">4.8. </a><a href="#name-computation" class="section-name selfRef">Computation</a>
+        </h3>
+<p id="section-4.8-1">The various base encodings have more or less computational requirements based on the size of the alphabet, the total number of bits encoded per character, if checksums are involved, and if floating point math is required.<a href="#section-4.8-1" class="pilcrow">¶</a></p>
+<p id="section-4.8-2">For reference Base02 uses 2 bits per character encoding while Base10 uses 4 bits per character and Base32 uses 5 bits and Base64 uses 6 bits.
+While non non-power-of-two alphabet BaseXX alphabets like Base36, Base58 or Base62 use 5.16, 5.86 5.95 bits respectively where computation is log2(XX) and XX is the alphabet length.<a href="#section-4.8-2" class="pilcrow">¶</a></p>
+<p id="section-4.8-3">Base62 is desirable by being the largest BaseXX alphabet to use only alpha-numeric symbols but it comes with the tradeoff of slightly more complicated computations.<a href="#section-4.8-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_applications">
+<section id="section-4.9">
+        <h3 id="name-application-specific">
+<a href="#section-4.9" class="section-number selfRef">4.9. </a><a href="#name-application-specific" class="section-name selfRef">Application Specific</a>
+        </h3>
+<p id="section-4.9-1">Some applications have very specific restrictions which may influence the alternate UUID encoding selection. This is a limited list compiling some known restrictions that implementations may consider while working with alternate UUID encodings.<a href="#section-4.9-1" class="pilcrow">¶</a></p>
+<div id="best_practice_uri_url_urn">
+<section id="section-4.9.1">
+          <h4 id="name-uri-url-urn">
+<a href="#section-4.9.1" class="section-number selfRef">4.9.1. </a><a href="#name-uri-url-urn" class="section-name selfRef">URI, URL, URN</a>
+          </h4>
+<p id="section-4.9.1-1">Uniform Resource Identifiers (URIs) have a specific list of reserved characters defined by <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-2.2" class="relref">Section 2.2</a></span> which require percent encoding to be used.<a href="#section-4.9.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.9.1-2">It is advisable to avoid these using BaseXX alphabets that include these symbols.<a href="#section-4.9.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_dns">
+<section id="section-4.9.2">
+          <h4 id="name-dns-record">
+<a href="#section-4.9.2" class="section-number selfRef">4.9.2. </a><a href="#name-dns-record" class="section-name selfRef">DNS Record</a>
+          </h4>
+<p id="section-4.9.2-1">Domain Name Systems (DNS) are case insensitive with the period or dot character (.) being a reserved symbol. <span>[<a href="#RFC9499" class="cite xref">RFC9499</a>], <a href="https://rfc-editor.org/rfc/rfc9499#section-2" class="relref">Section 2</a></span><a href="#section-4.9.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.9.2-2">Thus BaseXX alphabets that utilize this character or use upper and lowercase values as defined by {#best_practice_sensitivity} should be avoided.<a href="#section-4.9.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="best_practice_markup">
+<section id="section-4.9.3">
+          <h4 id="name-xml-html-css">
+<a href="#section-4.9.3" class="section-number selfRef">4.9.3. </a><a href="#name-xml-html-css" class="section-name selfRef">XML, HTML, CSS</a>
+          </h4>
+<p id="section-4.9.3-1">Extensible Markup Language (<span>[<a href="#XML" class="cite xref">XML</a>]</span>) namespaces cannot start with a leading numeric character.<a href="#section-4.9.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.9.3-2">While older versions of Hypertext Markup Language (<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>}) had restrictions on element identifiers starting with a leading digit. HTML5 does not have any such restrictions.
+The same goes for Cascading Style Sheet (<span>[<a href="#CSS" class="cite xref">CSS</a>]</span>) selectors identifiers where older versions would have issues when identifiers start with digits.<a href="#section-4.9.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.9.3-3">Thus for XML, HTML and CSS is is advantageous to use an alternate UUID encoding such as <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span> to ensure that the first digit is always a alphabet character.<a href="#section-4.9.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="best_practice_other">
+<section id="section-4.10">
+        <h3 id="name-other">
+<a href="#section-4.10" class="section-number selfRef">4.10. </a><a href="#name-other" class="section-name selfRef">Other</a>
+      </h3>
+</section>
+</div>
+</section>
+</div>
+<div id="security_considerations">
+<section id="section-5">
+      <h2 id="name-security-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-5-1">Section <a href="#best_practice_checksums" class="auto internal xref">Section 4.2.2</a> is the only section that deals with any security-related items and this only covers data integrity validation for UUIDs sent across the wire. Otherwise there are no other security considerations.<a href="#section-5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana_considerations">
+<section id="section-6">
+      <h2 id="name-iana-considerations">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-6-1">This document has no IANA actions.<a href="#section-6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-7">
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4648">[RFC4648]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9562">[RFC9562]</dt>
+      <dd>
+<span class="refAuthor">Davis, K.</span>, <span class="refAuthor">Peabody, B.</span>, and <span class="refAuthor">P. Leach</span>, <span class="refTitle">"Universally Unique IDentifiers (UUIDs)"</span>, <span class="seriesInfo">RFC 9562</span>, <span class="seriesInfo">DOI 10.17487/RFC9562</span>, <time datetime="2024-05" class="refDate">May 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9562">https://www.rfc-editor.org/rfc/rfc9562</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="Base62">[Base62]</dt>
+        <dd>
+<span class="refAuthor">Prokhorenko, S.</span>, <span class="refTitle">"Base64 UUID"</span>, <span class="seriesInfo">commit 778a6a4</span>, <time datetime="2025-07" class="refDate">July 2025</time>, <span>&lt;<a href="https://github.com/sergeyprokhorenko/Base64UUID">https://github.com/sergeyprokhorenko/Base64UUID</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="CSS">[CSS]</dt>
+        <dd>
+<span class="refAuthor">W3C</span>, <span class="refTitle">"Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.w3.org/TR/CSS2/syndata.html#value-def-identifier">https://www.w3.org/TR/CSS2/syndata.html#value-def-identifier</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DCB32">[DCB32]</dt>
+        <dd>
+<span class="refAuthor">Crockford, D.</span>, <span class="refTitle">"Douglas Crockford's Base32"</span>, <time datetime="2002-11" class="refDate">November 2002</time>, <span>&lt;<a href="https://www.crockford.com/base32.html">https://www.crockford.com/base32.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="GEOHASH">[GEOHASH]</dt>
+        <dd>
+<span class="refAuthor">Geohash</span>, <span class="refTitle">"Geohash"</span>, <span class="seriesInfo">commit 3f0ce0b</span>, <time datetime="2009-11" class="refDate">November 2009</time>, <span>&lt;<a href="https://github.com/vinsci/geohash/blob/master/Geohash/geohash.py">https://github.com/vinsci/geohash/blob/master/Geohash/geohash.py</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="HTML">[HTML]</dt>
+        <dd>
+<span class="refAuthor">whatwg</span>, <span class="refTitle">"HTML Living Standard"</span>, <time datetime="2025-11" class="refDate">November 2025</time>, <span>&lt;<a href="https://html.spec.whatwg.org/">https://html.spec.whatwg.org/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NCNAME">[NCNAME]</dt>
+        <dd>
+<span class="refAuthor">Taylor, D.</span>, <span class="refTitle">"Compact UUIDs for Constrained Grammars"</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-taylor-uuid-ncname/">https://datatracker.ietf.org/doc/draft-taylor-uuid-ncname/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3986">[RFC3986]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9499">[RFC9499]</dt>
+        <dd>
+<span class="refAuthor">Hoffman, P.</span> and <span class="refAuthor">K. Fujiwara</span>, <span class="refTitle">"DNS Terminology"</span>, <span class="seriesInfo">BCP 219</span>, <span class="seriesInfo">RFC 9499</span>, <span class="seriesInfo">DOI 10.17487/RFC9499</span>, <time datetime="2024-03" class="refDate">March 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9499">https://www.rfc-editor.org/rfc/rfc9499</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XML">[XML]</dt>
+        <dd>
+<span class="refAuthor">W3C</span>, <span class="refTitle">"Namespaces in XML 1.0 (Third Edition)"</span>, <time datetime="2009-12" class="refDate">December 2009</time>, <span>&lt;<a href="https://www.w3.org/TR/2009/REC-xml-names-20091208/">https://www.w3.org/TR/2009/REC-xml-names-20091208/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ZB32">[ZB32]</dt>
+      <dd>
+<span class="refAuthor">O'Whielacronx, Z.</span>, <span class="refTitle">"human-oriented base-32 encoding"</span>, <time datetime="2009-11" class="refDate">November 2009</time>, <span>&lt;<a href="https://philzimmermann.com/docs/human-oriented-base-32-encoding.txt">https://philzimmermann.com/docs/human-oriented-base-32-encoding.txt</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="changelog">
+<section id="appendix-B">
+      <h2 id="name-changelog">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-changelog" class="section-name selfRef">Changelog</a>
+      </h2>
+<p id="appendix-B-1">draft-00:<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="appendix-B-2.1">
+          <p id="appendix-B-2.1.1">Initial Release<a href="#appendix-B-2.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+</section>
+</div>
+<div id="examples">
+<section id="appendix-C">
+      <h2 id="name-example-uuid-base-encodings">
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-example-uuid-base-encodings" class="section-name selfRef">Example UUID Base Encodings</a>
+      </h2>
+<p id="appendix-C-1">The following list of libraries, tools, code, packages and other resources is for illustrative and research purposes.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">Neither the authors or IETF endorse any of these libraries or guarantee their contents safe and harmless.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-3">Install, download or use this software at your own risk.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<div id="base32-base">
+<section id="appendix-C.1">
+        <h3 id="name-base32-base">
+<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-base32-base" class="section-name selfRef">Base32, base</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.1-1">
+<pre>
+- https://github.com/chilts/sid
+- https://www.jsdelivr.com/package/npm/uuid-encoder
+- https://github.com/jetify-com/typeid
+- https://docs.crunchybridge.com/api-concepts/eid
+- https://hackage.haskell.org/package/ron-0.12/docs/RON-UUID.html
+- https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abencl_system_uuid.htm
+</pre><a href="#appendix-C.1-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base32-hex">
+<section id="appendix-C.2">
+        <h3 id="name-base32-hex">
+<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-base32-hex" class="section-name selfRef">Base32, Hex</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.2-1">
+<pre>
+- https://github.com/rs/xid
+</pre><a href="#appendix-C.2-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base32-crockford">
+<section id="appendix-C.3">
+        <h3 id="name-base32-crockford">
+<a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-base32-crockford" class="section-name selfRef">Base32, Crockford</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.3-1">
+<pre>
+- https://github.com/ulid/spec
+- https://codeberg.org/prettyid/python
+- https://ptrchm.com/posts/based-uuid/
+- https://github.com/martinheidegger/uuid-b32
+- https://docs.rs/fast32/latest/fast32/
+- https://uuid.ramsey.dev/en/stable/rfc4122/version7.html
+- https://crates.io/crates/crockford-uuid
+- https://rymc.io/blog/2024/uuidv7-typeids-in-diesel/
+- https://docs.rs/rusty_ulid/latest/rusty_ulid/
+</pre><a href="#appendix-C.3-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base32-ncname">
+<section id="appendix-C.4">
+        <h3 id="name-base32-ncname">
+<a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-base32-ncname" class="section-name selfRef">Base32, NCNAME</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.4-1">
+<pre>
+- https://www.rubydoc.info/gems/uuid-ncname
+</pre><a href="#appendix-C.4-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base32-other">
+<section id="appendix-C.5">
+        <h3 id="name-base32-other">
+<a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-base32-other" class="section-name selfRef">Base32, Other</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.5-1">
+<pre>
+- https://brandur.org/fragments/base32-slugs
+</pre><a href="#appendix-C.5-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base36">
+<section id="appendix-C.6">
+        <h3 id="name-base36-2">
+<a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-base36-2" class="section-name selfRef">Base36</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.6-1">
+<pre>
+- https://github.com/paralleldrive/cuid2
+- https://www.jsdelivr.com/package/npm/uuid-encoder
+- https://duncan99.wordpress.com/2013/01/22/converting-uuid-to-base36/
+- https://github.com/salieri/uuid-encoder
+- https://stackoverflow.com/questions/62059588/shortening-a-guid
+- https://gist.github.com/fabiolimace/508dd2dd9d32fd493b31a5f386d5d4bc
+- https://classic.yarnpkg.com/en/package/base36-uuid
+</pre><a href="#appendix-C.6-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base57">
+<section id="appendix-C.7">
+        <h3 id="name-base57">
+<a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-base57" class="section-name selfRef">Base57</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.7-1">
+<pre>
+- https://github.com/lithammer/shortuuid
+</pre><a href="#appendix-C.7-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base58">
+<section id="appendix-C.8">
+        <h3 id="name-base58-2">
+<a href="#appendix-C.8" class="section-number selfRef">C.8. </a><a href="#name-base58-2" class="section-name selfRef">Base58</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.8-1">
+<pre>
+- https://github.com/cbschuld/uuid-base58
+- https://www.linkedin.com/pulse/advantages-using-base58-unique-identifier-databases-lucian-ivanov
+- https://github.com/AlexanderMatveev/go-uuid-base58
+- https://packagist.org/packages/cbschuld/php-uuid-base58
+- https://classic.yarnpkg.com/en/package/uuid58
+- https://blog.schochastics.net/posts/2024-08-24_short-uuids/
+- https://www.jsdelivr.com/package/npm/uuid-encoder
+</pre><a href="#appendix-C.8-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base62">
+<section id="appendix-C.9">
+        <h3 id="name-base62-2">
+<a href="#appendix-C.9" class="section-number selfRef">C.9. </a><a href="#name-base62-2" class="section-name selfRef">Base62</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.9-1">
+<pre>
+- https://github.com/boundary/flake
+- https://github.com/segmentio/ksuid
+- https://www.jsdelivr.com/package/npm/uuid-encoder
+</pre><a href="#appendix-C.9-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base64">
+<section id="appendix-C.10">
+        <h3 id="name-base64-2">
+<a href="#appendix-C.10" class="section-number selfRef">C.10. </a><a href="#name-base64-2" class="section-name selfRef">Base64</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.10-1">
+<pre>
+- https://github.com/elastic/elasticsearch/blob/main/server/src/main/java/org/elasticsearch/common/UUIDs.java#L23
+- https://github.com/chilts/sid
+- https://github.com/twitter-archive/snowflake
+- https://github.com/ppearcy/elasticflake/blob/master/src/main/java/org/limberware/elasticflake/Base64.java
+- https://www.mongodb.com/docs/manual/reference/method/ObjectId.createFromBase64/
+- https://firebase.blog/posts/2015/02/the-2120-ways-to-ensure-unique_68
+- https://www.jsdelivr.com/package/npm/uuid-encoder
+- https://base64-uuid.com/
+- https://rcfed.com/Utilities/Base64GUID
+- https://toolslick.com/conversion/data/guid
+- https://guidgenerator.com/
+- https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abencl_system_uuid.htm
+</pre><a href="#appendix-C.10-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="base85">
+<section id="appendix-C.11">
+        <h3 id="name-base85-2">
+<a href="#appendix-C.11" class="section-number selfRef">C.11. </a><a href="#name-base85-2" class="section-name selfRef">Base85</a>
+        </h3>
+<div class="alignLeft art-text artwork" id="appendix-C.11-1">
+<pre>
+- https://stackoverflow.com/a/772984
+- http://codehardblog.azurewebsites.net/encoding-uuid-based-keys-to-save-memory/
+- https://gist.github.com/Higgs1/fee62d230bd87257e0b0
+- https://www.npmjs.com/package/pure-uuid
+- https://cjhaas.com/2013/11/12/php-base85-encode-128-bit-integer-guiduuid/
+- https://webpowered.tools/textcodec/
+</pre><a href="#appendix-C.11-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-D">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Kyzer R. Davis</span></div>
+<div dir="auto" class="left"><span class="org">Cisco Systems</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kydavis@cisco.com" class="email">kydavis@cisco.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Brad G. Peabody</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:brad@peabody.io" class="email">brad@peabody.io</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
