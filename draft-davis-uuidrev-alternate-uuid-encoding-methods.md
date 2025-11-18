@@ -155,15 +155,15 @@ Note: All UUID examples in this document are alternate encodings of {{RFC9562, S
 
 ## Base32 {#b32}
 
-Base32 alphabets generally use 5 bits per character to encode the original value and produce a 26 character output which may or may not have padding present for a 128 bit UUID. These Base32 Alphabets include, but are not limited to, the standards based Base32 and Base32hex from {{RFC4648}}, Douglas Crockford's Base32 {{DCB32}}, Z-Base-32 {{ZB32}}, and {{GEOHASH}}.
+Base32 alphabets generally use 5 bits per character to encode the original value and produce a 26 character output which may or may not have padding present for a 128 bit UUID. These Base32 Alphabets include, but are not limited to, the standards based Base32 from {{RFC4648, Section 6}}, Base32hex from {{RFC4648, Section 7}}, Douglas Crockford's Base32 {{DCB32}}, Z-Base-32 {{ZB32}}, and {{GEOHASH}}.
 
 Base32 alphabets tend to have the most variance between the characters used by the various alphabets since the implementors can be a bit more selective in what characters are present. {{best_practice_exclusions}}{: format="title"}, alphabet {{best_practice_sorting}}{: format="title"} are almost always present with little overlap between the various implementations.
 
-Base32 tends to be case insensitive since lowercase character a-z are often treated the same as uppercase A-Z and not required to fill out the underlying alphabet. Finally, {{best_practice_special}}{: format="title"} are not usually used with Base32 encoding unless for {{best_practice_padding}}{: format="title"} or {{best_practice_checksums}}{: format="title"} features which can usually be omitted entirely.
+Base32 tends to be case insensitive since lowercase character a-z are often treated the same as uppercase A-Z and not required to fill out the underlying alphabet. Finally, {{best_practice_special}}{: format="title"} are not usually used with Base32 encoding unless for {{best_practice_padding}}{: format="title"} or {{best_practice_checksums}}{: format="title"} features which can usually be omitted entirely. There are far too many other Base32 Alphabet variants to cover in this document. As such refer to {{best_practices}}{: format="title"} while selecting an alternate Base32 alphabet not listed in this section.
 
 Base32 is a great choice for implementations where it is available with either Base32hex {{RFC4648}} or Douglas Crockford's Base32 {{DCB32}} being the recommended option for a 26 character UUID that provides a lot of great features for machine or human interactions.
 
-Z-Base-32 {{ZB32}}{: format="title"} makes to many changes to the underlying alphabet for a very custom use-case to be recommend. While {{GEOHASH}} is closer to Base32hex with some characters removed as seen in Douglas Crockford's Base32 {{DCB32}} it is possible that the {{best_practice_availability}}{: format="title"} may prove challenging for implementors.
+Z-Base-32 {{ZB32}}{: format="title"} makes to many changes to the underlying alphabet order to accommodate a very custom use-case and cannot be recommended for use with UUID. Although {{GEOHASH}} is closer to Base32hex with some specific characters removed as seen in Douglas Crockford's Base32 {{DCB32}} the logic of removing trailing zero's is a something that no other library does. Further it is possible that the {{best_practice_availability}}{: format="title"} may prove challenging for implementors trying to leverage GEOHASH Base32 in their applications. Finally, the regular Base32 from from {{RFC4648, Section 6}} is a fine choice but when compared to base32hex the sorting benefits make it a superior alphabet.
 
 ~~~
 V0EKVBJTTG8T19R502GCI7JBUO
@@ -176,16 +176,27 @@ Z0EMZBKXXG8X19V502GCJ7KBYR
 {: #sampleBase32Crockford title='Example UUID encoded as Douglas Crockford's Base32'}
 
 TODO add NCNAME
+TODO mention Base32-SLUGS?
 
 ## Base36 {#b36}
 
+TODO Base36
+
 ## Base58 {#b58}
+
+TODO NCNAME, Bitcoin
 
 ## Base62 {#b62}
 
+TODO IEEE Base62
+
 ## Base64 {#b64}
 
+TODO Base64 Base, URl Safe, NCNAME, Base64UUID
+
 ## Base85 {#b85}
+
+TODO ASCII85 (BTOA), Z85
 
 # UUID Encoding Best Practices {#best_practices}
 
@@ -350,6 +361,8 @@ Thus for XML, HTML and CSS is is advantageous to use an alternate UUID encoding 
 
 ## Other {#best_practice_other}
 
+TODO COPYING, PARSING
+
 # Security Considerations {#security_considerations}
 
 Section {{best_practice_checksums}} is the only section that deals with any security-related items and this only covers data integrity validation for UUIDs sent across the wire. Otherwise there are no other security considerations.
@@ -372,6 +385,10 @@ draft-00:
 
 {: spacing="compact"}
 - Initial Release
+
+# Test Vectors {#test_vectors}
+
+TODO test vector encoding for any UUID present in 9562 text and appendix
 
 # Example UUID Base Encodings {#examples}
 
