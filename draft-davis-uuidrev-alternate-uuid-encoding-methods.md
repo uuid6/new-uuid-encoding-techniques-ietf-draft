@@ -274,6 +274,7 @@ The following character groupings illustrate some of the problematic characters 
 - 0, O, o
 - 1, I, i, L, l
 - 2, Z, z
+- 5, S, s
 - V, v, U, u
 ~~~
 
