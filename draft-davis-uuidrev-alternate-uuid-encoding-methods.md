@@ -95,21 +95,48 @@ informative:
     author:
     - org: IEEE
     date: 2008-11
+  Base64sort:
     target: https://github.com/sergeyprokhorenko/Base64UUID
-    title: Base64 UUID
+    title: Base64 Sort
     author:
     - name: Sergey Prokhorenko
     date: 2025-07
     seriesinfo:
       commit: 778a6a4
+  Bitcoin:
+    target: https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
+    title: A secure, lossless, and compressed Base62 encoding
+    author:
+    - org: Bitcoin
+    date: 2008-11
+    seriesinfo:
+      commit: fae71d3
+  Flickr:
+    target: https://www.flickr.com/groups/api/discuss/72157616713786392/
+    title: manufacturing flic.kr style photo URLs
+    author:
+    - name: Kellen
+  Base58xrp:
+    target: https://xrpl.org/docs/references/protocol/data-types/base58-encodings
+    title: base58 Encodings
+    author:
+    - org: XRP Ledger
+    date: 2024
+  Z85:
+    target: https://rfc.zeromq.org/spec/32/
+    title: 32/Z85
+    author:
+    - org: iMatix Corporation
+    date: 2013
+
 
 --- abstract
 
-This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods found in the industry. Many of these methods facilitate greater efficiency in storage or transport versus the unnecessarily verbose text representation from {{RFC9562}}.
+This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods observed in the industry.
 
-This document updates {{RFC9562}} to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for our application.
+This document updates {{RFC9562}} to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application.
 
-When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics.
+When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from {{RFC9562}}.
 
 --- middle
 
@@ -122,7 +149,7 @@ Due to this shortcoming savvy programmers have been leveraging alternate encodin
 
 While overhauling RFC4122 content and creating UUIDv6, UUIDv7, and UUIDv8 for RFC9562; one of the largest topics for discussion was that of alternate encodings. This tremendous show of support for the topic has proven that an update is required. This topic grew in length to the point where it needed to be split out of the revision and into a separate document which focuses solely on the topic of alternate UUID Encoding.
 
-This document will cover the most common alternate UUID Encoding methods used in the field while covering the pros and cons for each. The latter half of this document will cover the best practice and considerations that implementations should take into considerations while selecting, implementing and even building new alternate UUID encoding method outside of the items covered in {{alt_encodings}}. These best practices are a result of many years of research, community feedback and inspection of over 55 different alternate UUID encoding implementations across 17 different alphabets. (See {{examples}}.)
+This document will cover the most common alternate UUID Encoding methods used in the field while covering the pros and cons for each. The latter half of this document will cover the best practice and considerations that implementations should factor in while selecting, implementing and even building new alternate UUID encoding method outside of the items covered in {{alt_encodings}}{: format="title"}. These best practices are a result of many years of research, community feedback and inspection of over 55 different alternate UUID encoding implementations across 17 different alphabets. (See {{examples}}{: format="title"}.)
 
 # Terminology
 
@@ -143,27 +170,29 @@ BaseXX
 
 # Alternate UUID Encoding Methods {#alt_encodings}
 
-{{RFC9562, Section 4}} details that at its core any given UUID is a 128 bit value which can be represented as Base02 (binary), base10 (integer), base16 (hex) and even a custom "hex-and-dash" string format which is Base16 (hex) with a few extra dash characters added to create a unique UUID string format that is instantly recognizable. Further, the section goes on to discuss other string formats that often use the Hex and Dash format or Integer format.
+{{RFC9562, Section 4}} details that at its core, any given UUID is a 128 bit value which can be represented as Base02 (binary), Base10 (decimal), base16 (hex) and even a custom "hex-and-dash" string format; which is Base16 (hex) with a few extra dash characters added to create a unique UUID string format that is instantly recognizable. Further, the section goes on to discuss other string formats that often use the Hex and Dash format or Integer format.
 
 While these are the "well known" UUID formats. The truth is that since UUID is a single 128 bit data value. It can be easily transposed and represented by many common BaseXX alphabets.
 
 The sheer number combinations of BaseXX Alphabets coupled with the various considerations found in {{best_practices}} make it impossible to cover every single BaseXX Alphabet combination in a single document. Instead this document will focus on the BaseXX Alphabets that see the most usage in real world implementations.
 
-UUID standard library implementors SHOULD consider adding support for at least one alternate encoding defined in this document and MAY provide support for more including those not listed in this document. Refer to the various considerations found in {{best_practices}} if creating or implementing a BaseXX Alphabet for UUID that is not covered already in the following sections.
+UUID standard library implementors SHOULD consider adding support for at least one alternate encoding defined in this document and MAY provide support for more; including those not listed in this document. if creating or implementing a BaseXX Alphabet for UUID that is not covered already in the following sections refer to the various considerations found in {{best_practices}}{: format="title"}.
 
 Note: All UUID examples in this document are alternate encodings of {{RFC9562, Section 4}}'s Example UUID starting from either Figure 2 (binary) or Figure 3 (integer).
 
 ## Base32 {#b32}
 
-Base32 alphabets generally use 5 bits per character to encode the original value and produce a 26 character output which may or may not have padding present for a 128 bit UUID. These Base32 Alphabets include, but are not limited to, the standards based Base32 from {{RFC4648, Section 6}}, Base32hex from {{RFC4648, Section 7}}, Douglas Crockford's Base32 {{DCB32}}, Z-Base-32 {{ZB32}}, and {{GEOHASH}}.
+Base32 alphabets generally use 5 bits per character to encode the original value and produce a 26 character output which likely have padding present when encoding a 128 bit UUID. These Base32 Alphabets include, but are not limited to, the standards based Base32 from {{RFC4648, Section 6}}, Base32hex from {{RFC4648, Section 7}}, Douglas Crockford's Base32 {{DCB32}}, Z-Base-32 {{ZB32}}, and {{GEOHASH}}.
 
-Base32 alphabets tend to have the most variance between the characters used by the various alphabets since the implementors can be a bit more selective in what characters are present. {{best_practice_exclusions}}{: format="title"}, alphabet {{best_practice_sorting}}{: format="title"} are almost always present with little overlap between the various implementations.
+Base32 alphabets tend to feature the most variance between the characters used by the underlying alphabet since the implementors can be more selective with exactly what characters are present. {{best_practice_exclusions}}{: format="title"}, alphabet {{best_practice_sorting}}{: format="title"} are almost always present with little overlap between the various implementations.
 
-Base32 tends to be case insensitive since lowercase character a-z are often treated the same as uppercase A-Z and not required to fill out the underlying alphabet. Finally, {{best_practice_special}}{: format="title"} are not usually used with Base32 encoding unless for {{best_practice_padding}}{: format="title"} or {{best_practice_checksums}}{: format="title"} features which can usually be omitted entirely. There are far too many other Base32 Alphabet variants to cover in this document. As such refer to {{best_practices}}{: format="title"} while selecting an alternate Base32 alphabet not listed in this section.
+Base32 tends to be case insensitive since lowercase character a-z are often treated the same as uppercase A-Z due to the fact that the distinct characters are not required to fill out the underlying alphabet. Finally, {{best_practice_special}}{: format="title"} are not usually used with Base32 encoding unless for {{best_practice_padding}}{: format="title"} or {{best_practice_checksums}}{: format="title"} features which can usually be omitted entirely.
 
-Base32 is a great choice for implementations where it is available with either Base32hex {{RFC4648}} or Douglas Crockford's Base32 {{DCB32}} being the recommended option for a 26 character UUID that provides a lot of great features for machine or human interactions.
+Base32 is a great choice for UUID implementations where it is available. Either Base32hex {{RFC4648}} or Douglas Crockford's Base32 {{DCB32}} are both recommended options for a 26 character UUID that provides a lot of great features for either machine or human interactions. An example of a UUID using Base32hex can be observed in {{sampleBase32HexUUID}} with a second example for Crockford's Base32 shown in {{sampleBase32Crockford}}.
 
-Z-Base-32 {{ZB32}}{: format="title"} makes to many changes to the underlying alphabet order to accommodate a very custom use-case and cannot be recommended for use with UUID. Although {{GEOHASH}} is closer to Base32hex with some specific characters removed as seen in Douglas Crockford's Base32 {{DCB32}} the logic of removing trailing zero's is a something that no other library does. Further it is possible that the {{best_practice_availability}}{: format="title"} may prove challenging for implementors trying to leverage GEOHASH Base32 in their applications. Finally, the regular Base32 from from {{RFC4648, Section 6}} is a fine choice but when compared to base32hex the sorting benefits make it a superior alphabet.
+Z-Base-32 {{ZB32}}{: format="title"} makes to many changes to the underlying alphabet in order to accommodate a very custom use-case and cannot be recommended for use with UUID. Although {{GEOHASH}} is closer to Base32hex, featuring some specific characters excluded as also seen in Douglas Crockford's Base32 {{DCB32}}; the logic of removing trailing zero's is a something that no other BaseXX Alphabet does. Further it is possible that the {{best_practice_availability}}{: format="title"} may prove challenging for implementors trying to leverage GEOHASH Base32 in their applications. Finally, the regular Base32 from from {{RFC4648, Section 6}} is a fine choice but when compared to base32hex; the sorting benefits make it a superior alphabet.
+
+There are far too many other Base32 Alphabet variants to cover in this document. As such refer to {{best_practices}}{: format="title"} while selecting an alternate Base32 alphabet not listed in this section.
 
 ~~~
 V0EKVBJTTG8T19R502GCI7JBUO
@@ -175,28 +204,43 @@ Z0EMZBKXXG8X19V502GCJ7KBYR
 ~~~
 {: #sampleBase32Crockford title='Example UUID encoded as Douglas Crockford's Base32'}
 
-TODO add NCNAME
-TODO mention Base32-SLUGS?
-
 ## Base36 {#b36}
 
-TODO Base36
+Base36 Alphabets are similar to Base32 in most every area but utilize 5.1699 bits per encoded character to reduce the size of a 128 bit UUID to 25 characters. The other main difference is using entirely uppercase A-Z characters which impacts {{best_practice_sensitivity}}{: format="title"}. The most common Base36 Alphabet uses digits 0-9 and then uppercase A-Z. While the opposite (A-Z0-9) is possible, this impacts {{best_practice_sorting}}{: format="title"} thus it is rarely observed.
+
+While the Base36 alphabet sees widespread {{best_practice_availability}}{: format="title"} it is edged out slightly by the overwhelming availability of Base32 Alphabets. Further the alphabet offers such little performance gains when compared to base32hex or Crockford's Base32 that it cannot be recommended as a must have encoding for all UUID implementations.
+
+## Base52 {#b52}
+
+TODO Base52
 
 ## Base58 {#b58}
 
-TODO NCNAME, Bitcoin
+Base58, traditionally used by {{Bitcoin}} (and {{Flickr}}) is a fairly popular alphabet which features similar, but not quite the same, {{best_practice_exclusions}}{: format="title"}  as Crockford's Base32. Base58 can fit an 128 bit UUID into a 22 character encoding comprising 5.857 bits per character. The encoding does not traditionally leverage {{best_practice_padding}}{: format="title"} and there is little to zero variance among Base58 alphabets with the notable exception being the {{Base58xrp}} alphabet which features a highly customized order to accommodate very specific data inputs.
 
 ## Base62 {#b62}
 
-TODO IEEE Base62
+{{Base62}} defined by the IEEE is the largest BaseXX Alphabet to contain no {{best_practice_special}}{: format="title"}. Base62 can encode a 128 bit UUID as a 22 character output similar to {{b58}} alphabets using 5.954 bits per character. During research for this document little was observed for libraries, tools or discussion about using this alphabet for encoding UUIDs.
+
+TODO review the IEEE specification again and flesh out this section or drop it entirely.
 
 ## Base64 {#b64}
 
-TODO Base64 Base, URl Safe, NCNAME, Base64UUID
+Base64 Alphabets are the first alphabets to require {{best_practice_special}}{: format="title"} in order to fill out the alphabet sufficiently. As a result these usually do not feature {{best_practice_exclusions}}{: format="title"}. Base64 can encode a 128 bit UUID as a 22 character value similarly to {{b58}} and {{b62}} while using a full 6 bits per character.
+
+Alphabets vary widely among implementation bases with those found in {{RFC4648, Section 4}} as Base64 and {{RFC4648, Section 5}} as Base65url being the two observed the most in the field by implementations already performing alternate UUID Encoding methods. With the introduction of symbols there are a near infinite number of permutations for a Base64 Alphabet. Thus covering them all in this document is not possible. When selecting a Base64 algorithm refer to {{best_practice_usage}}{: format="title"}.
+
+Base64 is recommended as an encoding for alternate UUIDs that want the most compact form possible with the least number of intrusive special characters. Alphabets like Base65url {{RFC4648, Section 5}} is encouraged for most use cases while {{base64sort}} is encouraged when lexicographical sort order is of the utmost importance.
+
+TODO Examples
 
 ## Base85 {#b85}
 
-TODO ASCII85 (BTOA), Z85
+Base85 uses 4 bytes encoded as 5 characters representing 6.409 bits per character. Thus a 128 bit UUID can be represented as 20 characters. This alphabet features the most {{best_practice_special}}{: format="title"} but offers the most compact UUID found in the field. These alphabets tend to vary with {{Z85}}, {{Base85}} and {{ASCII85}} being the dominant standouts among the crowd.
+
+Base85 Alphabets often employ two techniques not seen in other alphabets using the characters "Y" or "Z" to denote a four byte sequence of ASCII Space characters or zeros.
+
+TODO flesh references for ASCII85 and BASE85 (Adobe) while discussing more on the topic of the Y/Z characters. (Should that be a best_practice section) "coalescing nullish characters"
 
 # UUID Encoding Best Practices {#best_practices}
 
@@ -222,7 +266,7 @@ UUIDs used by Internet of Things (IoT) Devices may lean towards an alternate enc
 
 The number of characters in a given encoding alphabet is directly correlated to the size of the alternate UUID encoding output.
 
-As a starting point the encodings defined by RFC9562 are Binary, Integer, and Hex. Base02 (Binary) version of a UUID is 128 characters in length consisting of 0s and 1s.The Base10 (Integer) version of a UUID is 39 characters consisting of characters 0 through 9 while the Base16 (Hex) version of a UUID shortens this to 32 characters by using characters 0 through 9 and A through F.
+As a starting point the encodings defined by RFC9562 are Binary, Integer, and Hex. Base02 (Binary) version of a UUID is 128 characters in length consisting of 0s and 1s.The Base10 (decimal) version of a UUID is 39 characters consisting of characters 0 through 9 while the Base16 (Hex) version of a UUID shortens this to 32 characters by using characters 0 through 9 and A through F.
 
 Base32 libraries tend to produce a UUID output of 26 characters in length and base64 drops the output UUID to 22 characters.
 
@@ -307,7 +351,7 @@ The ordering of these is traditionally Numeric, Uppercase, Lowercase and Symbols
 
 It should be noted that some symbols like the dollar sign ($) may sort before numbers while other special such as an underscore (_) will be sorted after the uppercase characters but before the lowercase characters if sorted via their ASCII values.
 
-If an implementation would like to ensure the sort order of the encoded value remains the same as the Base02 (binary) or Base10 (integer) value one should scrutinize the position of the underlying BaseXX alphabets, their ordering and the includes symbols.
+If an implementation would like to ensure the sort order of the encoded value remains the same as the Base02 (binary) or Base10 (decimal) value one should scrutinize the position of the underlying BaseXX alphabets, their ordering and the includes symbols.
 
 Some Examples to illustrate the ordering trends:
 
