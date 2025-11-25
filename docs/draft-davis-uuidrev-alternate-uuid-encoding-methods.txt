@@ -5,8 +5,8 @@
 uuidrev                                                      K. R. Davis
 Internet-Draft                                             Cisco Systems
 Updates: 9562 (if approved)                                 BGP. Peabody
-Intended status: Standards Track                        17 November 2025
-Expires: 21 May 2026
+Intended status: Standards Track                        25 November 2025
+Expires: 29 May 2026
 
 
                     Alternate UUID Encoding Methods
@@ -15,19 +15,18 @@ Expires: 21 May 2026
 Abstract
 
    This document presents considerations and best practices for
-   alternate Universally Unique Identifier (UUID) encoding methods found
-   in the industry.  Many of these methods facilitate greater efficiency
-   in storage or transport versus the unnecessarily verbose text
-   representation from [RFC9562].
+   alternate Universally Unique Identifier (UUID) encoding methods
+   observed in the industry.
 
    This document updates [RFC9562] to provide suggested alternate
    encoding methods, best practices and the various implementation
-   considerations required for choosing the correct encoding for our
+   considerations required for choosing the correct encoding for an
    application.
 
    When selected correctly; these alternate UUID encodings perform
    better on the wire, in a database, or within various other
-   application logics.
+   application logics versus the unnecessarily verbose text
+   representation from [RFC9562].
 
 About This Document
 
@@ -47,21 +46,17 @@ About This Document
    Source for this draft and an issue tracker can be found at
    https://github.com/uuid6/new-uuid-encoding-techniques-ietf-draft.
 
-
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                  [Page 1]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 1]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
 
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
@@ -73,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 May 2026.
+   This Internet-Draft will expire on 29 May 2026.
 
 Copyright Notice
 
@@ -96,56 +91,68 @@ Table of Contents
      2.1.  Conventions and Definitions . . . . . . . . . . . . . . .   4
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Alternate UUID Encoding Methods . . . . . . . . . . . . . . .   5
-     3.1.  Base32  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     3.2.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.3.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.4.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.5.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.6.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   4.  UUID Encoding Best Practices  . . . . . . . . . . . . . . . .   6
-     4.1.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     4.2.  Maximum Character Length  . . . . . . . . . . . . . . . .   7
-       4.2.1.  Padding . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.1.  Base32  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     3.2.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.3.  Base52  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.4.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.5.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.6.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.7.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   4.  UUID Encoding Best Practices  . . . . . . . . . . . . . . . .  11
+     4.1.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     4.2.  Maximum Character Length  . . . . . . . . . . . . . . . .  12
+     4.3.  Padding Characters  . . . . . . . . . . . . . . . . . . .  13
+     4.4.  Checksum Characters . . . . . . . . . . . . . . . . . . .  14
+     4.5.  Special Characters  . . . . . . . . . . . . . . . . . . .  16
+     4.6.  Character Exclusions  . . . . . . . . . . . . . . . . . .  17
+     4.7.  Case Sensitivity  . . . . . . . . . . . . . . . . . . . .  19
 
 
 
-Davis & Peabody            Expires 21 May 2026                  [Page 2]
+Davis & Peabody            Expires 29 May 2026                  [Page 2]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
 
-       4.2.2.  Checksums . . . . . . . . . . . . . . . . . . . . . .   9
-     4.3.  Special Characters  . . . . . . . . . . . . . . . . . . .   9
-     4.4.  Character Exclusions  . . . . . . . . . . . . . . . . . .  10
-     4.5.  Case Sensitivity  . . . . . . . . . . . . . . . . . . . .  10
-     4.6.  Sorting and Ordering  . . . . . . . . . . . . . . . . . .  11
-     4.7.  Encoding Availability . . . . . . . . . . . . . . . . . .  11
-     4.8.  Computation . . . . . . . . . . . . . . . . . . . . . . .  12
-     4.9.  Application Specific  . . . . . . . . . . . . . . . . . .  12
-       4.9.1.  URI, URL, URN . . . . . . . . . . . . . . . . . . . .  12
-       4.9.2.  DNS Record  . . . . . . . . . . . . . . . . . . . . .  12
-       4.9.3.  XML, HTML, CSS  . . . . . . . . . . . . . . . . . . .  13
-     4.10. Other . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Acknowledgments  . . . . . . . . . . . . . . . . . .  14
-   Appendix B.  Changelog  . . . . . . . . . . . . . . . . . . . . .  15
-   Appendix C.  Example UUID Base Encodings  . . . . . . . . . . . .  15
-     C.1.  Base32, base  . . . . . . . . . . . . . . . . . . . . . .  15
-     C.2.  Base32, Hex . . . . . . . . . . . . . . . . . . . . . . .  15
-     C.3.  Base32, Crockford . . . . . . . . . . . . . . . . . . . .  15
-     C.4.  Base32, NCNAME  . . . . . . . . . . . . . . . . . . . . .  15
-     C.5.  Base32, Other . . . . . . . . . . . . . . . . . . . . . .  16
-     C.6.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     C.7.  Base57  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     C.8.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     C.9.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     C.10. Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     C.11. Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  17
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
+     4.8.  Sorting and Ordering  . . . . . . . . . . . . . . . . . .  20
+     4.9.  Compressing Nullish Characters  . . . . . . . . . . . . .  22
+     4.10. Encoding Availability . . . . . . . . . . . . . . . . . .  23
+     4.11. Computation . . . . . . . . . . . . . . . . . . . . . . .  23
+     4.12. Application Specific  . . . . . . . . . . . . . . . . . .  24
+       4.12.1.  URI, URL, URN  . . . . . . . . . . . . . . . . . . .  24
+       4.12.2.  DNS Record . . . . . . . . . . . . . . . . . . . . .  25
+       4.12.3.  XML, HTML, CSS . . . . . . . . . . . . . . . . . . .  25
+   5.  Parsing . . . . . . . . . . . . . . . . . . . . . . . . . . .  25
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  26
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  26
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  26
+   Appendix A.  Acknowledgments  . . . . . . . . . . . . . . . . . .  28
+   Appendix B.  Changelog  . . . . . . . . . . . . . . . . . . . . .  28
+   Appendix C.  Test Vectors . . . . . . . . . . . . . . . . . . . .  28
+     C.1.  Generic UUID  . . . . . . . . . . . . . . . . . . . . . .  28
+     C.2.  NIL UUID  . . . . . . . . . . . . . . . . . . . . . . . .  29
+     C.3.  MAX UUID  . . . . . . . . . . . . . . . . . . . . . . . .  30
+     C.4.  UUIDv1  . . . . . . . . . . . . . . . . . . . . . . . . .  31
+     C.5.  UUIDv3  . . . . . . . . . . . . . . . . . . . . . . . . .  32
+     C.6.  UUIDv4  . . . . . . . . . . . . . . . . . . . . . . . . .  32
+     C.7.  UUIDv5  . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     C.8.  UUIDv6  . . . . . . . . . . . . . . . . . . . . . . . . .  34
+     C.9.  UUIDv7  . . . . . . . . . . . . . . . . . . . . . . . . .  35
+     C.10. UUIDv8  . . . . . . . . . . . . . . . . . . . . . . . . .  36
+   Appendix D.  Example UUID Base Encoding Tools, Libraries, and
+           resources . . . . . . . . . . . . . . . . . . . . . . . .  37
+     D.1.  Base32, Base  . . . . . . . . . . . . . . . . . . . . . .  38
+     D.2.  Base32, Hex . . . . . . . . . . . . . . . . . . . . . . .  38
+     D.3.  Base32, Crockford . . . . . . . . . . . . . . . . . . . .  38
+     D.4.  Base32, NCNAME  . . . . . . . . . . . . . . . . . . . . .  38
+     D.5.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .  38
+     D.6.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .  38
+     D.7.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  39
+     D.8.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  39
+     D.9.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  39
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  39
 
 1.  Introduction
 
@@ -155,6 +162,14 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    representation suffers poorly for storage, transmission and
    application parsing.
 
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 3]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
    Due to this shortcoming savvy programmers have been leveraging
    alternate encoding UUIDs for as long as UUIDs have been around.
    Bespoke implementations within a single application or a myriad of
@@ -162,14 +177,6 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    short.  While these solve the problem in a bubble: most applications,
    databases, or standard libraries provide UUIDs as a built-in set of
    functionality which mirror the IETF documents.  If a feature is not
-
-
-
-Davis & Peabody            Expires 21 May 2026                  [Page 3]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
    defined by an applicable specification documents, the implementors
    and maintainers do not write the code and thus the end users do not
    see the feature.  Thus while the problem of alternate encodings has
@@ -188,12 +195,13 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    This document will cover the most common alternate UUID Encoding
    methods used in the field while covering the pros and cons for each.
    The latter half of this document will cover the best practice and
-   considerations that implementations should take into considerations
-   while selecting, implementing and even building new alternate UUID
-   encoding method outside of the items covered in Section 3.  These
-   best practices are a result of many years of research, community
-   feedback and inspection of over 55 different alternate UUID encoding
-   implementations across 17 different alphabets.  (See Appendix C.)
+   considerations that implementations should factor in while selecting,
+   implementing and even building new alternate UUID encoding method
+   outside of the items covered in Alternate UUID Encoding Methods.
+   These best practices are a result of many years of research,
+   community feedback and inspection of over 55 different alternate UUID
+   encoding implementations across 17 different alphabets.  (See Example
+   UUID Base Encoding Tools, Libraries, and resources.)
 
 2.  Terminology
 
@@ -211,30 +219,26 @@ Internet-Draft           alternate-uuid-encoding           November 2025
 
    UUID          Universally Unique Identifier [RFC9562]
 
-   BaseXX        Base where XX references two numeric values with any
-                 leading 0 kept.  For example Base02, Base10, Base16,
-                 Base32, Base64, etc.
 
 
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                  [Page 4]
+Davis & Peabody            Expires 29 May 2026                  [Page 4]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
 
+   BaseXX        Base where XX references two numeric values with any
+                 leading 0 kept.  For example Base02, Base10, Base16,
+                 Base32, Base64, etc.
+
 3.  Alternate UUID Encoding Methods
 
-   [RFC9562], Section 4 details that at its core any given UUID is a 128
-   bit value which can be represented as Base02 (binary), base10
-   (integer), base16 (hex) and even a custom "hex-and-dash" string
-   format which is Base16 (hex) with a few extra dash characters added
-   to create a unique UUID string format that is instantly recognizable.
-   Further, the section goes on to discuss other string formats that
-   often use the Hex and Dash format or Integer format.
+   [RFC9562], Section 4 details that at its core, any given UUID is a
+   128 bit value which can be represented as Base02 (binary), Base10
+   (decimal/integer), base16 (hex) and even a custom "hex-and-dash"
+   string format; which is Base16 (hex) with a few extra dash characters
+   added to create a unique UUID string format that is instantly
+   recognizable.  Further, the section goes on to discuss other string
+   formats that often use the Hex and Dash format or Integer format.
 
    While these are the "well known" UUID formats.  The truth is that
    since UUID is a single 128 bit data value.  It can be easily
@@ -243,63 +247,152 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    The sheer number combinations of BaseXX Alphabets coupled with the
    various considerations found in Section 4 make it impossible to cover
    every single BaseXX Alphabet combination in a single document.
-   Instead this document will focus on the BaseXX Alphabets that see the
-   most usage in real world implementations.
+   Instead this document will focus on the BaseXX Alphabets that feature
+   US-ASCII ([RFC20]) which see the most usage in real world
+   implementations or prototyped well during the early phases of
+   creating this document.
 
    UUID standard library implementors SHOULD consider adding support for
    at least one alternate encoding defined in this document and MAY
-   provide support for more including those not listed in this document.
-   Refer to the various considerations found in Section 4 if creating or
-   implementing a BaseXX Alphabet for UUID that is not covered already
-   in the following sections.
+   provide support for more; including those not listed in this
+   document.  If creating or implementing a BaseXX Alphabet for UUID
+   that is not covered already in the following sections refer to the
+   various considerations found in UUID Encoding Best Practices.
 
-   Note: All UUID examples in this document are alternate encodings of
-   [RFC9562], Section 4's Example UUID starting from either Figure 2
-   (binary) or Figure 3 (integer).
-
-3.1.  Base32
-
-   Base32 alphabets generally use 5 bits per character to encode the
-   original value and produce a 26 character output which may or may not
-   have padding present for a 128 bit UUID.  These Base32 Alphabets
-   include, but are not limited to, the standards based Base32 and
-   Base32hex from [RFC4648], Douglas Crockford's Base32 [DCB32],
-   Z-Base-32 [ZB32], and [GEOHASH].
-
-   Base32 alphabets tend to have the most variance between the
-   characters used by the various alphabets since the implementors can
-   be a bit more selective in what characters are present.  Character
-   Exclusions, alphabet Sorting and Ordering are almost always present
-   with little overlap between the various implementations.
+   For an at-a-glance comparison of the alphabets, refer to Table 1.
 
 
 
 
 
 
-Davis & Peabody            Expires 21 May 2026                  [Page 5]
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 5]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
 
-   Base32 tends to be case insensitive since lowercase character a-z are
-   often treated the same as uppercase A-Z and not required to fill out
-   the underlying alphabet.  Finally, Special Characters are not usually
-   used with Base32 encoding unless for Padding or Checksums features
-   which can usually be omitted entirely.
+   +========+============+=====================================================================================+
+   |Encoding|Variant     |Alphabet Order                                                                       |
+   +========+============+=====================================================================================+
+   |Base16  |[RFC9562],  |0123456789ABCDEF with - characters added                                             |
+   |        |Section 4   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base16  |[RFC4648],  |0123456789ABCDEF                                                                     |
+   |        |Section 8   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base32  |[RFC4648],  |ABCDEFGHIJKLMNOPQRSTUVWXYZ234567                                                     |
+   |        |Section 6   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base32  |[RFC4648],  |0123456789ABCDEFGHIJKLMNOPQRSTUV                                                     |
+   |        |Section 7   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base32  |[DCB32]     |0123456789ABCDEFGHJKMNPQRSTVWXYZ                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base36  |---         |0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ                                                 |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base52  |---         |ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz                                 |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base58  |[Bitcoin]   |123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz                           |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base62  |[IEEEBase62]|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789                       |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base64  |[RFC4648],  |ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/                     |
+   |        |Section 4   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base64  |[RFC4648],  |ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_                     |
+   |        |Section 5   |                                                                                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base64  |[Base64sort]|$0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz                     |
+   +--------+------------+-------------------------------------------------------------------------------------+
+   |Base85  |[Z85]       |0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#|
+   +--------+------------+-------------------------------------------------------------------------------------+
 
-   Base32 is a great choice for implementations where it is available
-   with either Base32hex [RFC4648] or Douglas Crockford's Base32 [DCB32]
-   being the recommended option for a 26 character UUID that provides a
-   lot of great features for machine or human interactions.
+               Table 1: Alt UUID Encoding Alphabet Comparison
+
+   Note: All UUID examples in this document are alternate encodings of
+   [RFC9562], Section 4's Example UUID starting from either Figure 2
+   (binary) or Figure 3 (integer).  Each section has a a few example
+   encodings but any UUID featured in RFC9562 can be found in the
+   Appendix C table converted to the corresponding BaseXX Alphabet
+   Encoding.
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 6]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+3.1.  Base32
+
+   Base32 alphabets generally use 5 bits per character to encode the
+   original value and produce a 26 character output which likely have
+   padding present when encoding a 128 bit UUID.  These Base32 Alphabets
+   include, but are not limited to, the standards based Base32 from
+   [RFC4648], Section 6, Base32hex from [RFC4648], Section 7, Douglas
+   Crockford's Base32 [DCB32], Z-Base-32 [ZB32], and [GEOHASH].
+
+   Base32 alphabets tend to feature the most variance between the
+   characters used by the underlying alphabet since the implementors can
+   be more selective with exactly what characters are present.
+   Character Exclusions, alphabet Sorting and Ordering are almost always
+   present with little overlap between the various implementations.
+
+   Base32 tends to be case insensitive since lowercase character a-z are
+   often treated the same as uppercase A-Z due to the fact that the
+   distinct characters are not required to fill out the underlying
+   alphabet.  Finally, Special Characters are not usually used with
+   Base32 encoding unless for Padding Characters or Checksum Characters
+   features which can usually be omitted entirely.
+
+   Base32 is a great choice for UUID implementations where it is
+   available.  Either Base32hex [RFC4648] or Douglas Crockford's Base32
+   [DCB32] are both recommended options for a 26 character UUID that
+   provides a lot of great features for either machine or human
+   interactions.  An example of a UUID using Base32hex can be observed
+   in Figure 1 with a second example for Crockford's Base32 shown in
+   Figure 2.
 
    Z-Base-32 human-oriented base-32 encoding makes to many changes to
-   the underlying alphabet for a very custom use-case to be recommend.
-   While [GEOHASH] is closer to Base32hex with some characters removed
-   as seen in Douglas Crockford's Base32 [DCB32] it is possible that the
-   Encoding Availability may prove challenging for implementors.
+   the underlying alphabet in order to accommodate a very custom use-
+   case and cannot be recommended for use with UUID.  Although [GEOHASH]
+   is closer to Base32hex, featuring some specific characters excluded
+   as also seen in Douglas Crockford's Base32 [DCB32]; the logic of
+   removing trailing zero's is a something that no other BaseXX Alphabet
+   does.  Further it is possible that the Encoding Availability may
+   prove challenging for implementors trying to leverage GEOHASH Base32
+   in their applications.  Finally, the regular Base32 from from
+   [RFC4648], Section 6 is a fine choice but when compared to base32hex;
+   the sorting benefits make it a superior alphabet.
+
+   There are far too many other Base32 Alphabet variants to cover in
+   this document.  As such refer to UUID Encoding Best Practices while
+   selecting an alternate Base32 alphabet not listed in this section.
 
    V0EKVBJTTG8T19R502GCI7JBUO
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 7]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
 
                 Figure 1: Example UUID encoded as Base32 Hex
 
@@ -307,17 +400,167 @@ Internet-Draft           alternate-uuid-encoding           November 2025
 
         Figure 2: Example UUID encoded as Douglas Crockford's Base32
 
-   TODO add NCNAME
-
 3.2.  Base36
 
-3.3.  Base58
+   Base36 Alphabets are similar to Base32 in most every area but utilize
+   5.1699 bits per encoded character to reduce the size of a 128 bit
+   UUID to 25 characters.  The other main difference is using entirely
+   uppercase A-Z characters which impacts Case Sensitivity.  The most
+   common Base36 Alphabet uses digits 0-9 and then uppercase A-Z.  While
+   the opposite (A-Z0-9) is possible, this impacts Sorting and Ordering
+   thus it is rarely observed.
 
-3.4.  Base62
+   While the Base36 alphabet sees widespread Encoding Availability it is
+   edged out slightly by the availability of Base32 Alphabets.  Further
+   the alphabet offers such little performance gains when compared to
+   base32hex or Crockford's Base32 that it cannot be recommended as a
+   must have encoding for all UUID implementations.
 
-3.5.  Base64
+   An example of a UUID using Base36 can be observed in Figure 3.
 
-3.6.  Base85
+   EOSWZOLG3BSX0ZN8OTQ1P8OOM
+
+                  Figure 3: Example UUID encoded as Base36
+
+3.3.  Base52
+
+   Base52 is a custom alphabet consisting of entirely the 52 alphabet
+   characters A-Z and a-z which create a 23 character UUID encoding at
+   5.700 bits per character.
+
+   While this not a very widespread BaseXX Alphabet, it does feature
+   some interesting properties.  This alphabet contains no Special
+   Characters and excludes 0-9 thus it is safe in many scenarios where a
+   leading digit or special character in the encoded output could prove
+   challenging.  This alphabet is ordered in a way that promotes Sorting
+   and Ordering.
+
+   An example of a UUID using Base52 can be observed in Figure 4.
+
+   FraqvVvqUBoEOFXsPYOPwUm
+
+                  Figure 4: Example UUID encoded as Base52
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 8]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+3.4.  Base58
+
+   Base58, traditionally used by [Bitcoin] (and [Flickr]) is a fairly
+   popular alphabet which features similar, but not quite the same,
+   Character Exclusions as Crockford's Base32.  Base58 can fit an 128
+   bit UUID into a 22 character encoding comprising 5.857 bits per
+   character.  The encoding does not traditionally leverage Padding
+   Characters and there is little to zero variance among Base58
+   alphabets with the notable exception being the [Base58xrp] alphabet
+   which features a highly customized order to accommodate very specific
+   data inputs.
+
+   Base58's Encoding Availability is hit or miss but the format is well-
+   known enough to encourage it's use with UUID.
+
+   An example of a UUID using Bitcoin's Base58 can be observed in
+   Figure 5.
+
+   B7wc88dU4e3NyJEj3e944DK
+
+             Figure 5: Example UUID encoded as Bitcoin's Base58
+
+3.5.  Base62
+
+   [IEEEBase62] defined by the IEEE is the largest BaseXX Alphabet to
+   contain no Special Characters.  Base62 can encode a 128 bit UUID as a
+   22 character output similar to Section 3.4 alphabets using 5.954 bits
+   per character.  During research for this document little was observed
+   for libraries, tools or discussion about using this alphabet for
+   encoding UUIDs.
+
+   An example of a UUID using IEEE's Base62 can be observed in Figure 6.
+
+   7YBUWgZR1mKSqGyj9tVViw
+
+              Figure 6: Example UUID encoded as IEEE's Base62
+
+3.6.  Base64
+
+   Base64 Alphabets are the first alphabets to require Special
+   Characters in order to fill out the alphabet sufficiently.  As a
+   result these usually do not feature Character Exclusions.  Base64 can
+   encode a 128 bit UUID as a 22 character value similarly to
+   Section 3.4 and Section 3.5 while using a full 6 bits per character.
+
+   Alphabets vary widely among implementation bases with those found in
+   [RFC4648], Section 4 as Base64 and [RFC4648], Section 5 as Base64url
+   being the two observed the most in the field by implementations
+
+
+
+Davis & Peabody            Expires 29 May 2026                  [Page 9]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   already performing alternate UUID Encoding methods.  With the
+   introduction of symbols there are a near infinite number of
+   permutations for a Base64 Alphabet.  Thus covering them all in this
+   document is not possible.  When selecting a Base64 algorithm refer to
+   Usage.
+
+   Base64 is recommended as an encoding for alternate UUIDs that want
+   the most compact form possible with the least number of intrusive
+   special characters.  Alphabets like Base64url [RFC4648], Section 5 is
+   encouraged for most use cases while [Base64sort] is encouraged when
+   lexicographical sort order is of the utmost importance.
+
+   UUID implementors SHOULD implement Base64url which already features
+   widespread Encoding Availability among the industry as of this
+   specification.
+
+   An example of a UUID using Base64 can be observed in Figure 7 with a
+   second example for Base64url shown in Figure 8.
+
+   +B1Prn3sEdCnZQCgyR5r9g==
+
+                  Figure 7: Example UUID encoded as Base64
+
+   -B1Prn3sEdCnZQCgyR5r9g==
+
+       Figure 8: Example UUID encoded as Base64 URL and Filename safe
+
+3.7.  Base85
+
+   Base85 uses 4 bytes encoded as 5 characters representing 6.409 bits
+   per character.  Thus a 128 bit UUID can be represented as 20
+   characters.  These alphabets features the most Special Characters but
+   offers the most compact UUID found in the field.  These alphabets
+   tend to vary with [Z85], Base85 and ASCII85 being the dominant
+   standouts among the crowd.
+
+   Due to their usage with encoding file contents as detailed in
+   Compressing Nullish Characters.  This specific compression techninque
+   is not seen in [Z85] or other seen in other BaseXX Alphabets.
+
+   Base85 sees some usage in the field with UUIDs and can be used but
+   Z85 is the recommended choice over Base85 or ASCII85.
+
+   An example of a UUID using Z85 can be observed in Figure 9.
+
+   {-iekEE4M)R!2>3:Stl>
+
+        Figure 9: Example UUID encoded as Base85 using Z85 alphabet
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 10]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
 
 4.  UUID Encoding Best Practices
 
@@ -326,17 +569,6 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    important to one use case may not be important to another.  As such
    the authors have compiled all of the various considerations into a
    set of best practice categories in the upcoming sections.
-
-
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                  [Page 6]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
 
    Each section attempts to discuss the topic in relation to its usage
    with UUID however many of the topics below can be generalized into
@@ -376,6 +608,16 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    with Maximum Transmission Unit (MTU) on limited bandwidth, highly
    latent networks.
 
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 11]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
    UUIDs used by Internet of Things (IoT) Devices may lean towards an
    alternate encoding algorithm which is the least computationally
    expensive as these devices are often limited in that respect.
@@ -385,21 +627,12 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    The number of characters in a given encoding alphabet is directly
    correlated to the size of the alternate UUID encoding output.
 
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                  [Page 7]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
    As a starting point the encodings defined by RFC9562 are Binary,
    Integer, and Hex. Base02 (Binary) version of a UUID is 128 characters
-   in length consisting of 0s and 1s.The Base10 (Integer) version of a
-   UUID is 39 characters consisting of characters 0 through 9 while the
-   Base16 (Hex) version of a UUID shortens this to 32 characters by
-   using characters 0 through 9 and A through F.
+   in length consisting of 0s and 1s.  The Base10 (decimal/integer)
+   version of a UUID is 39 characters consisting of characters 0 through
+   9 while the Base16 (Hex) version of a UUID shortens this to 32
+   characters by using characters 0 through 9 and A through F.
 
    Base32 libraries tend to produce a UUID output of 26 characters in
    length and base64 drops the output UUID to 22 characters.
@@ -421,13 +654,63 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    the actual size of the output UUID and nothing else.
 
    To gleam the maximum size of a given BaseXX encoding convert the
-   binary form of UUID MAX from [RFC9562], Section 5.10.
+   binary form of UUID MAX from [RFC9562], Section 5.10.  Table 2
+   details the maximum length of various BaseXX Encoding methods without
+   padding present.
 
-4.2.1.  Padding
 
-   Padding and padding characters go hand in hand with the previous
-   section involving the maximum character length of an output alternate
-   UUID encoding.
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 12]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+      +==========+======================+==========================+
+      | Encoding | Variant              | Maximum Character Length |
+      +==========+======================+==========================+
+      | Base16   | [RFC9562], Section 4 | 36                       |
+      +----------+----------------------+--------------------------+
+      | Base16   | [RFC4648], Section 8 | 32                       |
+      +----------+----------------------+--------------------------+
+      | Base32   | [RFC4648], Section 6 | 26                       |
+      +----------+----------------------+--------------------------+
+      | Base32   | [RFC4648], Section 7 | 26                       |
+      +----------+----------------------+--------------------------+
+      | Base32   | [DCB32]              | 26                       |
+      +----------+----------------------+--------------------------+
+      | Base36   | ---                  | 25                       |
+      +----------+----------------------+--------------------------+
+      | Base52   | ---                  | 23                       |
+      +----------+----------------------+--------------------------+
+      | Base58   | [Bitcoin]            | 22                       |
+      +----------+----------------------+--------------------------+
+      | Base62   | [IEEEBase62]         | 22                       |
+      +----------+----------------------+--------------------------+
+      | Base64   | [RFC4648], Section 4 | 22                       |
+      +----------+----------------------+--------------------------+
+      | Base64   | [RFC4648], Section 5 | 22                       |
+      +----------+----------------------+--------------------------+
+      | Base64   | [Base64sort]         | 22                       |
+      +----------+----------------------+--------------------------+
+      | Base85   | [Z85]                | 20                       |
+      +----------+----------------------+--------------------------+
+
+               Table 2: Alt UUID Encoding Length Comparison
+
+4.3.  Padding Characters
+
+   Padding characters go hand in hand with the previous section
+   involving the maximum character length of an output alternate UUID
+   encoding.
 
    The most common padding character is the equal sign (=) however it
    could theoretically be any character possible.  It is recommended to
@@ -439,32 +722,71 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    SHOULD stay in this position and moving the character can have
    ramifications for sorting.
 
-   The inclusion or removal of the padding character determines if a
-   given alternate encoding is to be fixed-length or a variable-length.
-   If an implementation requires that a given UUID alternate encoding
 
 
 
-Davis & Peabody            Expires 21 May 2026                  [Page 8]
+Davis & Peabody            Expires 29 May 2026                 [Page 13]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
 
+   The inclusion or removal of the padding character determines if a
+   given alternate encoding is to be fixed-length or a variable-length.
+   If an implementation requires that a given UUID alternate encoding
    always be the same length then padding characters MUST be used.  If
    fixed-length outputs are not a problem then the padding character MAY
    be omitted.
 
-   For BaseXX values that do not nicely divide with the 128 bit UUID the
-   padding character may be seen more frequently than others that do
-   have clean byte divisions.
+   Table 3 compares padding usage among the BaseXX encoding methods in
+   this document.
 
-4.2.2.  Checksums
+               +==========+======================+=========+
+               | Encoding | Variant              | Padding |
+               +==========+======================+=========+
+               | Base16   | [RFC9562], Section 4 | N       |
+               +----------+----------------------+---------+
+               | Base16   | [RFC4648], Section 8 | N       |
+               +----------+----------------------+---------+
+               | Base32   | [RFC4648], Section 6 | Y (=)   |
+               +----------+----------------------+---------+
+               | Base32   | [RFC4648], Section 7 | Y (=)   |
+               +----------+----------------------+---------+
+               | Base32   | [DCB32]              | N       |
+               +----------+----------------------+---------+
+               | Base36   | ---                  | N       |
+               +----------+----------------------+---------+
+               | Base52   | ---                  | N       |
+               +----------+----------------------+---------+
+               | Base58   | [Bitcoin]            | N       |
+               +----------+----------------------+---------+
+               | Base62   | [IEEEBase62]         | Y       |
+               +----------+----------------------+---------+
+               | Base64   | [RFC4648], Section 4 | Y (=)   |
+               +----------+----------------------+---------+
+               | Base64   | [RFC4648], Section 5 | Y (=)   |
+               +----------+----------------------+---------+
+               | Base64   | [Base64sort]         | N       |
+               +----------+----------------------+---------+
+               | Base85   | [Z85]                | N       |
+               +----------+----------------------+---------+
+
+               Table 3: Alt UUID Encoding Padding Comparison
+
+4.4.  Checksum Characters
 
    Some newer BaseXX encodings include checksum characters that are used
    to ensure the input/output encoding and decoding is working as
    expected.
 
-   The actual character and algorithm used varies among BaseXX
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 14]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   The actual character and algorithm used vary among BaseXX
    implementations.
 
    Including checksums increases both the maximum size of the output
@@ -478,9 +800,49 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    generation and parsing process.
 
    For applications that simply care about generating UUIDs but do not
-   need to parse, checksums may be omitted entirely.
+   need to parse, checksums may be omitted entirely.  Table 4 compares
+   checksum usage among the BaseXX encoding methods in this document.
 
-4.3.  Special Characters
+          +==========+======================+==================+
+          | Encoding | Variant              | Checksums        |
+          +==========+======================+==================+
+          | Base16   | [RFC9562], Section 4 | N                |
+          +----------+----------------------+------------------+
+          | Base16   | [RFC4648], Section 8 | N                |
+          +----------+----------------------+------------------+
+          | Base32   | [RFC4648], Section 6 | N                |
+          +----------+----------------------+------------------+
+          | Base32   | [RFC4648], Section 7 | N                |
+          +----------+----------------------+------------------+
+          | Base32   | [DCB32]              | Y (*,~,$,=,U,u)  |
+          +----------+----------------------+------------------+
+          | Base36   | ---                  | N                |
+          +----------+----------------------+------------------+
+          | Base52   | ---                  | N                |
+          +----------+----------------------+------------------+
+          | Base58   | [Bitcoin]            | Y (SHA256-based) |
+          +----------+----------------------+------------------+
+          | Base62   | [IEEEBase62]         | N                |
+          +----------+----------------------+------------------+
+          | Base64   | [RFC4648], Section 4 | N                |
+          +----------+----------------------+------------------+
+          | Base64   | [RFC4648], Section 5 | N                |
+          +----------+----------------------+------------------+
+          | Base64   | [Base64sort]         | N                |
+          +----------+----------------------+------------------+
+          | Base85   | [Z85]                | N                |
+          +----------+----------------------+------------------+
+
+              Table 4: Alt UUID Encoding Checksum Comparison
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 15]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+4.5.  Special Characters
 
    After all of the alpha-numeric characters are used a BaseXX alphabet
    must resort to using special characters such as but not limited to
@@ -491,25 +853,106 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    excluded.
 
    The inclusion of these characters decrease the overall size of the
-   output UUID but have implications in regards to not just sorting and
+   encoded UUID but have implications in regards to not just sorting and
    readability but often application usage.  For example Base64 as
    defined by [RFC4648] has two alphabets which change the special
-   characters to ensure safe usage with URLs and Filenames.  When
-   evaluating a baseXX encoding, care must be taken to ensure the
-   special characters are compatible with the desired use case.
+   characters to ensure safe usage with URLs and Filenames.  Another
+   example is the ability to double-click a UUID and copy the value.
+   When special characters are present the text highlight starts and
+   stops between these characters.  In such a scenario, if this is
+   important one should implement a BaseXX Alphabet with no such
+   characters.
+
+   When evaluating a baseXX encoding, care must be taken to ensure the
+   special characters are compatible with the desired use case.  Table 5
+   compares special character inclusions among the BaseXX encoding
+   methods in this document.
 
 
 
 
-Davis & Peabody            Expires 21 May 2026                  [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 16]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
 
-4.4.  Character Exclusions
+     +==========+======================+=============================+
+     | Encoding | Variant              | Special Characters          |
+     +==========+======================+=============================+
+     | Base16   | [RFC9562], Section 4 | Y (dash)                    |
+     +----------+----------------------+-----------------------------+
+     | Base16   | [RFC4648], Section 8 | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base32   | [RFC4648], Section 6 | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base32   | [RFC4648], Section 7 | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base32   | [DCB32]              | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base36   | ---                  | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base52   | ---                  | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base58   | [Bitcoin]            | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base62   | [IEEEBase62]         | N                           |
+     +----------+----------------------+-----------------------------+
+     | Base64   | [RFC4648], Section 4 | Y (plus, forward-slash)     |
+     +----------+----------------------+-----------------------------+
+     | Base64   | [RFC4648], Section 5 | Y (dash, underscore)        |
+     +----------+----------------------+-----------------------------+
+     | Base64   | [Base64sort]         | Y (dollar-sign, underscore) |
+     +----------+----------------------+-----------------------------+
+     | Base85   | [Z85]                | Y (numerous, see Table 1)   |
+     +----------+----------------------+-----------------------------+
+
+          Table 5: Alt UUID Encoding Special Character Comparison
+
+4.6.  Character Exclusions
 
    Newer BaseXX alphabet may exclude characters and keep only one value
    present.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 17]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
 
    This often occurs when multiple characters are similar in shape which
    which may lead to issues when humans are required to read the
@@ -530,6 +973,7 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    - 0, O, o
    - 1, I, i, L, l
    - 2, Z, z
+   - 5, S, s
    - V, v, U, u
 
    Unfortunately there is no standard for which character is omitted or
@@ -541,9 +985,64 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    Implementations should vet BaseXX alphabets with character exclusions
    thoroughly to ensure any possible inclusion of symbols does not cause
    problems while also verifying that sorting is not impacted if sorting
-   is a requirement.
+   is a requirement.  Table 6 compares character exclusions among the
+   BaseXX encoding methods in this document.
 
-4.5.  Case Sensitivity
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 18]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+        +==========+======================+======================+
+        | Encoding | Variant              | Character Exclusions |
+        +==========+======================+======================+
+        | Base16   | [RFC9562], Section 4 | N                    |
+        +----------+----------------------+----------------------+
+        | Base16   | [RFC4648], Section 8 | N                    |
+        +----------+----------------------+----------------------+
+        | Base32   | [RFC4648], Section 6 | N                    |
+        +----------+----------------------+----------------------+
+        | Base32   | [RFC4648], Section 7 | N                    |
+        +----------+----------------------+----------------------+
+        | Base32   | [DCB32]              | Y (Ii,Ll,Oo,Uu)      |
+        +----------+----------------------+----------------------+
+        | Base36   | ---                  | N                    |
+        +----------+----------------------+----------------------+
+        | Base52   | ---                  | N                    |
+        +----------+----------------------+----------------------+
+        | Base58   | [Bitcoin]            | Y (0,I,O,l)          |
+        +----------+----------------------+----------------------+
+        | Base62   | [IEEEBase62]         | N                    |
+        +----------+----------------------+----------------------+
+        | Base64   | [RFC4648], Section 4 | N                    |
+        +----------+----------------------+----------------------+
+        | Base64   | [RFC4648], Section 5 | N                    |
+        +----------+----------------------+----------------------+
+        | Base64   | [Base64sort]         | N                    |
+        +----------+----------------------+----------------------+
+        | Base85   | [Z85]                | N                    |
+        +----------+----------------------+----------------------+
+
+        Table 6: Alt UUID Encoding Character Exclusion Comparison
+
+4.7.  Case Sensitivity
 
    Case Sensitivity becomes important when the alphabet is above 32
    characters.  For alphabets below Base32, such as Base16, uppercase
@@ -551,33 +1050,77 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    however in larger BaseXX alphabets the uppercase and lowercase
    alphabetic characters represent distinct output encodings.
 
-
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 10]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
    In most scenarios uppercase are placed before lowercase counterparts
    in the ordering.  This ordering directly impacts sorting since most
    applications will sort uppercase characters before lowercase
    characters.
 
-   The BaseXX alphabet used also changes comparison logics where "aBc
-   does not necessarily qual "AbC" in all output encodings.
 
-4.6.  Sorting and Ordering
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 19]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   The BaseXX alphabet used also changes comparison logics where "aBc
+   does not necessarily qual "AbC" in all output encodings.  Table 7
+   compares case sensitivity among the BaseXX encoding methods in this
+   document.
+
+           +==========+======================+================+
+           | Encoding | Variant              | Case Sensitive |
+           +==========+======================+================+
+           | Base16   | [RFC9562], Section 4 | N              |
+           +----------+----------------------+----------------+
+           | Base16   | [RFC4648], Section 8 | N              |
+           +----------+----------------------+----------------+
+           | Base32   | [RFC4648], Section 6 | N              |
+           +----------+----------------------+----------------+
+           | Base32   | [RFC4648], Section 7 | N              |
+           +----------+----------------------+----------------+
+           | Base32   | [DCB32]              | N              |
+           +----------+----------------------+----------------+
+           | Base36   | ---                  | N              |
+           +----------+----------------------+----------------+
+           | Base52   | ---                  | Y              |
+           +----------+----------------------+----------------+
+           | Base58   | [Bitcoin]            | Y              |
+           +----------+----------------------+----------------+
+           | Base62   | [IEEEBase62]         | Y              |
+           +----------+----------------------+----------------+
+           | Base64   | [RFC4648], Section 4 | Y              |
+           +----------+----------------------+----------------+
+           | Base64   | [RFC4648], Section 5 | Y              |
+           +----------+----------------------+----------------+
+           | Base64   | [Base64sort]         | Y              |
+           +----------+----------------------+----------------+
+           | Base85   | [Z85]                | Y              |
+           +----------+----------------------+----------------+
+
+               Table 7: Alt UUID Encoding Case Sensitivity
+                                Comparison
+
+4.8.  Sorting and Ordering
 
    Lexicographical sorting of UUIDs is a very important factor to many
    applications and the ordering of the BaseXX alphabet directly impacts
    the sorting of the encoded UUID output.
 
    The alphabets generally consist of two or more of the following 4
-   components with optional omissions as defined by Section 4.4:
+   components with optional omissions as defined by Section 4.6:
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 20]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
 
 1. Numeric Characters: 0-9
 2. Uppercase Character: A-Z
@@ -594,40 +1137,119 @@ Internet-Draft           alternate-uuid-encoding           November 2025
 
    If an implementation would like to ensure the sort order of the
    encoded value remains the same as the Base02 (binary) or Base10
-   (integer) value one should scrutinize the position of the underlying
+   (decimal) value one should scrutinize the position of the underlying
    BaseXX alphabets, their ordering and the includes symbols.
 
-   Some Examples to illustrate the ordering trends:
+   Figure 10 illustrate the ordering trendss for some common BaseXX
+   Alphabets
 
 - Base10: 0123456789
 - Base36: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
 - Base62: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
 - Base64: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
 
-4.7.  Encoding Availability
+               Figure 10: Alphabet Ordering Comparison
+
+   Table 8 compares binary sortting among the BaseXX encoding methods in
+   this document.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 21]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+      +==========+======================+==========================+
+      | Encoding | Variant              | Sorts the Same as Binary |
+      +==========+======================+==========================+
+      | Base16   | [RFC9562], Section 4 | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base16   | [RFC4648], Section 8 | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base32   | [RFC4648], Section 6 | N                        |
+      +----------+----------------------+--------------------------+
+      | Base32   | [RFC4648], Section 7 | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base32   | [DCB32]              | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base36   | ---                  | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base52   | ---                  | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base58   | [Bitcoin]            | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base62   | [IEEEBase62]         | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base64   | [RFC4648], Section 4 | N                        |
+      +----------+----------------------+--------------------------+
+      | Base64   | [RFC4648], Section 5 | N                        |
+      +----------+----------------------+--------------------------+
+      | Base64   | [Base64sort]         | Y                        |
+      +----------+----------------------+--------------------------+
+      | Base85   | [Z85]                | N                        |
+      +----------+----------------------+--------------------------+
+
+              Table 8: Alt UUID Encoding Sorting Comparison
+
+4.9.  Compressing Nullish Characters
+
+   Some BaseXX alphabets may use varying techniques for compressing
+   nullish characters which can sometimes yeild values smaller than what
+   is cited in Section 4.2.
+
+   {Base36} and {Base58} will trim leading zero characters before
+   attempting to encode the data.
+
+   {Base85} alphabets may employ a technique to compress a continous
+   four byte sequence of ASCII Space characters as the character
+   lowercase y. {Base85} alphabets may also compress a continous four
+   byte sequence of ASCII Zero characters as the character lowercase z.
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 22]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+4.10.  Encoding Availability
 
    The BaseXX alphabet encoding availability may be the second greatest
    hurdle implementations navigate as they chose a viable alternate
    encoding for UUID.
 
-
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 11]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
-   For example, traditional Base64 url safe sees far more
-   implementations than Base32hex while even fewer have implemented
-   Base62 or even Crockford's Base32 variant.
+   For example, traditional Base64url safe sees far more implementations
+   than Base32hex while even fewer have implemented Base62 or even
+   Crockford's Base32 variant.
 
    The ability to utilize a given encoding or provide a customized
-   alphabet is often a limiting factor in implementations.  Implementors
-   will need to write their own, leverage third-party libraries or
-   select a viable alternative.
+   alphabet may be a limiting factor in implementations.  In this
+   scenario implementors will need to write their own, leverage third-
+   party libraries or select a viable alternative.
 
-4.8.  Computation
+4.11.  Computation
 
    The various base encodings have more or less computational
    requirements based on the size of the alphabet, the total number of
@@ -637,21 +1259,77 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    For reference Base02 uses 2 bits per character encoding while Base10
    uses 4 bits per character and Base32 uses 5 bits and Base64 uses 6
    bits.  While non non-power-of-two alphabet BaseXX alphabets like
-   Base36, Base58 or Base62 use 5.16, 5.86 5.95 bits respectively where
-   computation is log2(XX) and XX is the alphabet length.
+   Base36, Base58 or Base62 use 5.169, 5.857 5.954 bits respectively
+   where computation is (\log _{2}(XX)) and XX is the alphabet length.
 
-   Base62 is desirable by being the largest BaseXX alphabet to use only
-   alpha-numeric symbols but it comes with the tradeoff of slightly more
-   complicated computations.
+   Table 9 compares bits per character among the BaseXX encoding methods
+   in this document.
 
-4.9.  Application Specific
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 23]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+         +==========+======================+====================+
+         | Encoding | Variant              | Bits per Character |
+         +==========+======================+====================+
+         | Base16   | [RFC9562], Section 4 | 4.000              |
+         +----------+----------------------+--------------------+
+         | Base16   | [RFC4648], Section 8 | 4.000              |
+         +----------+----------------------+--------------------+
+         | Base32   | [RFC4648], Section 6 | 5.000              |
+         +----------+----------------------+--------------------+
+         | Base32   | [RFC4648], Section 7 | 5.000              |
+         +----------+----------------------+--------------------+
+         | Base32   | [DCB32]              | 5.000              |
+         +----------+----------------------+--------------------+
+         | Base36   | ---                  | 5.169              |
+         +----------+----------------------+--------------------+
+         | Base52   | ---                  | 5.700              |
+         +----------+----------------------+--------------------+
+         | Base58   | [Bitcoin]            | 5.857              |
+         +----------+----------------------+--------------------+
+         | Base62   | [IEEEBase62]         | 5.954              |
+         +----------+----------------------+--------------------+
+         | Base64   | [RFC4648], Section 4 | 6.000              |
+         +----------+----------------------+--------------------+
+         | Base64   | [RFC4648], Section 5 | 6.000              |
+         +----------+----------------------+--------------------+
+         | Base64   | [Base64sort]         | 6.000              |
+         +----------+----------------------+--------------------+
+         | Base85   | [Z85]                | 6.409              |
+         +----------+----------------------+--------------------+
+
+                Table 9: Alt UUID Encoding Bits Comparison
+
+4.12.  Application Specific
 
    Some applications have very specific restrictions which may influence
    the alternate UUID encoding selection.  This is a limited list
    compiling some known restrictions that implementations may consider
    while working with alternate UUID encodings.
 
-4.9.1.  URI, URL, URN
+4.12.1.  URI, URL, URN
 
    Uniform Resource Identifiers (URIs) have a specific list of reserved
    characters defined by [RFC3986], Section 2.2 which require percent
@@ -660,25 +1338,24 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    It is advisable to avoid these using BaseXX alphabets that include
    these symbols.
 
-4.9.2.  DNS Record
-
-   Domain Name Systems (DNS) are case insensitive with the period or dot
-   character (.) being a reserved symbol.  [RFC9499], Section 2
 
 
 
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 12]
+Davis & Peabody            Expires 29 May 2026                 [Page 24]
 
 Internet-Draft           alternate-uuid-encoding           November 2025
 
+
+4.12.2.  DNS Record
+
+   Domain Name Systems (DNS) are case insensitive with the period or dot
+   character (.) being a reserved symbol.  [RFC9499], Section 2
 
    Thus BaseXX alphabets that utilize this character or use upper and
    lowercase values as defined by {#best_practice_sensitivity} should be
    avoided.
 
-4.9.3.  XML, HTML, CSS
+4.12.3.  XML, HTML, CSS
 
    Extensible Markup Language ([XML]) namespaces cannot start with a
    leading numeric character.
@@ -689,26 +1366,60 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    Cascading Style Sheet ([CSS]) selectors identifiers where older
    versions would have issues when identifiers start with digits.
 
-   Thus for XML, HTML and CSS is is advantageous to use an alternate
-   UUID encoding such as [NCNAME] to ensure that the first digit is
-   always a alphabet character.
+   Thus for XML, HTML and CSS is is advantageous to use some advanced
+   emthods such as:
 
-4.10.  Other
+   *  The alternate UUID encoding techninque defined in [NCNAME] to
+      ensure that the first digit is always an uppercase alphabet
+      character.
+   *  Utilize Section 3.3 which always does not start with a special
+      character or digit.
+   *  Simply prefix the first non-digit/non-special character in the
+      given alphabet.  For example, if uppercase A is avaialble; prefix
+      this character to satisfy the constraints.
 
-5.  Security Considerations
+5.  Parsing
 
-   Section Section 4.2.2 is the only section that deals with any
+   This document focuses on generating UUIDs via alternate formats over
+   parsing UUIDs of alternate encoding formats.  The generic default for
+   any existing uuid_parse() function SHOULD remain that of [RFC9562],
+   Section 4 hex-and-dash string format.
+
+   Implementors MAY provide parse functionality to parse UUIDs of
+   alternate formats but the distrubution of the encoding algorithm
+   among disperate systems is outside of the scope of this document.
+
+   In practice this is likely not an issue since most UUID
+   implementations that require UUID parsing are likely aware of the
+   generated encoding format.  For example the sender and reciever of a
+   Base64url encoded UUID may be within a known application boundary.
+   It is rare for two differing systems to send UUIDs in a manner that
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 25]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   requires the reciever to fully parse a UUID of any format back into
+   binary; rather than using the UUID recieved at face value as a
+   string.
+
+6.  Security Considerations
+
+   Section Checksum Characters is the only section that deals with any
    security-related items and this only covers data integrity validation
    for UUIDs sent across the wire.  Otherwise there are no other
    security considerations.
 
-6.  IANA Considerations
+7.  IANA Considerations
 
    This document has no IANA actions.
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -723,21 +1434,34 @@ Internet-Draft           alternate-uuid-encoding           November 2025
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 13]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
    [RFC9562]  Davis, K., Peabody, B., and P. Leach, "Universally Unique
               IDentifiers (UUIDs)", RFC 9562, DOI 10.17487/RFC9562, May
               2024, <https://www.rfc-editor.org/rfc/rfc9562>.
 
-7.2.  Informative References
+8.2.  Informative References
 
-   [Base62]   Prokhorenko, S., "Base64 UUID", commit 778a6a4, July 2025,
+   [Base58xrp]
+              XRP Ledger, "base58 Encodings", 2024,
+              <https://xrpl.org/docs/references/protocol/data-types/
+              base58-encodings>.
+
+   [Base64sort]
+              Prokhorenko, S., "Base64 Sort", commit 778a6a4, July 2025,
               <https://github.com/sergeyprokhorenko/Base64UUID>.
+
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 26]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   [Bitcoin]  Bitcoin, "A secure, lossless, and compressed Base62
+              encoding", commit fae71d3, November 2008,
+              <https://github.com/bitcoin/bitcoin/blob/master/src/
+              base58.cpp>.
 
    [CSS]      W3C, "Cascading Style Sheets Level 2 Revision 1 (CSS 2.1)
               Specification", June 2011, <https://www.w3.org/TR/CSS2/
@@ -746,6 +1470,10 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    [DCB32]    Crockford, D., "Douglas Crockford's Base32", November
               2002, <https://www.crockford.com/base32.html>.
 
+   [Flickr]   Kellen, "manufacturing flic.kr style photo URLs", n.d.,
+              <https://www.flickr.com/groups/api/
+              discuss/72157616713786392/>.
+
    [GEOHASH]  Geohash, "Geohash", commit 3f0ce0b, November 2009,
               <https://github.com/vinsci/geohash/blob/master/Geohash/
               geohash.py>.
@@ -753,9 +1481,18 @@ Internet-Draft           alternate-uuid-encoding           November 2025
    [HTML]     whatwg, "HTML Living Standard", November 2025,
               <https://html.spec.whatwg.org/>.
 
+   [IEEEBase62]
+              IEEE, "A secure, lossless, and compressed Base62
+              encoding", November 2008,
+              <https://ieeexplore.ieee.org/document/4737287>.
+
    [NCNAME]   Taylor, D., "Compact UUIDs for Constrained Grammars",
               September 2025, <https://datatracker.ietf.org/doc/draft-
               taylor-uuid-ncname/>.
+
+   [RFC20]    Cerf, V., "ASCII format for network interchange", STD 80,
+              RFC 20, DOI 10.17487/RFC0020, October 1969,
+              <https://www.rfc-editor.org/rfc/rfc20>.
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
@@ -770,21 +1507,33 @@ Internet-Draft           alternate-uuid-encoding           November 2025
               2009,
               <https://www.w3.org/TR/2009/REC-xml-names-20091208/>.
 
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 27]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+   [Z85]      iMatix Corporation, "32/Z85", 2013,
+              <https://rfc.zeromq.org/spec/32/>.
+
    [ZB32]     O'Whielacronx, Z., "human-oriented base-32 encoding",
               November 2009, <https://philzimmermann.com/docs/human-
               oriented-base-32-encoding.txt>.
 
 Appendix A.  Acknowledgments
 
-   TODO acknowledge.
+   The authors gratefully acknowledge the contributions of
 
+   *  Yulian Kuncheff for their work on the UUID Formatter test tool
+      which was valueable in comparing various UUID encoding formats
+      side-by-side.
+   *  LiosK for early prototyping of various BaseXX Alphabets
+   *  Sergey Prokhorenko for continously ensuring we work on this
+      document.
 
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 14]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
+   As well as all of those in the IETF community and on GitHub to who
+   contributed to the discussions which resulted in this document.
 
 Appendix B.  Changelog
 
@@ -792,7 +1541,522 @@ Appendix B.  Changelog
 
    *  Initial Release
 
-Appendix C.  Example UUID Base Encodings
+Appendix C.  Test Vectors
+
+   The test vectors in the upcoming sections map the UUIDs found in
+   RFC9562 Sections to their appropriate BaseXX Alphabet Encoding
+   without padding.
+
+C.1.  Generic UUID
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section 4                   |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | f81d4fae-7dec-11d0-a765-00a0c91e6bf6 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | f81d4fae7dec11d0a76500a0c91e6bf6     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 7AOU7LT55QI5BJ3FACQMSHTL6Y           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | V0EKVBJTTG8T19R502GCI7JBUO           |
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 28]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | Z0EMZBKXXG8X19V502GCJ7KBYR           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | EOSWZOLG3BSX0ZN8OTQ1P8OOM            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | FraqvVvqUBoEOFXsPYOPwUm              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | Xe22UfxT3rxcKJEAfL5373               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | +B1Prn3sEdCnZQCgyR5r9g               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | -B1Prn3sEdCnZQCgyR5r9g               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | Is6JyiUTkGo9S_$9286ajq               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | {-iekEE4M)R!2>3:Stl>                 |
+    +----------+--------------+--------------------------------------+
+
+            Table 10: UUID Test Vectors for RFC9562, Section 4
+
+C.2.  NIL UUID
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section 5.9                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 00000000-0000-0000-0000-000000000000 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 00000000000000000000000000000000     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | AAAAAAAAAAAAAAAAAAAAAAAAAA           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 00000000000000000000000000           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | 00000000000000000000000000           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 0                                    |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | A                                    |
+    +----------+--------------+--------------------------------------+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 29]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    | Base58   | [Bitcoin]    | 1                                    |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | 0                                    |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | AAAAAAAAAAAAAAAAAAAAAA               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | AAAAAAAAAAAAAAAAAAAAAA               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | F$$$$$$$$$$$$$$$$$$$$$               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | 00000000000000000000                 |
+    +----------+--------------+--------------------------------------+
+
+      Table 11: UUID Test Vectors for RFC9562, Section 5.9: Nil UUID
+
+C.3.  MAX UUID
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section 5.10                |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 77777777777777777777777774           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | VVVVVVVVVVVVVVVVVVVVVVVVVS           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | ZZZZZZZZZZZZZZZZZZZZZZZZZW           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | p777777777777777777777777p           |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | GBIWTpZqojFGQPQPXtvbJAv              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | P8AQGAut7N92awznwCnjuQP              |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | /////////////////////w               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | _____________________w               |
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 30]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | Izzzzzzzzzzzzzzzzzzzzz               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | s8W-!s8W-!s8W-!s8W-!                 |
+    +----------+--------------+--------------------------------------+
+
+     Table 12: UUID Test Vectors for RFC9562, Section 5.10: MAX UUID
+
+C.4.  UUIDv1
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.1                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | C232AB00-9414-11EC-B3C8-9F6BDECED846 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | C232AB00941411ECB3C89F6BDECED846     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | YIZKWAEUCQI6ZM6IT5V55TWYIY           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | O8PAM04K2G8UPCU8JTLTTJMO8O           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | R8SAP04M2G8YSCY8KXNXXKPR8R           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | BHW3F9QSZLQPYH8GTZ35HZ4UE            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | EddHArfCMSZGGUJvWdXrHHq              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | Qys2KsgsAKw9ZKupo76FCh               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | wjKrAJQUEeyzyJ9r3s7YRg               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | wjKrAJQUEeyzyJ9r3s7YRg               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | I1Beg$_0FGvAE7bqjTnhW5               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | .znd(LOs.@V=F+O?P<+y                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 13: UUID Test Vectors for RFC9562, Section A.1: UUIDv1
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 31]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+C.5.  UUIDv3
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.2                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 5df41881-3aed-3515-88a7-2f4a814cf09e |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 5df418813aed351588a72f4a814cf09e     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | LX2BRAJ25U2RLCFHF5FICTHQTY           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | BNQ1H09QTKQHB2575T582J7GJO           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | BQT1H09TXMTHB2575X582K7GKR           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 5K8PHACEYCDEGBDB1VWP0EAHQ            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | CKwZBXIbBzTOnGTcpOSLRtq              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | CbuPE286MB6RsDazcU7sUy               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | XfQYgTrtNRWIpy9KgUzwng               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | XfQYgTrtNRWIpy9KgUzwng               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | GSx0X0Diop4NXbAoe0IE1T               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | ?1\tb3ped>Lo2muJP>R)                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 14: UUID Test Vectors for RFC9562, Section A.2: UUIDv3
+
+C.6.  UUIDv4
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.3                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 919108f7-52d1-4320-9bac-f847db4148a8 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 32]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    | Base16   | [RFC4648],   | 919108f752d143209bacf847db4148a8     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | SGIQR52S2FBSBG5M7BD5WQKIVA           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | I68GHTQIQ51I16TCV13TMGA8L0           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | J68GHXTJT51J16XCZ13XPGA8N0           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 8M8SCPFUGFIJ4QENJ0IG77QG8            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | DWDhSoKPZRoqkgBWaJcOckY              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | JyZVoFVQxQNmw2bsgr7D1R               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | kZEI91LRQyCbrPhH20FIqA               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | kZEI91LRQyCbrPhH20FIqA               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | HGZFYrJh4278igy3UQFJXc               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | K=Y}zqQE&OO2(xP*D!xe                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 15: UUID Test Vectors for RFC9562, Section A.3: UUIDv4
+
+C.7.  UUIDv5
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.4                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 2ed6657d-e927-568b-95e1-2665a8aea6a2 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 2ed6657de927568b95e12665a8aea6a2     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | F3LGK7PJE5LIXFPBEZS2RLVGUI           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 5RB6AVF94TB8N5F14PIQHBL6K8           |
+    |          | Section 7    |                                      |
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 33]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | 5VB6AZF94XB8Q5F14SJTHBN6M8           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 2RTO2O5WTBFMSYWZX7KHQ1Z8I            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | BFPTsrUJhwfXFHQeVflYshu              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | 6nTLogGvw2vmQjtATLqvLq               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | LtZlfeknVouV4SZlqK6mog               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | LtZlfeknVouV4SZlqK6mog               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | FipaKxuHSLXtMW8aLcfePX               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | f4KPZ>{GI&MeK63Sii1(                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 16: UUID Test Vectors for RFC9562, Section A.4: UUIDv5
+
+C.8.  UUIDv6
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.5                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 1EC9414C-232A-6B00-B3C8-9F6BDECED846 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 1EC9414C232A6B00B3C89F6BDECED846     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | D3EUCTBDFJVQBM6IT5V55TWYIY           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 3R4K2J1359LG1CU8JTLTTJMO8O           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | 3V4M2K1359NG1CY8KXNXXKPR8R           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 1TM3WVVTP7XVNZXA2TV43IJWM            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | liRiaXmgJTfBQppyCovyGu               |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | 4oVbpzb8BpnTH1mg11dmWd               |
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 34]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | HslBTCMqawCzyJ9r3s7YRg               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | HslBTCMqawCzyJ9r3s7YRg               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | FTmJ4B7mdf$AE7bqjTnhW5               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | 9)3YwbpWEeV=F+O?P<+y                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 17: UUID Test Vectors for RFC9562, Section A.5: UUIDv6
+
+C.9.  UUIDv7
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section A.6                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 017F22E2-79B0-7CC3-98C4-DC0C0C07398F |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 017F22E279B07CC398C4DC0C0C07398F     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | AF7SFYTZWB6MHGGE3QGAYBZZR4           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 05VI5OJPM1UC7664RG60O1PPHS           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | 05ZJ5RKSP1YC7664VG60R1SSHW           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 36TWI214QWJ7MGSVQ83NM8WF             |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | BrKaFlCsyjaiCYuzuWvtun               |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | BihbxwwQ4NZZpKRH9JDCz                |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | AX8i4nmwfMOYxNwMDAc5jw               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | AX8i4nmwfMOYxNwMDAc5jw               |
+    |          | Section 5    |                                      |
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 35]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | F0UmAXTQ0wktY3r$kB0naE               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | 0E(rMD9zXlN8E+*3<O!N                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 18: UUID Test Vectors for RFC9562, Section A.6: UUIDv7
+
+C.10.  UUIDv8
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section B.1                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 2489E9AD-2EE2-8E00-8EC9-32D5F69181C0 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 2489E9AD2EE28E008EC932D5F69181C0     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | ESE6TLJO4KHABDWJGLK7NEMBYA           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | 4I4UJB9ESA7013M96BAVD4C1O0           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | 4J4YKB9EWA7013P96BAZD4C1R0           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 25VHD0YEN79F79OO0TV0BAE9S            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | skNtHBdXlnQCRPhYqjxSkQ               |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | 5WhDz2zW6g9mHu7EP9hoVq               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | JInprS7ijgCOyTLV9pGBwA               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | JInprS7ijgCOyTLV9pGBwA               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | FZXTahAi9D$7v8BhMqZN6$               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | b-g=/f5?(>J(:6b{k%{w                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 19: UUID Test Vectors for RFC9562, Section B.1: UUIDv8
+
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 36]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+    +==========+==============+======================================+
+    | Encoding | Variant      | RFC9562, Section B.2                 |
+    +==========+==============+======================================+
+    | Base16   | [RFC9562],   | 5c146b14-3c52-8afd-938a-375d0df1fbf6 |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base16   | [RFC4648],   | 5c146b143c528afd938a375d0df1fbf6     |
+    |          | Section 8    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | LQKGWFB4KKFP3E4KG5OQ34P36Y           |
+    |          | Section 6    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [RFC4648],   | BGA6M51SAA5FR4SA6TEGRSFRUO           |
+    |          | Section 7    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base32   | [DCB32]      | BGA6P51WAA5FV4WA6XEGVWFVYR           |
+    +----------+--------------+--------------------------------------+
+    | Base36   | ---          | 5G8XXKU1AQGT02ZJGR8PA3EUU            |
+    +----------+--------------+--------------------------------------+
+    | Base52   | ---          | CIhPGFswaUyeIiUVKFQScIW              |
+    +----------+--------------+--------------------------------------+
+    | Base58   | [Bitcoin]    | CNV2iY4mKiTS1uw8RxapEH               |
+    +----------+--------------+--------------------------------------+
+    | Base62   | [IEEEBase62] | TODO                                 |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | XBRrFDxSiv2TijddDfH79g               |
+    |          | Section 4    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [RFC4648],   | XBRrFDxSiv2TijddDfH79g               |
+    |          | Section 5    |                                      |
+    +----------+--------------+--------------------------------------+
+    | Base64   | [Base64sort] | GR45gJE499zOD9CpoCwUjq               |
+    +----------+--------------+--------------------------------------+
+    | Base85   | [Z85]        | tOH@/jw}7nLzRq84E%t?                 |
+    +----------+--------------+--------------------------------------+
+
+       Table 20: UUID Test Vectors for RFC9562, Section B.2: UUIDv8
+
+Appendix D.  Example UUID Base Encoding Tools, Libraries, and resources
 
    The following list of libraries, tools, code, packages and other
    resources is for illustrative and research purposes.
@@ -802,7 +2066,15 @@ Appendix C.  Example UUID Base Encodings
 
    Install, download or use this software at your own risk.
 
-C.1.  Base32, base
+
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 37]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+D.1.  Base32, Base
 
 - https://github.com/chilts/sid
 - https://www.jsdelivr.com/package/npm/uuid-encoder
@@ -811,11 +2083,11 @@ C.1.  Base32, base
 - https://hackage.haskell.org/package/ron-0.12/docs/RON-UUID.html
 - https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abencl_system_uuid.htm
 
-C.2.  Base32, Hex
+D.2.  Base32, Hex
 
    - https://github.com/rs/xid
 
-C.3.  Base32, Crockford
+D.3.  Base32, Crockford
 
    - https://github.com/ulid/spec
    - https://codeberg.org/prettyid/python
@@ -827,26 +2099,11 @@ C.3.  Base32, Crockford
    - https://rymc.io/blog/2024/uuidv7-typeids-in-diesel/
    - https://docs.rs/rusty_ulid/latest/rusty_ulid/
 
-C.4.  Base32, NCNAME
+D.4.  Base32, NCNAME
 
    - https://www.rubydoc.info/gems/uuid-ncname
 
-
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 15]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
-C.5.  Base32, Other
-
-   - https://brandur.org/fragments/base32-slugs
-
-C.6.  Base36
+D.5.  Base36
 
   - https://github.com/paralleldrive/cuid2
   - https://www.jsdelivr.com/package/npm/uuid-encoder
@@ -856,11 +2113,7 @@ C.6.  Base36
   - https://gist.github.com/fabiolimace/508dd2dd9d32fd493b31a5f386d5d4bc
   - https://classic.yarnpkg.com/en/package/base36-uuid
 
-C.7.  Base57
-
-   - https://github.com/lithammer/shortuuid
-
-C.8.  Base58
+D.6.  Base58
 
 - https://github.com/cbschuld/uuid-base58
 - https://www.linkedin.com/pulse/advantages-using-base58-unique-identifier-databases-lucian-ivanov
@@ -870,13 +2123,20 @@ C.8.  Base58
 - https://blog.schochastics.net/posts/2024-08-24_short-uuids/
 - https://www.jsdelivr.com/package/npm/uuid-encoder
 
-C.9.  Base62
+
+
+Davis & Peabody            Expires 29 May 2026                 [Page 38]
+
+Internet-Draft           alternate-uuid-encoding           November 2025
+
+
+D.7.  Base62
 
    - https://github.com/boundary/flake
    - https://github.com/segmentio/ksuid
    - https://www.jsdelivr.com/package/npm/uuid-encoder
 
-C.10.  Base64
+D.8.  Base64
 
 - https://github.com/elastic/elasticsearch/blob/main/server/src/main/java/org/elasticsearch/common/UUIDs.java#L23
 - https://github.com/chilts/sid
@@ -891,14 +2151,7 @@ C.10.  Base64
 - https://guidgenerator.com/
 - https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abencl_system_uuid.htm
 
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 16]
-
-Internet-Draft           alternate-uuid-encoding           November 2025
-
-
-C.11.  Base85
+D.9.  Base85
 
 - https://stackoverflow.com/a/772984
 - http://codehardblog.azurewebsites.net/encoding-uuid-based-keys-to-save-memory/
@@ -928,25 +2181,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody            Expires 21 May 2026                 [Page 17]
+Davis & Peabody            Expires 29 May 2026                 [Page 39]
