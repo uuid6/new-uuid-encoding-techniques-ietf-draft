@@ -4,6 +4,11 @@
 
 This page is a WORK IN PROGRESS. Any all things may change at a moments notice.
 
+
+# WIP Documents
+- [HTML](https://uuid6.github.io/new-uuid-encoding-techniques-ietf-draft/draft-davis-uuidrev-alt-uuid-encoding-methods.html)
+- [Text](https://uuid6.github.io/new-uuid-encoding-techniques-ietf-draft/draft-davis-uuidrev-alt-uuid-encoding-methods.txt)
+
 # Contributing
 
 - Note there are many, many encoding types, a quick sample can be seen here: https://en.wikipedia.org/wiki/Binary-to-text_encoding#Encoding_standards
