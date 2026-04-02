@@ -9,10 +9,10 @@
 <meta content="Brad G. Peabody" name="author">
 <meta content="
        This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods observed in the industry. 
-       This document updates   to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application. 
-       When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from  . 
+       This document updates RFC9562 to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application. 
+       When selected correctly, these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from RFC9562. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.32.0" name="generator">
 <meta content="uuid" name="keyword">
 <meta content="encoding" name="keyword">
 <meta content="base02" name="keyword">
@@ -22,25 +22,26 @@
 <meta content="base36" name="keyword">
 <meta content="base52" name="keyword">
 <meta content="base58" name="keyword">
+<meta content="base62" name="keyword">
 <meta content="base64" name="keyword">
 <meta content="base85" name="keyword">
-<meta content="draft-davis-uuidrev-alternate-uuid-encoding-methods" name="ietf.draft">
+<meta content="draft-davis-uuidrev-alt-uuid-encoding-methods-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.32.0
     Python 3.12.3
     ConfigArgParse 1.7.1
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.0
-    pycountry 24.6.1
+    platformdirs 4.9.2
+    pycountry 26.2.16
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.6.0
     weasyprint 65.0
 -->
-<link href="draft-davis-uuidrev-alternate-uuid-encoding-methods.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-davis-uuidrev-alt-uuid-encoding-methods.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">/*
 
@@ -1228,12 +1229,12 @@ li > p:last-of-type:only-child {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">alternate-uuid-encoding</td>
-<td class="right">December 2025</td>
+<td class="center">alt-uuid-encoding</td>
+<td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Davis &amp; Peabody</td>
-<td class="center">Expires 11 June 2026</td>
+<td class="center">Expires 4 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1243,18 +1244,18 @@ li > p:last-of-type:only-child {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">uuidrev</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-davis-uuidrev-alternate-uuid-encoding-methods</dd>
+<dd class="internet-draft">draft-davis-uuidrev-alt-uuid-encoding-methods-00</dd>
 <dt class="label-updates">Updates:</dt>
 <dd class="updates">
 <a href="https://www.rfc-editor.org/rfc/rfc9562" class="eref">9562</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-08" class="published">8 December 2025</time>
+<time datetime="2026-04-02" class="published">2 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-11">11 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-04">4 October 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1271,8 +1272,8 @@ li > p:last-of-type:only-child {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods observed in the industry.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">This document updates <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">When selected correctly; these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This document updates RFC9562 to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">When selected correctly, these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from RFC9562.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1281,7 +1282,7 @@ li > p:last-of-type:only-child {
 <p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
 <p id="section-note.1-2">
         The latest revision of this draft can be found at <span><a href="https://example.com/LATEST">https://example.com/LATEST</a></span>.
-        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid-encoding/">https://datatracker.ietf.org/doc/draft-davis-uuidrev-alternate-uuid-encoding/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-davis-uuidrev-alt-uuid-encoding-methods/">https://datatracker.ietf.org/doc/draft-davis-uuidrev-alt-uuid-encoding-methods/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 <p id="section-note.1-3">
         Discussion of this document takes place on the
         Revise Universally Unique Identifier Definitions (uuidrev) Working Group mailing list (<span><a href="mailto:uuidrev@ietf.org">mailto:uuidrev@ietf.org</a></span>),
@@ -1309,7 +1310,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1318,7 +1319,7 @@ li > p:last-of-type:only-child {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1406,7 +1407,7 @@ li > p:last-of-type:only-child {
                 <p id="section-toc.1-1.4.2.8.1"><a href="#section-4.8" class="auto internal xref">4.8</a>.  <a href="#name-sorting-and-ordering" class="internal xref">Sorting and Ordering</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.9">
-                <p id="section-toc.1-1.4.2.9.1"><a href="#section-4.9" class="auto internal xref">4.9</a>.  <a href="#name-compressing-nullish-charact" class="internal xref">Compressing Nullish Characters</a></p>
+                <p id="section-toc.1-1.4.2.9.1"><a href="#section-4.9" class="auto internal xref">4.9</a>.  <a href="#name-compressing-characters" class="internal xref">Compressing Characters</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.10">
                 <p id="section-toc.1-1.4.2.10.1"><a href="#section-4.10" class="auto internal xref">4.10</a>. <a href="#name-encoding-availability" class="internal xref">Encoding Availability</a></p>
@@ -1425,6 +1426,9 @@ li > p:last-of-type:only-child {
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.12.2.3">
                     <p id="section-toc.1-1.4.2.12.2.3.1"><a href="#section-4.12.3" class="auto internal xref">4.12.3</a>.  <a href="#name-xml-html-css" class="internal xref">XML, HTML, CSS</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.12.2.4">
+                    <p id="section-toc.1-1.4.2.12.2.4.1"><a href="#section-4.12.4" class="auto internal xref">4.12.4</a>.  <a href="#name-database-keys" class="internal xref">Database Keys</a></p>
 </li>
                 </ul>
 </li>
@@ -1475,22 +1479,28 @@ li > p:last-of-type:only-child {
                 <p id="section-toc.1-1.12.2.4.1"><a href="#appendix-C.4" class="auto internal xref">C.4</a>.  <a href="#name-uuidv1" class="internal xref">UUIDv1</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.5">
-                <p id="section-toc.1-1.12.2.5.1"><a href="#appendix-C.5" class="auto internal xref">C.5</a>.  <a href="#name-uuidv3" class="internal xref">UUIDv3</a></p>
+                <p id="section-toc.1-1.12.2.5.1"><a href="#appendix-C.5" class="auto internal xref">C.5</a>.  <a href="#name-uuidv2" class="internal xref">UUIDv2</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.6">
-                <p id="section-toc.1-1.12.2.6.1"><a href="#appendix-C.6" class="auto internal xref">C.6</a>.  <a href="#name-uuidv4" class="internal xref">UUIDv4</a></p>
+                <p id="section-toc.1-1.12.2.6.1"><a href="#appendix-C.6" class="auto internal xref">C.6</a>.  <a href="#name-uuidv3" class="internal xref">UUIDv3</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.7">
-                <p id="section-toc.1-1.12.2.7.1"><a href="#appendix-C.7" class="auto internal xref">C.7</a>.  <a href="#name-uuidv5" class="internal xref">UUIDv5</a></p>
+                <p id="section-toc.1-1.12.2.7.1"><a href="#appendix-C.7" class="auto internal xref">C.7</a>.  <a href="#name-uuidv4" class="internal xref">UUIDv4</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.8">
-                <p id="section-toc.1-1.12.2.8.1"><a href="#appendix-C.8" class="auto internal xref">C.8</a>.  <a href="#name-uuidv6" class="internal xref">UUIDv6</a></p>
+                <p id="section-toc.1-1.12.2.8.1"><a href="#appendix-C.8" class="auto internal xref">C.8</a>.  <a href="#name-uuidv5" class="internal xref">UUIDv5</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.9">
-                <p id="section-toc.1-1.12.2.9.1"><a href="#appendix-C.9" class="auto internal xref">C.9</a>.  <a href="#name-uuidv7" class="internal xref">UUIDv7</a></p>
+                <p id="section-toc.1-1.12.2.9.1"><a href="#appendix-C.9" class="auto internal xref">C.9</a>.  <a href="#name-uuidv6" class="internal xref">UUIDv6</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.10">
-                <p id="section-toc.1-1.12.2.10.1"><a href="#appendix-C.10" class="auto internal xref">C.10</a>. <a href="#name-uuidv8" class="internal xref">UUIDv8</a></p>
+                <p id="section-toc.1-1.12.2.10.1"><a href="#appendix-C.10" class="auto internal xref">C.10</a>. <a href="#name-uuidv7" class="internal xref">UUIDv7</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.11">
+                <p id="section-toc.1-1.12.2.11.1"><a href="#appendix-C.11" class="auto internal xref">C.11</a>. <a href="#name-uuidv8" class="internal xref">UUIDv8</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.12">
+                <p id="section-toc.1-1.12.2.12.1"><a href="#appendix-C.12" class="auto internal xref">C.12</a>. <a href="#name-microsoft-uuid" class="internal xref">Microsoft UUID</a></p>
 </li>
             </ul>
 </li>
@@ -1538,12 +1548,12 @@ li > p:last-of-type:only-child {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The original "hex-and-dash" (8-4-4-4-12) format of UUIDs defined in <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> represents a 128-bit UUID value as a 288-bit text value.
+<p id="section-1-1">The original "hex-and-dash" (8-4-4-4-12) canonical format of UUIDs defined in <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> represents a 128-bit UUID value as a 288-bit text value.
 Although this format is useful for human readability, it is verbose for storage, transmission, and application parsing.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">Because of this, developers have long used alternate UUID encodings.
 Many bespoke implementations—either within a single application or as one-off libraries—address shortcomings of the hex-and-dash form.
-However, most applications, databases, and standard libraries expose UUIDs using the formats described in IETF documents.
-If a feature is not specified by a widely used standard, implementers typically do not provide it and users do not see it.
+However, most applications, databases, and standard libraries expose UUIDs exclusively using the formats described in IETF documents.
+If a feature is not specified by a well defined standard, implementers typically do not provide that feature and users do not see those capabilities.
 Consequently, although alternate encodings have been used and reimplemented for many years, there is no single applicable standard and implementations are inconsistent.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">During the revision process that produced UUIDv6, UUIDv7, and UUIDv8 for <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>, alternate encodings were a major topic of discussion.
 The level of interest showed that a separate document focused on alternate encodings was needed.<a href="#section-1-3" class="pilcrow">¶</a></p>
@@ -1596,7 +1606,7 @@ For example Base02, Base10, Base16, Base32, Base64, etc.<a href="#section-2.2-2.
       <h2 id="name-alternate-uuid-encoding-met">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-alternate-uuid-encoding-met" class="section-name selfRef">Alternate UUID Encoding Methods</a>
       </h2>
-<p id="section-3-1"><span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span> details that at its core, any given UUID is a 128 bit value which can be represented as Base02 (binary), Base10 (decimal/integer), base16 (hex) and even a custom "hex-and-dash" string format; which is Base16 (hex) with a few extra dash characters added to create a unique UUID string format that is instantly recognizable.
+<p id="section-3-1"><span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span> details that at its core, any given UUID is a 128 bit value which can be represented as Base02 (binary), Base10 (decimal/integer), Base16 (hex) and even a custom "hex-and-dash" string format; which is Base16 (hex) with a few extra dash characters added to create a unique UUID string format that is instantly recognizable.
 Further, the section goes on to discuss other string formats that often use the Hex and Dash format or Integer format.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">While these are the "well-known" UUID formats, a UUID is fundamentally a 128-bit value and can be represented using many BaseXX alphabets.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">The large number of possible BaseXX alphabets, together with the considerations described in <a href="#best_practices" class="auto internal xref">Section 4</a>, makes it impractical to cover every alphabet variant in a single document.
@@ -1656,7 +1666,7 @@ If you implement a BaseXX alphabet not covered in the sections below, consult th
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base32</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+              <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
             <td class="text-left" rowspan="1" colspan="1">
               <code>0123456789ABCDEFGHJKMNPQRSTVWXYZ</code>
@@ -1679,7 +1689,7 @@ If you implement a BaseXX alphabet not covered in the sections below, consult th
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base58</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+              <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
             <td class="text-left" rowspan="1" colspan="1">
               <code>123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</code>
@@ -1688,10 +1698,19 @@ If you implement a BaseXX alphabet not covered in the sections below, consult th
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base62</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+              <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
             <td class="text-left" rowspan="1" colspan="1">
               <code>ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</code>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Base62</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</code>
 </td>
           </tr>
           <tr>
@@ -1741,15 +1760,16 @@ Each section has a few example encodings; any UUID featured in RFC9562 can be fo
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-base32" class="section-name selfRef">Base32</a>
         </h3>
 <p id="section-3.1-1">Base32 alphabets generally use 5 bits per character, producing a 26-character output when encoding a 128-bit UUID; padding may be present.
-These alphabets include standards-based Base32 (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>), Base32hex (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>), Douglas Crockford's Base32 <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>, Z-Base-32 <span>[<a href="#ZB32" class="cite xref">ZB32</a>]</span>, and <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+These alphabets include standards-based Base32 (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>), Base32hex (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>), Base32 for Humans <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span> (formerly known as Douglas Crockford's Base32), Z-Base-32 <span>[<a href="#ZB32" class="cite xref">ZB32</a>]</span>, and <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">Base32 alphabets vary the most in character choice because implementers can be selective about which characters are included.
 <a href="#best_practice_exclusions" class="internal xref">Character Exclusions</a> and alphabet ordering (see <a href="#best_practice_sorting" class="internal xref">Sorting and Ordering</a>) are important considerations and differ across implementations.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">Base32 is often case-insensitive: lowercase letters are frequently treated the same as uppercase because the alphabet does not require distinct upper- and lower-case characters.
 <a href="#best_practice_special" class="internal xref">Special Characters</a> are rarely used with Base32, except for <a href="#best_practice_padding" class="internal xref">Padding Characters</a> or <a href="#best_practice_checksums" class="internal xref">Checksum Characters</a> features, which can often be omitted.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1-4">Base32 is a strong choice when available. Base32hex (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>) and Crockford's Base32 (<span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>) are recommended options for a 26-character UUID that works well for both machines and humans.
-See <a href="#sampleBase32HexUUID" class="auto internal xref">Figure 1</a> and <a href="#sampleBase32Crockford" class="auto internal xref">Figure 2</a> for examples.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">Base32 is a strong choice when available.
+Base32hex (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>) and Base32 for Humans (<span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>) are recommended options for a 26-character UUID that works well for both machines and humans.
+See <a href="#sampleBase32HexUUID" class="auto internal xref">Figure 1</a> and <a href="#sampleBase32human" class="auto internal xref">Figure 2</a> for examples.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 <p id="section-3.1-5">Z-Base-32 <a href="#ZB32" class="internal xref">human-oriented base-32 encoding</a> makes many changes to the underlying alphabet to accommodate a specific use case and is not recommended for UUIDs.
-Although <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span> is closer to Base32hex and excludes some characters like Crockford's alphabet, its removal of trailing zeros is an unusual behavior not used by other BaseXX alphabets and may make adoption difficult.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+Although <span>[<a href="#GEOHASH" class="cite xref">GEOHASH</a>]</span> is closer to Base32hex and excludes some characters like the Base32 for Humans alphabet, its removal of trailing zeros is an unusual behavior not used by other BaseXX alphabets and may make adoption difficult.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.1-6">There are many other Base32 variants; consult <a href="#best_practices" class="internal xref">UUID Encoding Best Practices</a> when selecting an alphabet not listed here.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
 <span id="name-example-uuid-encoded-as-bas"></span><div id="sampleBase32HexUUID">
 <figure id="figure-1">
@@ -1762,7 +1782,7 @@ V0EKVBJTTG8T19R502GCI7JBUO
 <a href="#name-example-uuid-encoded-as-bas" class="selfRef">Example UUID encoded as Base32 Hex</a>
           </figcaption></figure>
 </div>
-<span id="name-example-uuid-encoded-as-dou"></span><div id="sampleBase32Crockford">
+<span id="name-example-uuid-encoded-as-base"></span><div id="sampleBase32human">
 <figure id="figure-2">
           <div class="alignLeft art-text artwork" id="section-3.1-8.1">
 <pre>
@@ -1770,7 +1790,7 @@ Z0EMZBKXXG8X19V502GCJ7KBYR
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-example-uuid-encoded-as-dou" class="selfRef">Example UUID encoded as Douglas Crockford's Base32</a>
+<a href="#name-example-uuid-encoded-as-base" class="selfRef">Example UUID encoded as Base32 for Humans</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1782,11 +1802,11 @@ Z0EMZBKXXG8X19V502GCJ7KBYR
         </h3>
 <p id="section-3.2-1">Base36 alphabets are similar to Base32 but use about 5.1699 bits per character, reducing a 128-bit UUID to 25 characters.
 Base36 typically uses digits <code>0–9</code> followed by uppercase <code>A–Z</code>, which affects case-sensitivity considerations (see <a href="#best_practice_sensitivity" class="internal xref">Case Sensitivity</a>).
-Alphabet ordering matters: using an alphabet with ordered as <code>A–Z0–9</code> would change sort order and is therefore uncommon.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">Base36 also compresses nullish characters (see {(best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">Base36 is reasonably available (<a href="#best_practice_availability" class="auto internal xref">Section 4.10</a>) but generally offers smaller benefits compared with base32hex or Crockford's Base32, so it is not recommended as a required encoding for all UUID implementations.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+Alphabet ordering matters: using an alphabet ordered as <code>A–Z0–9</code> would change sort order and is therefore uncommon.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">Base36 also compresses leading null bytes (see <a href="#best_practice_compression" class="auto internal xref">Section 4.9</a>) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">Base36 is reasonably available (<a href="#best_practice_availability" class="auto internal xref">Section 4.10</a>) but does not have concrete specifications outlined by a standards body.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.2-4">See <a href="#sampleBase36" class="auto internal xref">Figure 3</a> for an example.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<span id="name-example-uuid-encoded-as-base"></span><div id="sampleBase36">
+<span id="name-example-uuid-encoded-as-base3"></span><div id="sampleBase36">
 <figure id="figure-3">
           <div class="alignLeft art-text artwork" id="section-3.2-5.1">
 <pre>
@@ -1794,7 +1814,7 @@ EOSWZOLG3BSX0ZN8OTQ1P8OOM
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-example-uuid-encoded-as-base" class="selfRef">Example UUID encoded as Base36</a>
+<a href="#name-example-uuid-encoded-as-base3" class="selfRef">Example UUID encoded as Base36</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1807,11 +1827,12 @@ EOSWZOLG3BSX0ZN8OTQ1P8OOM
 <p id="section-3.3-1">Base52 uses the 52 alphabetic characters <code>A–Z</code> and <code>a–z</code>, producing a 23-character UUID at about 5.700 bits per character.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">Although not widely used, Base52 has useful properties: it contains no special characters (<a href="#best_practice_special" class="internal xref">Special Characters</a>) and excludes digits, avoiding issues with leading digits in some contexts.
 Its ordering can be chosen to preserve desirable sort behavior (see <a href="#best_practice_sorting" class="internal xref">Sorting and Ordering</a>).<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">Base52 also compresses nullish characters (see {(best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">See <a href="#sampleBase52" class="auto internal xref">Figure 4</a> for an example.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Base52 also compresses leading null bytes (see <a href="#best_practice_compression" class="auto internal xref">Section 4.9</a>) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Base52 does not have concrete specifications outlined by a standards body, but it is reasonably easy to implement.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">See <a href="#sampleBase52" class="auto internal xref">Figure 4</a> for an example.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <span id="name-example-uuid-encoded-as-base5"></span><div id="sampleBase52">
 <figure id="figure-4">
-          <div class="alignLeft art-text artwork" id="section-3.3-5.1">
+          <div class="alignLeft art-text artwork" id="section-3.3-6.1">
 <pre>
 FraqvVvqUBoEOFXsPYOPwUm
 </pre>
@@ -1827,10 +1848,10 @@ FraqvVvqUBoEOFXsPYOPwUm
         <h3 id="name-base58">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-base58" class="section-name selfRef">Base58</a>
         </h3>
-<p id="section-3.4-1">Base58, used by <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span> (and <span>[<a href="#Flickr" class="cite xref">Flickr</a>]</span>), is a popular alphabet similar to Crockford's Base32 in its character exclusions.
+<p id="section-3.4-1">Base58, used by <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span> (and <span>[<a href="#Flickr" class="cite xref">Flickr</a>]</span>), is a popular alphabet and similar to Base32 for Humans in its character exclusions.
 Base58 encodes a 128-bit UUID into a 22-character string (about 5.857 bits per character).
 Base58 typically omits <a href="#best_practice_padding" class="internal xref">Padding Characters</a>, and most implementations follow the same alphabet, with the <span>[<a href="#Base58xrp" class="cite xref">Base58xrp</a>]</span> variant being a notable exception.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.4-2">Base58 also compresses nullish characters (see {(best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">Base58 also compresses leading null bytes (see <a href="#best_practice_compression" class="auto internal xref">Section 4.9</a>) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.4-3">Base58 <a href="#best_practice_availability" class="internal xref">Encoding Availability</a> varies, but the format is well-known and commonly used for UUIDs in practice.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
 <p id="section-3.4-4">See <a href="#sampleBase58" class="auto internal xref">Figure 5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 <span id="name-example-uuid-encoded-as-bit"></span><div id="sampleBase58">
@@ -1851,14 +1872,17 @@ B7wc88dU4e3NyJEj3e944DK
         <h3 id="name-base62">
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-base62" class="section-name selfRef">Base62</a>
         </h3>
-<p id="section-3.5-1"><span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span> (defined by the IEEE) is the largest BaseXX alphabet that contains no special characters (<a href="#best_practice_special" class="internal xref">Special Characters</a>).
+<p id="section-3.5-1">Base62 is the largest BaseXX alphabet that contains no special characters (<a href="#best_practice_special" class="internal xref">Special Characters</a>).
 Base62 encodes a 128-bit UUID as a 22-character string (about 5.954 bits per character).
-During research the authors observed few libraries or discussions specifically using Base62 for UUIDs.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
-<p id="section-3.5-2">Base62 also compresses nullish characters (see {(best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
-<p id="section-3.5-3">See <a href="#sampleBase62" class="auto internal xref">Figure 6</a> for an example.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+During research the authors observed a number of libraries or discussions specifically using Base62 for UUIDs.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2"><span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span> (defined by the IEEE) is one implementation and <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span> is a variant that preserves sort order.
+Both variants use the same set of 62 characters but in a different order: <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span> orders the alphabet as <code>A–Za–z0–9</code> while <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span> orders it as <code>0–9A–Za–z</code> to preserve lexicographic sort order (see <a href="#alphabetTable" class="auto internal xref">Table 1</a>).
+Additionally, <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span> includes padding while <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span> does not.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3"><span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span> also compresses leading null bytes (see <a href="#best_practice_compression" class="auto internal xref">Section 4.9</a>) which may be desirable to further reduce the size of the encoded UUID.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-4">See <a href="#sampleBase62" class="auto internal xref">Figure 6</a> for an example.<a href="#section-3.5-4" class="pilcrow">¶</a></p>
 <span id="name-example-uuid-encoded-as-iee"></span><div id="sampleBase62">
 <figure id="figure-6">
-          <div class="alignLeft art-text artwork" id="section-3.5-4.1">
+          <div class="alignLeft art-text artwork" id="section-3.5-5.1">
 <pre>
 HiLegqjbBwUc0Q8tJ3ffs6
 </pre>
@@ -1877,12 +1901,13 @@ HiLegqjbBwUc0Q8tJ3ffs6
 <p id="section-3.6-1">Base64 alphabets require special characters (<a href="#best_practice_special" class="internal xref">Special Characters</a>) to complete the 64-symbol set, so they typically do not use character exclusions.
 Base64 encodes a 128-bit UUID into a 22-character string (6 bits per character), similar in length to Base58 and Base62.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <p id="section-3.6-2">Because symbols are involved, many other permutations exist and this document cannot cover them all; see <a href="#best_practice_usage" class="internal xref">Usage</a> when selecting an alphabet.
-The most common variants are the Base64 alphabet in <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span> and Base64url in <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
-<p id="section-3.6-3">Base64 is recommended when maximum compactness is desired without {(best_practice_compression}}{: format="title"}. For most use cases, Base64url (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>) is encouraged because it is safe for URLs, filenames and <a href="#best_practice_applications" class="internal xref">Application Specific</a> use cases.
+The most common variants are the Base64 alphabet in <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>, Base64url in <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span> and Base64sort (<span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>) (also known as Base64lex).<a href="#section-3.6-2" class="pilcrow">¶</a></p>
+<p id="section-3.6-3">Base64 is recommended when maximum compactness is desired without <a href="#best_practice_compression" class="internal xref">Compressing Characters</a>.
+For most use cases, Base64url (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>) is encouraged because it is safe for URLs, filenames and <a href="#best_practice_applications" class="internal xref">Application Specific</a> use cases.
 When lexicographical sorting that matches binary order is critical (for example, with UUIDv6 or UUIDv7), consider <code>Base64sort</code> (<span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>).<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">UUID implementers <span class="bcp14">SHOULD</span> implement Base64url because it already enjoys widespread availability (<a href="#best_practice_availability" class="internal xref">Encoding Availability</a>).<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">Base64 alphabets enjoy widespread availability (<a href="#best_practice_availability" class="internal xref">Encoding Availability</a>) and are far more common than Base32 as per an analysis of RFC4648 alphabet usage in the wild <span>[<a href="#RFC4648_Usage_Report" class="cite xref">RFC4648_Usage_Report</a>]</span>.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 <p id="section-3.6-5">See <a href="#sampleBase64" class="auto internal xref">Figure 7</a> and <a href="#sampleBase64url" class="auto internal xref">Figure 8</a> for examples.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
-<span id="name-example-uuid-encoded-as-base6"></span><div id="sampleBase64">
+<span id="name-example-uuid-encoded-using-"></span><div id="sampleBase64">
 <figure id="figure-7">
           <div class="alignLeft art-text artwork" id="section-3.6-6.1">
 <pre>
@@ -1890,10 +1915,10 @@ When lexicographical sorting that matches binary order is critical (for example,
 </pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-example-uuid-encoded-as-base6" class="selfRef">Example UUID encoded as Base64</a>
+<a href="#name-example-uuid-encoded-using-" class="selfRef">Example UUID encoded using the Base64 alphabet (with padding)</a>
           </figcaption></figure>
 </div>
-<span id="name-example-uuid-encoded-as-base64"></span><div id="sampleBase64url">
+<span id="name-example-uuid-encoded-using-t"></span><div id="sampleBase64url">
 <figure id="figure-8">
           <div class="alignLeft art-text artwork" id="section-3.6-7.1">
 <pre>
@@ -1901,7 +1926,18 @@ When lexicographical sorting that matches binary order is critical (for example,
 </pre>
 </div>
 <figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-example-uuid-encoded-as-base64" class="selfRef">Example UUID encoded as Base64 URL and Filename safe</a>
+<a href="#name-example-uuid-encoded-using-t" class="selfRef">Example UUID encoded using the Base64 URL and Filename safe alphabet (with padding)</a>
+          </figcaption></figure>
+</div>
+<span id="name-example-uuid-encoded-using-th"></span><div id="sampleBase64sort">
+<figure id="figure-9">
+          <div class="alignLeft art-text artwork" id="section-3.6-8.1">
+<pre>
+y0pEfbrg3S1bOF1VmGtfxV
+</pre>
+</div>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-example-uuid-encoded-using-th" class="selfRef">Example UUID encoded using the Base64 Lexicographically sortable and Filename safe alphabet (without padding)</a>
           </figcaption></figure>
 </div>
 </section>
@@ -1912,19 +1948,20 @@ When lexicographical sorting that matches binary order is critical (for example,
 <a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-base85" class="section-name selfRef">Base85</a>
         </h3>
 <p id="section-3.7-1">Base85 encodes 4 bytes as 5 characters (about 6.409 bits per character), so a 128-bit UUID can be represented in 20 characters.
-These alphabets include many special characters (<a href="#best_practice_special" class="auto internal xref">Section 4.5</a> and provide the most compact textual representation among the alphabets discussed.
-Common variants include Z85, Base85, and ASCII85.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.7-2">Some Base85 variants include compression techniques for certain byte sequences (see <a href="#best_practice_compression" class="internal xref">Compressing Nullish Characters</a>). Those techniques are not universal across all Base85 alphabets.<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+These alphabets include many special characters (<a href="#best_practice_special" class="internal xref">Special Characters</a>), and provide the most compact textual representation among the alphabets discussed.
+Common variants include Z85, <span>[<a href="#RFC1924" class="cite xref">RFC1924</a>]</span> Base85, and ASCII85.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">Some Base85 variants include compression techniques for certain byte sequences (see <a href="#best_practice_compression" class="internal xref">Compressing Characters</a>).
+Those techniques are not universal across all Base85 alphabets.<a href="#section-3.7-2" class="pilcrow">¶</a></p>
 <p id="section-3.7-3">Z85 is the recommended Base85 variant for UUIDs when Base85 is desired.<a href="#section-3.7-3" class="pilcrow">¶</a></p>
-<p id="section-3.7-4">See <a href="#sampleBase85" class="auto internal xref">Figure 9</a> for an example.<a href="#section-3.7-4" class="pilcrow">¶</a></p>
+<p id="section-3.7-4">See <a href="#sampleBase85" class="auto internal xref">Figure 10</a> for an example.<a href="#section-3.7-4" class="pilcrow">¶</a></p>
 <span id="name-example-uuid-encoded-as-base8"></span><div id="sampleBase85">
-<figure id="figure-9">
+<figure id="figure-10">
           <div class="alignLeft art-text artwork" id="section-3.7-5.1">
 <pre>
 {-iekEE4M)R!2&gt;3:Stl&gt;
 </pre>
 </div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
 <a href="#name-example-uuid-encoded-as-base8" class="selfRef">Example UUID encoded as Base85 using Z85 alphabet</a>
           </figcaption></figure>
 </div>
@@ -1946,12 +1983,13 @@ Requirements that matter for one application may be irrelevant for another; the 
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-usage" class="section-name selfRef">Usage</a>
         </h3>
 <p id="section-4.1-1">Understanding how a UUID will be used is the most important step when choosing an alternate encoding.
-That analysis affects many of the considerations that follow: there is no single correct choice for every scenario.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+That analysis affects many of the considerations that follow.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">For example, a UUID used as a logging prefix should be compact to reduce log size, while a UUID that must be read or spoken by humans should avoid characters that are easily confused.
 Shorter encodings with character exclusions are preferable when values are recited by phone or written by hand to reduce transcription errors.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">Datastores (see <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>) care about case sensitivity, alphabet ordering, and encoded length because these factors affect sorting, storage, and performance at scale.
-UUIDs transmitted between machines benefit from compact encodings to reduce bytes on the wire and improve behavior on limited-MTU or high-latency networks.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+UUIDs transmitted between machines benefit from extremely compact encodings to reduce bytes on the wire and improve behavior on limited-MTU or high-latency networks.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-4">For resource-constrained devices such as IoT endpoints, prefer encodings that are computationally inexpensive to encode and decode.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">The general statement by the authors is as follows: there is no single correct choice to cover every scenario.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_length">
@@ -1959,7 +1997,7 @@ UUIDs transmitted between machines benefit from compact encodings to reduce byte
         <h3 id="name-maximum-character-length">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-maximum-character-length" class="section-name selfRef">Maximum Character Length</a>
         </h3>
-<p id="section-4.2-1">The number of characters in a given encoding alphabet is directly correlated to the size of the alternate UUID encoding output.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">The number of characters/symbols in a given encoding alphabet is directly correlated to the size of the alternate UUID encoding output.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">As a starting point the encodings defined by RFC9562 are Binary, Integer, and Hex.
 Base02 (Binary) version of a UUID is 128 characters in length consisting of 0s and 1s.
 The Base10 (decimal/integer) version of a UUID is 39 characters consisting of characters 0 through 9 while the Base16 (Hex) version of a UUID shortens this to 32 characters by using characters 0 through 9 and A through F.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
@@ -2016,7 +2054,7 @@ Further, some of these alphabets require unique math to properly apply to the fi
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">26</td>
             </tr>
@@ -2033,14 +2071,21 @@ Further, some of these alphabets require unique math to properly apply to the fi
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">22</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">22</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">22</td>
             </tr>
@@ -2087,8 +2132,9 @@ Further, some of these alphabets require unique math to properly apply to the fi
 It is recommended to use the equal sign since it is the most well-known padding character among the various BaseXX encodings.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.3-3">Further, this character is almost always in the least significant, right-most section of a given alternate UUID encoding.
 The padding <span class="bcp14">SHOULD</span> stay in this position and moving the character can have ramifications for sorting.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.3-4">Since UUIDs defined by <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> are always 128 bits, padding <span class="bcp14">MAY</span> be omitted and the resulting output will always be the same length.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
-<p id="section-4.3-5"><a href="#paddingTable" class="auto internal xref">Table 3</a> compares padding usage among the BaseXX encoding methods in this document.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">For example, Base64sort (<span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>) allows for either the equal sign (=) or tilde (~) as a padding character, but only the tilde is valid for sorting because the equal sign is lexicographically less than all other characters in the alphabet.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.3-5">Since UUIDs defined by <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span> are always 128 bits, padding <span class="bcp14">MAY</span> be omitted and the resulting output will always be the same length.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.3-6"><a href="#paddingTable" class="auto internal xref">Table 3</a> compares padding usage among the BaseXX encoding methods in this document.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
 <span id="name-alt-uuid-encoding-padding-c"></span><div id="paddingTable">
 <table class="center" id="table-3">
           <caption>
@@ -2134,7 +2180,7 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2151,16 +2197,23 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base64</td>
@@ -2181,7 +2234,7 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
               <td class="text-left" rowspan="1" colspan="1">
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
-              <td class="text-left" rowspan="1" colspan="1">Y (=)</td>
+              <td class="text-left" rowspan="1" colspan="1">Y (= or ~)</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base85</td>
@@ -2251,7 +2304,7 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y (*,~,$,=,U,u)</td>
             </tr>
@@ -2268,14 +2321,21 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y (SHA256-based)</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">N</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2318,14 +2378,14 @@ The padding <span class="bcp14">SHOULD</span> stay in this position and moving t
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-special-characters" class="section-name selfRef">Special Characters</a>
         </h3>
 <p id="section-4.5-1">After all of the alpha-numeric characters are used a BaseXX alphabet must resort to using special characters such as but not limited to underscore (_), hyphen (-), plus (+), forward slash (/), dollar sign ($), etc.
-This usually occurs around 62 characters (ten digits 0-9, 26 lowercase english characters, 26 uppercase english characters) but may happen with earlier BaseXX alphabets when specific characters are excluded.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+This usually occurs around 62 characters (ten digits 0-9, 26 lowercase English characters, 26 uppercase English characters) but may happen with earlier BaseXX alphabets when specific characters are excluded.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 <p id="section-4.5-2">The inclusion of these characters decrease the overall size of the encoded UUID but have implications in regards to not just sorting and readability but often application usage.
-For example Base64 as defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span> has two alphabets which change the special characters to ensure safe usage with URLs and Filenames.
-Another example is the ability to double-click a UUID and copy the value.
+For example Base64 as defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span> has two alphabets which change the special characters to ensure safe usage with URLs and Filenames.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.5-3">Another example is the ability to double-click a UUID and copy the value.
 When special characters are present the text highlight starts and stops between these characters.
-In such a scenario, if this is important one should implement a BaseXX Alphabet with no such characters.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
-<p id="section-4.5-3">When evaluating a baseXX encoding, care must be taken to ensure the special characters are compatible with the desired use case.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
-<p id="section-4.5-4"><a href="#specialTable" class="auto internal xref">Table 5</a> compares special character inclusions among the BaseXX encoding methods in this document.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
+In such a scenario, if this is important one should implement a BaseXX Alphabet with no such characters.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.5-4">When evaluating a baseXX encoding, care must be taken to ensure the special characters are compatible with the desired use case.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
+<p id="section-4.5-5"><a href="#specialTable" class="auto internal xref">Table 5</a> compares special character inclusions among the BaseXX encoding methods in this document.<a href="#section-4.5-5" class="pilcrow">¶</a></p>
 <span id="name-alt-uuid-encoding-special-c"></span><div id="specialTable">
 <table class="center" id="table-5">
           <caption>
@@ -2371,7 +2431,7 @@ In such a scenario, if this is important one should implement a BaseXX Alphabet 
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2388,14 +2448,21 @@ In such a scenario, if this is important one should implement a BaseXX Alphabet 
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">N</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2437,26 +2504,26 @@ In such a scenario, if this is important one should implement a BaseXX Alphabet 
         <h3 id="name-character-exclusions">
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-character-exclusions" class="section-name selfRef">Character Exclusions</a>
         </h3>
-<p id="section-4.6-1">Newer BaseXX alphabet may exclude characters and keep only one value present.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
-<p id="section-4.6-2">This often occurs when multiple characters are similar in shape which which may lead to issues when humans are required to read the characters aloud or manually transpose the characters by hand.
-Some characters may be excluded for other reasons.
-For example it may be advantageous to remove 0 as a possible option to eliminate the possibility of leading 0s in the output data which may lead to problems in specific use cases where leading 0s are not permitted or may be inadvertently removed by the application.
-Finally, in some smaller BaseXX alphabets it is possible to exclude characters because they are not required to fill out the space.
-The notable example is Base32hex defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span> which only uses A through V because the remaining slots are filled by numeric 0-9.<a href="#section-4.6-2" class="pilcrow">¶</a></p>
-<p id="section-4.6-3">The following character groupings illustrate some of the problematic characters that are similarly shaped.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.6-4">
+<p id="section-4.6-1">Newer BaseXX alphabets may exclude characters, retaining only one character from each group of visually similar characters.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-2">This often occurs when multiple characters are similar in shape, which may lead to issues when humans are required to read the characters aloud or manually transpose the characters by hand.
+Some characters may be excluded for other non-obvious reasons like avoiding potential vulgar words or other application-specific issues.<a href="#section-4.6-2" class="pilcrow">¶</a></p>
+<p id="section-4.6-3">For example it may be advantageous to remove 0 as a possible option to eliminate the possibility of leading 0s in the output data which may lead to problems in specific use cases where leading 0s are not permitted or may be inadvertently removed by the application.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.6-4">Finally, in some smaller BaseXX alphabets it is possible to exclude characters because they are not required to fill out the space.
+The notable example is Base32hex defined by <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span> which only uses A through V because the remaining slots are filled by numeric 0-9.<a href="#section-4.6-4" class="pilcrow">¶</a></p>
+<p id="section-4.6-5">The following character groupings illustrate some of the problematic characters that are similarly shaped.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.6-6">
 <pre>
 - 0, O, o
 - 1, I, i, L, l
 - 2, Z, z
 - 5, S, s
 - V, v, U, u
-</pre><a href="#section-4.6-4" class="pilcrow">¶</a>
+</pre><a href="#section-4.6-6" class="pilcrow">¶</a>
 </div>
-<p id="section-4.6-5">Unfortunately there is no consistent method for which character is omitted or removed.
-Some BaseXX alphabets may remove the numeric characters while others may remove one or both of the english characters often replacing them with symbols in larger BaseXX alphabets to fill the gaps.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
-<p id="section-4.6-6">Implementations should vet BaseXX alphabets with character exclusions thoroughly to ensure any possible inclusion of symbols does not cause problems while also verifying that sorting is not impacted if sorting is a requirement.<a href="#section-4.6-6" class="pilcrow">¶</a></p>
-<p id="section-4.6-7"><a href="#exclusionTable" class="auto internal xref">Table 6</a> compares character exclusions among the BaseXX encoding methods in this document.<a href="#section-4.6-7" class="pilcrow">¶</a></p>
+<p id="section-4.6-7">Unfortunately there is no consistent method for which character is omitted or removed.
+Some BaseXX alphabets may remove the numeric characters while others may remove one or both of the English characters, often replacing them with symbols in larger BaseXX alphabets to fill the gaps.<a href="#section-4.6-7" class="pilcrow">¶</a></p>
+<p id="section-4.6-8">Implementations should vet BaseXX alphabets with character exclusions thoroughly to ensure any possible inclusion of symbols does not cause problems while also verifying that sorting is not impacted if sorting is a requirement.<a href="#section-4.6-8" class="pilcrow">¶</a></p>
+<p id="section-4.6-9"><a href="#exclusionTable" class="auto internal xref">Table 6</a> compares character exclusions among the BaseXX encoding methods in this document.<a href="#section-4.6-9" class="pilcrow">¶</a></p>
 <span id="name-alt-uuid-encoding-character"></span><div id="exclusionTable">
 <table class="center" id="table-6">
           <caption>
@@ -2502,7 +2569,7 @@ Some BaseXX alphabets may remove the numeric characters while others may remove 
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y (Ii,Ll,Oo,Uu)</td>
             </tr>
@@ -2519,14 +2586,21 @@ Some BaseXX alphabets may remove the numeric characters while others may remove 
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y (0,I,O,l)</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">N</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2570,7 +2644,8 @@ Some BaseXX alphabets may remove the numeric characters while others may remove 
         </h3>
 <p id="section-4.7-1">Case sensitivity becomes important when the alphabet includes more than 32 characters.
 For alphabets at or below Base32 (for example, Base16), uppercase and lowercase characters are often treated interchangeably; for larger alphabets, uppercase and lowercase letters represent distinct values.<a href="#section-4.7-1" class="pilcrow">¶</a></p>
-<p id="section-4.7-2">In most scenarios, uppercase letters are ordered before lowercase letters. This ordering directly impacts sorting because many applications sort uppercase characters before lowercase characters.
+<p id="section-4.7-2">In most scenarios, uppercase letters are ordered before lowercase letters.
+This ordering directly impacts sorting because many applications sort uppercase characters before lowercase characters.
 Sorting is further covered in <a href="#best_practice_sorting" class="internal xref">Sorting and Ordering</a>.<a href="#section-4.7-2" class="pilcrow">¶</a></p>
 <p id="section-4.7-3">The BaseXX alphabet used also changes comparison logic: "aBc" does not necessarily equal "AbC" in all encodings.<a href="#section-4.7-3" class="pilcrow">¶</a></p>
 <p id="section-4.7-4"><a href="#sensitivityTable" class="auto internal xref">Table 7</a> compares case sensitivity among the BaseXX encoding methods in this document.<a href="#section-4.7-4" class="pilcrow">¶</a></p>
@@ -2619,7 +2694,7 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">N</td>
             </tr>
@@ -2636,14 +2711,21 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">Y</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
             </tr>
@@ -2685,7 +2767,7 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
         <h3 id="name-sorting-and-ordering">
 <a href="#section-4.8" class="section-number selfRef">4.8. </a><a href="#name-sorting-and-ordering" class="section-name selfRef">Sorting and Ordering</a>
         </h3>
-<p id="section-4.8-1">Lexicographical sorting of UUIDs is a very important factor to many applications and the ordering of the BaseXX alphabet directly impacts the sorting of the encoded UUID output such as those created by UUIDv6 and UUIDv7 where Lexicographically sortable UUIDs are a key feature of underlying algorithm.<a href="#section-4.8-1" class="pilcrow">¶</a></p>
+<p id="section-4.8-1">Lexicographical sorting of UUIDs is a very important factor to many applications and the ordering of the BaseXX alphabet directly impacts the sorting of the encoded UUID output such as those created by UUIDv6 and UUIDv7 where lexicographically sortable UUIDs are a key feature of the underlying algorithm.<a href="#section-4.8-1" class="pilcrow">¶</a></p>
 <p id="section-4.8-2">The BaseXX alphabets generally consist of two or more of the following 4 components with optional omissions as defined by <a href="#best_practice_exclusions" class="auto internal xref">Section 4.6</a>:<a href="#section-4.8-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.8-3">
 <pre>
@@ -2695,21 +2777,23 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
 4. Symbols: underscore (_), hyphen (-), plus (+), forward slash (/), dollar sign ($), etc.
 </pre><a href="#section-4.8-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4.8-4">The ordering of these is traditionally Numeric, Uppercase, Lowercase and Symbols. However for ordering purposes, some symbols may be placed at a different position to adhere to their position found in US-ASCII (<span>[<a href="#RFC20" class="cite xref">RFC20</a>]</span>).<a href="#section-4.8-4" class="pilcrow">¶</a></p>
-<p id="section-4.8-5">A common sorting example is a symbol like the dash (-) character may sort before numbers while other special such as an underscore (_) will be sorted after the uppercase characters but before the lowercase characters if sorted via their ASCII values.<a href="#section-4.8-5" class="pilcrow">¶</a></p>
-<p id="section-4.8-6">If an implementation would like to ensure the sort order of the encoded value remains the same as the Base02 (binary) or Base10 (decimal) value one should scrutinize the position of the underlying BaseXX alphabets, their ordering and the includes symbols.<a href="#section-4.8-6" class="pilcrow">¶</a></p>
-<p id="section-4.8-7"><a href="#alphabetTrend" class="auto internal xref">Figure 10</a> illustrate the ordering trends for some common BaseXX Alphabets.<a href="#section-4.8-7" class="pilcrow">¶</a></p>
+<p id="section-4.8-4">The ordering of these is traditionally Numeric, Uppercase, Lowercase and Symbols.
+However for ordering purposes, some symbols may be placed at a different position to adhere to their position found in US-ASCII (<span>[<a href="#RFC20" class="cite xref">RFC20</a>]</span>).<a href="#section-4.8-4" class="pilcrow">¶</a></p>
+<p id="section-4.8-5">A common sorting example is a symbol like the dash (-) character may sort before numbers while other special characters such as an underscore (_) will be sorted after the uppercase characters but before the lowercase characters if sorted via their ASCII values.<a href="#section-4.8-5" class="pilcrow">¶</a></p>
+<p id="section-4.8-6">If an implementation would like to ensure the sort order of the encoded value remains the same as the Base02 (binary) or Base10 (decimal) value one should scrutinize the position of the underlying BaseXX alphabets, their ordering and the included symbols.<a href="#section-4.8-6" class="pilcrow">¶</a></p>
+<p id="section-4.8-7"><a href="#alphabetTrend" class="auto internal xref">Figure 11</a> illustrate the ordering trends for some common BaseXX Alphabets that adhere to the US-ASCII character set and their ordering of the various components.<a href="#section-4.8-7" class="pilcrow">¶</a></p>
 <span id="name-alphabet-ordering-compariso"></span><div id="alphabetTrend">
-<figure id="figure-10">
+<figure id="figure-11">
           <div class="alignLeft art-text artwork" id="section-4.8-8.1">
 <pre>
-- Base10: 0123456789
-- Base36: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
-- Base62: 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
-- Base64: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
+- Base10:      0123456789
+- Base32hex:   0123456789ABCDEFGHIJKLMNOPQRSTUV
+- Base36:      0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
+- Base62sort:  0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+- Base64sort: -0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
 </pre>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-alphabet-ordering-compariso" class="selfRef">Alphabet Ordering Comparison</a>
           </figcaption></figure>
 </div>
@@ -2759,7 +2843,7 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
             </tr>
@@ -2776,14 +2860,21 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">N</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">Y</td>
             </tr>
@@ -2822,11 +2913,11 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
 </div>
 <div id="best_practice_compression">
 <section id="section-4.9">
-        <h3 id="name-compressing-nullish-charact">
-<a href="#section-4.9" class="section-number selfRef">4.9. </a><a href="#name-compressing-nullish-charact" class="section-name selfRef">Compressing Nullish Characters</a>
+        <h3 id="name-compressing-characters">
+<a href="#section-4.9" class="section-number selfRef">4.9. </a><a href="#name-compressing-characters" class="section-name selfRef">Compressing Characters</a>
         </h3>
-<p id="section-4.9-1">Some BaseXX alphabets may use varying techniques for compressing nullish characters which can sometimes yield values smaller than what is cited in <a href="#best_practice_length" class="auto internal xref">Section 4.2</a>.<a href="#section-4.9-1" class="pilcrow">¶</a></p>
-<p id="section-4.9-2"><a href="#Base36" class="internal xref">Base36</a>, <a href="#Base52" class="internal xref">Base52</a>, <a href="#Base58" class="internal xref">Base58</a>, <a href="#Base62" class="internal xref">Base62</a> will trim leading zero characters before attempting to encode the data.<a href="#section-4.9-2" class="pilcrow">¶</a></p>
+<p id="section-4.9-1">Some BaseXX alphabets may use varying techniques for compressing null bytes (0x00), whitespace, or long runs of the continuous characters which can sometimes yield values smaller than what is cited in <a href="#best_practice_length" class="auto internal xref">Section 4.2</a>.<a href="#section-4.9-1" class="pilcrow">¶</a></p>
+<p id="section-4.9-2"><a href="#Base36" class="internal xref">Base36</a>, <a href="#Base52" class="internal xref">Base52</a>, <a href="#Base58" class="internal xref">Base58</a>, and <a href="#Base62ieee" class="internal xref">A secure, lossless, and compressed Base62 encoding</a> will trim leading zero characters before attempting to encode the data.<a href="#section-4.9-2" class="pilcrow">¶</a></p>
 <p id="section-4.9-3"><a href="#Base85" class="internal xref">Base85</a> alphabets may employ a technique to compress a continuous four byte sequence of ASCII Space characters as the character lowercase y.<a href="#section-4.9-3" class="pilcrow">¶</a></p>
 <p id="section-4.9-4"><a href="#Base85" class="internal xref">Base85</a> alphabets may also compress a continuous four byte sequence of ASCII Zero characters as the character lowercase z.<a href="#section-4.9-4" class="pilcrow">¶</a></p>
 <p id="section-4.9-5">The leading zero compression technique can be observed in <a href="#test_vectors_nil_uuid" class="auto internal xref">Appendix C.2</a> using NIL UUID input to illustrate the output featuring a much smaller value than the outputs found in other test vectors.<a href="#section-4.9-5" class="pilcrow">¶</a></p>
@@ -2839,9 +2930,11 @@ Sorting is further covered in <a href="#best_practice_sorting" class="internal x
 <a href="#section-4.10" class="section-number selfRef">4.10. </a><a href="#name-encoding-availability" class="section-name selfRef">Encoding Availability</a>
         </h3>
 <p id="section-4.10-1">The BaseXX alphabet encoding availability may be the second greatest hurdle implementations navigate as they chose a viable alternate encoding for UUID.<a href="#section-4.10-1" class="pilcrow">¶</a></p>
-<p id="section-4.10-2">For example, traditional Base64url safe sees far more implementations than Base32hex while even fewer have implemented Base62 or even Crockford's Base32 variant.<a href="#section-4.10-2" class="pilcrow">¶</a></p>
+<p id="section-4.10-2">For example, traditional Base64url safe sees far more standard implementations than Base32hex as per <span>[<a href="#RFC4648_Usage_Report" class="cite xref">RFC4648_Usage_Report</a>]</span> while even fewer have implemented Base62 or Base36 variants.<a href="#section-4.10-2" class="pilcrow">¶</a></p>
 <p id="section-4.10-3">The ability to utilize a given encoding or provide a customized alphabet may be a limiting factor in implementations.
 In this scenario implementors will need to write their own, leverage third-party libraries or select a viable alternative.<a href="#section-4.10-3" class="pilcrow">¶</a></p>
+<p id="section-4.10-4">This is being addressed in some ways by standardizing documents such as <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span> or <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span> but there are still many BaseXX alphabets that do not have concrete specifications outlined by a standards body.
+Further, it takes time for a languages and applications to implement and adopt these standards and for the standards to be widely adopted by the community.<a href="#section-4.10-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_computation">
@@ -2849,8 +2942,8 @@ In this scenario implementors will need to write their own, leverage third-party
         <h3 id="name-computation">
 <a href="#section-4.11" class="section-number selfRef">4.11. </a><a href="#name-computation" class="section-name selfRef">Computation</a>
         </h3>
-<p id="section-4.11-1">The various base encodings have more or less computational requirements based on the size of the alphabet, the total number of bits encoded per character, if checksums are involved, and if floating point math is required.<a href="#section-4.11-1" class="pilcrow">¶</a></p>
-<p id="section-4.11-2">For reference Base02 uses 2 bits per character encoding while Base10 uses 4 bits per character and Base32 uses 5 bits and Base64 uses 6 bits.
+<p id="section-4.11-1">The various base encodings have more or less computational requirements based on the size of the alphabet, the total number of bits encoded per character, if checksums are involved, and if floating point math is required (e.g radix-xx computations).<a href="#section-4.11-1" class="pilcrow">¶</a></p>
+<p id="section-4.11-2">For reference, Base02 uses 1 bit per character, Base10 uses about 3.322 bits per character, Base16 uses 4 bits per character, Base32 uses 5 bits, and Base64 uses 6 bits.
 While non–power-of-two alphabets like Base36, Base58, or Base62 use approximately 5.169, 5.857, and 5.954 bits per character respectively, the computation is log<sub>2</sub>(XX) where XX is the alphabet length.<a href="#section-4.11-2" class="pilcrow">¶</a></p>
 <p id="section-4.11-3"><a href="#bitsTable" class="auto internal xref">Table 9</a> compares bits per character among the BaseXX encoding methods in this document.<a href="#section-4.11-3" class="pilcrow">¶</a></p>
 <span id="name-alt-uuid-encoding-bits-comp"></span><div id="bitsTable">
@@ -2898,7 +2991,7 @@ While non–power-of-two alphabets like Base36, Base58, or Base62 use approximat
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">5.000</td>
             </tr>
@@ -2915,14 +3008,21 @@ While non–power-of-two alphabets like Base36, Base58, or Base62 use approximat
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">5.857</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">5.954</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">5.954</td>
             </tr>
@@ -2981,7 +3081,7 @@ This section features a limited list compiling some known restrictions that impl
 <a href="#section-4.12.2" class="section-number selfRef">4.12.2. </a><a href="#name-dns-record" class="section-name selfRef">DNS Record</a>
           </h4>
 <p id="section-4.12.2-1">Domain Name Systems (DNS) are case insensitive with the period or dot character (.) being a reserved symbol. <span>[<a href="#RFC9499" class="cite xref">RFC9499</a>], <a href="https://rfc-editor.org/rfc/rfc9499#section-2" class="relref">Section 2</a></span><a href="#section-4.12.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.12.2-2">Thus BaseXX alphabets that utilize this character or use upper and lowercase values as defined by {#best_practice_sensitivity}{: format="title"} should be avoided.<a href="#section-4.12.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.12.2-2">Thus BaseXX alphabets that utilize this character or use upper and lowercase values as defined by <a href="#best_practice_sensitivity" class="internal xref">Case Sensitivity</a> should be avoided.<a href="#section-4.12.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_markup">
@@ -2990,21 +3090,48 @@ This section features a limited list compiling some known restrictions that impl
 <a href="#section-4.12.3" class="section-number selfRef">4.12.3. </a><a href="#name-xml-html-css" class="section-name selfRef">XML, HTML, CSS</a>
           </h4>
 <p id="section-4.12.3-1">Extensible Markup Language (<span>[<a href="#XML" class="cite xref">XML</a>]</span>) namespaces cannot start with a leading numeric character.<a href="#section-4.12.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.12.3-2">While older versions of Hypertext Markup Language (<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>}) had restrictions on element identifiers starting with a leading digit; HTML5 does not have any such restrictions.
+<p id="section-4.12.3-2">While older versions of Hypertext Markup Language (<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>) had restrictions on element identifiers starting with a leading digit, HTML5 does not have any such restrictions.
 The same goes for Cascading Style Sheet (<span>[<a href="#CSS" class="cite xref">CSS</a>]</span>) selectors identifiers where older versions would have issues when identifiers start with digits.<a href="#section-4.12.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.12.3-3">Thus for XML, HTML, and CSS it is advantageous to use some advanced methods such as:<a href="#section-4.12.3-3" class="pilcrow">¶</a></p>
 <ul class="compact">
 <li class="compact" id="section-4.12.3-4.1">
-              <p id="section-4.12.3-4.1.1">Leveraging the alternate UUID encoding technique defined in <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span> to ensure that the first digit is always an uppercase alphabet character.<a href="#section-4.12.3-4.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.12.3-4.1.1">Leveraging the alternate UUID encoding technique defined via <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span> (UUID-NCName-32, UUID-NCName-58 or UUID-NCName-64) to ensure that the first digit is always an uppercase alphabet character.<a href="#section-4.12.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-4.12.3-4.2">
-              <p id="section-4.12.3-4.2.1">Utilize <a href="#Base52" class="auto internal xref">Section 3.3</a> which ensures the output UUID does not start with a special character or digit.<a href="#section-4.12.3-4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.12.3-4.2.1">An alternative algorithm to the NCNAME method is to prefix a value like <code>b0100</code> or <code>b10</code> as seen in <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> or <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span> to ensure the first character is always a letter.<a href="#section-4.12.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="compact" id="section-4.12.3-4.3">
-              <p id="section-4.12.3-4.3.1">Simply prefix the first non-digit/non-special character in the given alphabet.
-For example, if uppercase A is available; prefix this character to satisfy the constraints.<a href="#section-4.12.3-4.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.12.3-4.3.1">Utilize <a href="#Base52" class="auto internal xref">Section 3.3</a> which ensures the output UUID does not start with a special character or digit.<a href="#section-4.12.3-4.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.12.3-4.4">
+              <p id="section-4.12.3-4.4.1">Simply prefix the first non-digit/non-special character in the given alphabet.
+For example, if uppercase A is available, prefix this character to satisfy the constraints.<a href="#section-4.12.3-4.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
+</section>
+</div>
+<div id="best_practice_database_keys">
+<section id="section-4.12.4">
+          <h4 id="name-database-keys">
+<a href="#section-4.12.4" class="section-number selfRef">4.12.4. </a><a href="#name-database-keys" class="section-name selfRef">Database Keys</a>
+          </h4>
+<p id="section-4.12.4-1">Databases often have specific requirements for keys such as case sensitivity, sorting, and maximum length.<a href="#section-4.12.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.12.4-2">When using alternate UUID encodings as database keys, it is important to consider these requirements and select an encoding that meets them.<a href="#section-4.12.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.12.4-3">Database implementors should consider <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> or <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span> when using alternate UUID encodings as database keys to ensure the first character is an uppercase alphabet character and the output is compact.<a href="#section-4.12.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.12.4-4">Base62id is preferred over Base64uuid due to the lack of special characters in the alphabet which can cause issues with sorting and other database operations.<a href="#section-4.12.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.12.4-5">It should also be noted that Base64uuid differs from Base64sort in that the hyphen character (-) in the first position of the alphabet is replaced with a dollar sign ($) as seen in <a href="#base64sortuuid" class="auto internal xref">Figure 12</a>.<a href="#section-4.12.4-5" class="pilcrow">¶</a></p>
+<span id="name-comparison-of-base64sort-an"></span><div id="base64sortuuid">
+<figure id="figure-12">
+            <div class="alignLeft art-text artwork" id="section-4.12.4-6.1">
+<pre>
+Base64sort: -0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+Base64uuid: $0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
+</pre>
+</div>
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<a href="#name-comparison-of-base64sort-an" class="selfRef">Comparison of Base64sort and Base64uuid Alphabets</a>
+            </figcaption></figure>
+</div>
 </section>
 </div>
 </section>
@@ -3016,7 +3143,7 @@ For example, if uppercase A is available; prefix this character to satisfy the c
       <h2 id="name-parsing">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-parsing" class="section-name selfRef">Parsing</a>
       </h2>
-<p id="section-5-1">This document focuses on generating UUIDs via alternate formats over parsing UUIDs of alternate encoding formats.
+<p id="section-5-1">This document focuses on generating UUIDs via alternate formats rather than parsing UUIDs of alternate encoding formats.
 The generic default for any existing <code>uuid_parse(uuid)</code> function <span class="bcp14">SHOULD</span> remain that of <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span> hex-and-dash string format.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">Implementors <span class="bcp14">MAY</span> provide parse functionality to parse UUIDs of alternate formats such as <code>uuid_parse(uuid, encoding="base64url")</code>.
 The distribution (and naming) of the encoding algorithm among disparate systems is outside of the scope of this document.<a href="#section-5-2" class="pilcrow">¶</a></p>
@@ -3051,7 +3178,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>
 </td>
-            <td class="text-left" rowspan="1" colspan="1">Not Recommended with UUID. Leverage Base32hex or Crockford's Base32.</td>
+            <td class="text-left" rowspan="1" colspan="1">Not Recommended with UUID. Leverage Base32hex or Base32 for Humans.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base32</td>
@@ -3063,33 +3190,40 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base32</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+              <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
-            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting and Humans usage is required.</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting and human usage is required.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base36</td>
             <td class="text-left" rowspan="1" colspan="1">---</td>
-            <td class="text-left" rowspan="1" colspan="1">Not Recommended with UUID. Leverage Base32hex or Crockford's Base32.</td>
+            <td class="text-left" rowspan="1" colspan="1">Not Recommended with UUID. Leverage Base32hex or Base32 for Humans.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base52</td>
             <td class="text-left" rowspan="1" colspan="1">---</td>
-            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting is required, special characters/digits pose problems variable length UUIDs is not a problem.</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting is required, special characters/digits pose problems, and variable-length UUIDs are not a problem.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base58</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+              <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
-            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting, humans usage is required and variable length UUIDs is not a problem.</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting and human usage is required, and variable-length UUIDs are not a problem.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base62</td>
             <td class="text-left" rowspan="1" colspan="1">
-              <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+              <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
-            <td class="text-left" rowspan="1" colspan="1">Recommended when variable length UUIDs is not a problem.</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when variable-length UUIDs are not a problem.</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Base62</td>
+            <td class="text-left" rowspan="1" colspan="1">
+              <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when sorting is required and special characters/digits pose problems.</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">Base64</td>
@@ -3117,7 +3251,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <td class="text-left" rowspan="1" colspan="1">
               <span>[<a href="#Z85" class="cite xref">Z85</a>]</span>
 </td>
-            <td class="text-left" rowspan="1" colspan="1">Recommended when symbols are of no issues.</td>
+            <td class="text-left" rowspan="1" colspan="1">Recommended when symbols are not a concern.</td>
           </tr>
         </tbody>
       </table>
@@ -3177,25 +3311,41 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="Base32human">[Base32human]</dt>
+        <dd>
+<span class="refAuthor">Crockford, D.</span> and <span class="refAuthor">K. Davis</span>, <span class="refTitle">"Base32 for Humans"</span>, <time datetime="2026-04" class="refDate">April 2026</time>, <span>&lt;<a href="https://github.com/douglascrockford/Base32">https://github.com/douglascrockford/Base32</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Base58btc">[Base58btc]</dt>
+        <dd>
+<span class="refAuthor">Bitcoin</span>, <span class="refTitle">"Bitcoin Base58 Implementation"</span>, <span class="seriesInfo">commit fae71d3</span>, <time datetime="2008-11" class="refDate">November 2008</time>, <span>&lt;<a href="https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp">https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="Base58xrp">[Base58xrp]</dt>
         <dd>
 <span class="refAuthor">XRP Ledger</span>, <span class="refTitle">"base58 Encodings"</span>, <time datetime="2024" class="refDate">2024</time>, <span>&lt;<a href="https://xrpl.org/docs/references/protocol/data-types/base58-encodings">https://xrpl.org/docs/references/protocol/data-types/base58-encodings</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Base62id">[Base62id]</dt>
+        <dd>
+<span class="refAuthor">Prokhorenko, S.</span>, <span class="refTitle">"Base62id Encoding Specification for Binary UUIDs"</span>, <time datetime="2026-04" class="refDate">April 2026</time>, <span>&lt;<a href="https://github.com/sergeyprokhorenko/Base62id/">https://github.com/sergeyprokhorenko/Base62id/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Base62ieee">[Base62ieee]</dt>
+        <dd>
+<span class="refAuthor">IEEE</span>, <span class="refTitle">"A secure, lossless, and compressed Base62 encoding"</span>, <time datetime="2008-11" class="refDate">November 2008</time>, <span>&lt;<a href="https://ieeexplore.ieee.org/document/4737287">https://ieeexplore.ieee.org/document/4737287</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Base62sort">[Base62sort]</dt>
+        <dd>
+<span class="refAuthor">Wu, P.-C.</span>, <span class="refTitle">"A base62 transformation format of ISO 10646 for multilingual identifiers"</span>, <time datetime="2001-08" class="refDate">August 2001</time>, <span>&lt;<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.408">https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.408</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="Base64sort">[Base64sort]</dt>
         <dd>
 <span class="refAuthor">Davis, K.</span>, <span class="refTitle">"A Sortable Base64 Alphabet"</span>, <time datetime="2025-12" class="refDate">December 2025</time>, <span>&lt;<a href="https://github.com/kyzer-davis/base64-sort-ietf-draft">https://github.com/kyzer-davis/base64-sort-ietf-draft</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="Bitcoin">[Bitcoin]</dt>
+<dt id="Base64uuid">[Base64uuid]</dt>
         <dd>
-<span class="refAuthor">Bitcoin</span>, <span class="refTitle">"A secure, lossless, and compressed Base62 encoding"</span>, <span class="seriesInfo">commit fae71d3</span>, <time datetime="2008-11" class="refDate">November 2008</time>, <span>&lt;<a href="https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp">https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp</a>&gt;</span>. </dd>
+<span class="refAuthor">Prokhorenko, S.</span>, <span class="refTitle">"The Base64UUID Encoding and Choice of Encoding for UUID"</span>, <time datetime="2026-04" class="refDate">April 2026</time>, <span>&lt;<a href="https://github.com/sergeyprokhorenko/Base64UUID">https://github.com/sergeyprokhorenko/Base64UUID</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CSS">[CSS]</dt>
         <dd>
 <span class="refAuthor">W3C</span>, <span class="refTitle">"Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.w3.org/TR/CSS2/syndata.html#value-def-identifier">https://www.w3.org/TR/CSS2/syndata.html#value-def-identifier</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="DCB32">[DCB32]</dt>
-        <dd>
-<span class="refAuthor">Crockford, D.</span>, <span class="refTitle">"Douglas Crockford's Base32"</span>, <time datetime="2002-11" class="refDate">November 2002</time>, <span>&lt;<a href="https://www.crockford.com/base32.html">https://www.crockford.com/base32.html</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="Flickr">[Flickr]</dt>
         <dd>
@@ -3209,13 +3359,13 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
         <dd>
 <span class="refAuthor">whatwg</span>, <span class="refTitle">"HTML Living Standard"</span>, <time datetime="2025-11" class="refDate">November 2025</time>, <span>&lt;<a href="https://html.spec.whatwg.org/">https://html.spec.whatwg.org/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IEEEBase62">[IEEEBase62]</dt>
-        <dd>
-<span class="refAuthor">IEEE</span>, <span class="refTitle">"A secure, lossless, and compressed Base62 encoding"</span>, <time datetime="2008-11" class="refDate">November 2008</time>, <span>&lt;<a href="https://ieeexplore.ieee.org/document/4737287">https://ieeexplore.ieee.org/document/4737287</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="NCNAME">[NCNAME]</dt>
         <dd>
 <span class="refAuthor">Taylor, D.</span>, <span class="refTitle">"Compact UUIDs for Constrained Grammars"</span>, <time datetime="2025-09" class="refDate">September 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-taylor-uuid-ncname/">https://datatracker.ietf.org/doc/draft-taylor-uuid-ncname/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1924">[RFC1924]</dt>
+        <dd>
+<span class="refAuthor">Elz, R.</span>, <span class="refTitle">"A Compact Representation of IPv6 Addresses"</span>, <span class="seriesInfo">RFC 1924</span>, <span class="seriesInfo">DOI 10.17487/RFC1924</span>, <time datetime="1996-04" class="refDate">April 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1924">https://www.rfc-editor.org/rfc/rfc1924</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC20">[RFC20]</dt>
         <dd>
@@ -3224,6 +3374,10 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <dt id="RFC3986">[RFC3986]</dt>
         <dd>
 <span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4648_Usage_Report">[RFC4648_Usage_Report]</dt>
+        <dd>
+<span class="refTitle">"RFC4648 Alphabet Usage Report"</span>, <span class="seriesInfo">commit de0a2760</span>, <time datetime="2025-11" class="refDate">November 2025</time>, <span>&lt;<a href="https://gitlab.com/julian.reschke/base-encodings-terminology/-/blob/main/classifcation.md?ref_type=heads">https://gitlab.com/julian.reschke/base-encodings-terminology/-/blob/main/classifcation.md?ref_type=heads</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9499">[RFC9499]</dt>
         <dd>
@@ -3254,7 +3408,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <p id="appendix-A-1">The authors gratefully acknowledge the contributions of<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <ul class="compact">
 <li class="compact" id="appendix-A-2.1">
-          <p id="appendix-A-2.1.1">Yulian Kuncheff for their work on the UUID Formatter test tool which was valuable in comparing various UUID encoding formats side-by-side.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.1.1">Yulian Kuncheff for their work on the UUID Formatter test tool (https://uuidformattester.yuli.dev/) which was valuable in comparing various UUID encoding formats side-by-side.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="compact" id="appendix-A-2.2">
           <p id="appendix-A-2.2.1">LiosK for early prototyping of various BaseXX Alphabets<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
@@ -3263,7 +3417,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           <p id="appendix-A-2.3.1">Sergey Prokhorenko for continuously ensuring we work on this document.<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-A-3">As well as all of those in the IETF community and on GitHub to who contributed to the discussions which resulted in this document.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">As well as all of those in the IETF community and on GitHub who contributed to the discussions which resulted in this document.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="changelog">
@@ -3285,7 +3439,9 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-test-vectors" class="section-name selfRef">Test Vectors</a>
       </h2>
 <p id="appendix-C-1">The test vectors in the upcoming sections map the UUIDs found in RFC9562 Sections to their appropriate BaseXX Alphabet Encoding without padding.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<p id="appendix-C-2">All of the BaseXX ALphabets described int his document and others not described can be viewed at the online tool the Author's are using for prototyping and comparison: https://uuidformattester.yuli.dev/  (Source Code: https://github.com/daegalus/uuid-format-tester)<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">All of the BaseXX Alphabets described in this document and others not described can be viewed at the online tool the Authors are using for prototyping and comparison: https://uuidformattester.yuli.dev/  (Source Code: https://github.com/daegalus/uuid-format-tester)<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-3">The NCNAME test vectors (UUID-NCName-32, UUID-NCName-58, and UUID-NCName-64) are direct copies from the appendix of <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span>.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
+<p id="appendix-C-4">Each section also includes test vectors for <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> and <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span> which are not included in the main body of the document but are included here for reference.<a href="#appendix-C-4" class="pilcrow">¶</a></p>
 <div id="generic-uuid">
 <section id="appendix-C.1">
         <h3 id="name-generic-uuid">
@@ -3344,7 +3500,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>Z0EMZBKXXG8X19V502GCJ7KBYR</code>
@@ -3367,7 +3523,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>Xe22UfxT3rxcKJEAfL5373</code>
@@ -3376,10 +3532,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>HiLegqjbBwUc0Q8tJ3ffs6</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>7YBUWgZR1mKSqGyj9tVViw</code>
 </td>
             </tr>
             <tr>
@@ -3406,7 +3571,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>y0pEfbrg3S1bOF1VmGtfxV</code>
 </td>
             </tr>
             <tr>
@@ -3421,6 +3586,56 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64"></span><div id="exampleUUIDprefix">
+<table class="center" id="table-12">
+          <caption>
+<a href="#table-12" class="selfRef">Table 12</a>:
+<a href="#name-uuid-ncname-base62id-base64" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 4</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>b7aou7lt55qoqoziauder427wk</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>B7wc88dU4e3NyJEj3e944DK</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>B-B1Prn3sHQdlAKDJHmv2K</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>N8JYxDHbz7rx9rGIw80uxC</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Is6JyiUTkGo9S_$9286ajq</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_nil_uuid">
@@ -3429,9 +3644,9 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-nil-uuid" class="section-name selfRef">NIL UUID</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc956"></span><div id="exampleUUIDvNIL">
-<table class="center" id="table-12">
+<table class="center" id="table-13">
           <caption>
-<a href="#table-12" class="selfRef">Table 12</a>:
+<a href="#table-13" class="selfRef">Table 13</a>:
 <a href="#name-uuid-test-vectors-for-rfc956" class="selfRef">UUID Test Vectors for RFC9562, Section 5.9: Nil UUID</a>
           </caption>
 <thead>
@@ -3481,7 +3696,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>00000000000000000000000000</code>
@@ -3504,7 +3719,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>1</code>
@@ -3513,7 +3728,16 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>0</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>0</code>
@@ -3558,6 +3782,56 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64u"></span><div id="exampleUUIDvNILprefix">
+<table class="center" id="table-14">
+          <caption>
+<a href="#table-14" class="selfRef">Table 14</a>:
+<a href="#name-uuid-ncname-base62id-base64u" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 5.9: Nil UUID</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>aaaaaaaaaaaaaaaaaaaaaaaaaa</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>A111111111111111______A</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAAAAAAAAAAAAAAAAAAA</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Fa84QWiAxLXUJaHZmEVPEG</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>F$$$$$$$$$$$$$$$$$$$$$</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_max_uuid">
@@ -3566,9 +3840,9 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-max-uuid" class="section-name selfRef">MAX UUID</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562"></span><div id="exampleUUIDvMAX">
-<table class="center" id="table-13">
+<table class="center" id="table-15">
           <caption>
-<a href="#table-13" class="selfRef">Table 13</a>:
+<a href="#table-15" class="selfRef">Table 15</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562" class="selfRef">UUID Test Vectors for RFC9562, Section 5.10: MAX UUID</a>
           </caption>
 <thead>
@@ -3618,7 +3892,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>ZZZZZZZZZZZZZZZZZZZZZZZZZW</code>
@@ -3641,7 +3915,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>P8AQGAut7N92awznwCnjuQP</code>
@@ -3650,10 +3924,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>HxECNQWFdpvuJxIw3HPrmH</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>7n42DGM5Tflk9n8mt7Fhc7</code>
 </td>
             </tr>
             <tr>
@@ -3680,7 +3963,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>zzzzzzzzzzzzzzzzzzzzzk</code>
 </td>
             </tr>
             <tr>
@@ -3695,6 +3978,56 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uu"></span><div id="exampleUUIDvMAXprefix">
+<table class="center" id="table-16">
+          <caption>
+<a href="#table-16" class="selfRef">Table 16</a>:
+<a href="#name-uuid-ncname-base62id-base64uu" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 5.10: MAX UUID</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>p777777777777777777777777p</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>P8AQGAut7N92awznwCnjuQP</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>P____________________P</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>NNC6dn4GR1JETNQMfLl6qN</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Izzzzzzzzzzzzzzzzzzzzz</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv1">
@@ -3703,9 +4036,9 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 <a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-uuidv1" class="section-name selfRef">UUIDv1</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-"></span><div id="exampleUUIDv1">
-<table class="center" id="table-14">
+<table class="center" id="table-17">
           <caption>
-<a href="#table-14" class="selfRef">Table 14</a>:
+<a href="#table-17" class="selfRef">Table 17</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-" class="selfRef">UUID Test Vectors for RFC9562, Section A.1: UUIDv1</a>
           </caption>
 <thead>
@@ -3755,7 +4088,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>R8SAP04M2G8YSCY8KXNXXKPR8R</code>
@@ -3778,7 +4111,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>Qys2KsgsAKw9ZKupo76FCh</code>
@@ -3787,10 +4120,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>F4bpVC8trxK13yapr3UFrY</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>5uRfL2yjhnArtoQfhtK5hO</code>
 </td>
             </tr>
             <tr>
@@ -3817,7 +4159,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>kY9f-8FJ3Tmnm8xfrgvNGV</code>
 </td>
             </tr>
             <tr>
@@ -3832,17 +4174,263 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uui"></span><div id="exampleUUIDv1prefix">
+<table class="center" id="table-18">
+          <caption>
+<a href="#table-18" class="selfRef">Table 18</a>:
+<a href="#name-uuid-ncname-base62id-base64uui" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.1: UUIDv1</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>byizkwaeucqpmhse7nppm5wcgl</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>B6S7oX73gv2Y1iTENdXX8hL</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>BwjKrAJQUHsPIn2vezthGL</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>LUZjlZguf8iMDOiFU7pUve</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>I1Beg$_0FGvAE7bqjTnhW5</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</section>
+</div>
+<div id="test_vectors_uuidv2">
+<section id="appendix-C.5">
+        <h3 id="name-uuidv2">
+<a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-uuidv2" class="section-name selfRef">UUIDv2</a>
+        </h3>
+<span id="name-uuid-test-vectors-for-dce-s"></span><div id="exampleUUIDv2">
+<table class="center" id="table-19">
+          <caption>
+<a href="#table-19" class="selfRef">Table 19</a>:
+<a href="#name-uuid-test-vectors-for-dce-s" class="selfRef">UUID Test Vectors for DCE Security: UUIDv2</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Variant</th>
+              <th class="text-left" rowspan="1" colspan="1">DCE Security UUID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base16</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>000003e8-cbb9-21ea-b201-00045a86c8a1</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base16</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-8" class="relref">Section 8</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>000003e8cbb921eab20100045a86c8a1</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAH2GLXEQ6VMQBAACFVBWIUE</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>00007Q6BN4GULCG10025L1M8K4</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>00007T6BQ4GYNCG10025N1P8M4</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base36</td>
+              <td class="text-left" rowspan="1" colspan="1">---</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>5XJERAFS5KNNNG5WAM10H</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base52</td>
+              <td class="text-left" rowspan="1" colspan="1">---</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>KNcIMemTgumAjqCSfqp</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2SMnXSegyRgxWPnMoHS</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>azPmOJmh9xNaNgM2sh</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>azPmOJmh9xNaNgM2sh</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAD6Mu5IeqyAQAEWobIoQ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAD6Mu5IeqyAQAEWobIoQ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>---2uBit7Tem-F-3LcQ7cF</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base85</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Z85" class="cite xref">Z85</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>000b++EF!YVh&lt;}dt87a(</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span id="name-uuid-ncname-base62id-base64uuid"></span><div id="exampleUUIDv2prefix">
+<table class="center" id="table-20">
+          <caption>
+<a href="#table-20" class="selfRef">Table 20</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for DCE Security: UUIDv2</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>caaaah2glxepkeaiaarninsfbl</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>C11KtP6Y9P3rRkvh2N1e__L</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>CAAAD6Mu5HqIBAARahsihL</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Fa84rLxnBVA2JNUzzkiHwn</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>F$$$EcmvZWuf70$$GPWgXW</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv3">
-<section id="appendix-C.5">
+<section id="appendix-C.6">
         <h3 id="name-uuidv3">
-<a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-uuidv3" class="section-name selfRef">UUIDv3</a>
+<a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-uuidv3" class="section-name selfRef">UUIDv3</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-s"></span><div id="exampleUUIDv3">
-<table class="center" id="table-15">
+<table class="center" id="table-21">
           <caption>
-<a href="#table-15" class="selfRef">Table 15</a>:
+<a href="#table-21" class="selfRef">Table 21</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-s" class="selfRef">UUID Test Vectors for RFC9562, Section A.2: UUIDv3</a>
           </caption>
 <thead>
@@ -3892,7 +4480,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>BQT1H09TXMTHB2575X582K7GKR</code>
@@ -3915,7 +4503,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>CbuPE286MB6RsDazcU7sUy</code>
@@ -3924,10 +4512,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>C1Rz9EB7xwwtaBE3hssbl8</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2rHpz41xnmmjQ14tXiiRby</code>
 </td>
             </tr>
             <tr>
@@ -3954,7 +4551,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>MUFNVIfhCGL7dmx9VJnkbV</code>
 </td>
             </tr>
             <tr>
@@ -3969,17 +4566,67 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uuid-"></span><div id="exampleUUIDv3prefix">
+<table class="center" id="table-22">
+          <caption>
+<a href="#table-22" class="selfRef">Table 22</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.2: UUIDv3</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>dlx2braj25vivrjzpjkauz4e6i</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>D3dTNMAmevR4NFAakRDtLdI</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>DXfQYgTrtUVinL0qBTPCeI</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>IRPuPak8l8KDjbMTJxDqqE</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>GSx0X0Diop4NXbAoe0IE1T</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv4">
-<section id="appendix-C.6">
+<section id="appendix-C.7">
         <h3 id="name-uuidv4">
-<a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-uuidv4" class="section-name selfRef">UUIDv4</a>
+<a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-uuidv4" class="section-name selfRef">UUIDv4</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-se"></span><div id="exampleUUIDv4">
-<table class="center" id="table-16">
+<table class="center" id="table-23">
           <caption>
-<a href="#table-16" class="selfRef">Table 16</a>:
+<a href="#table-23" class="selfRef">Table 23</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-se" class="selfRef">UUID Test Vectors for RFC9562, Section A.3: UUIDv4</a>
           </caption>
 <thead>
@@ -4029,7 +4676,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>J68GHXTJT51J16XCZ13XPGA8N0</code>
@@ -4052,7 +4699,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>JyZVoFVQxQNmw2bsgr7D1R</code>
@@ -4061,10 +4708,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>EaqKcHGnV4iQSYo57bXn6o</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2rHpz41xnmmjQ14tXiiRby</code>
 </td>
             </tr>
             <tr>
@@ -4091,7 +4747,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>ZO37xpAGFm1QfEW6qo47e-</code>
 </td>
             </tr>
             <tr>
@@ -4106,17 +4762,67 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uuid-t"></span><div id="exampleUUIDv4prefix">
+<table class="center" id="table-24">
+          <caption>
+<a href="#table-24" class="selfRef">Table 24</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-t" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.3: UUIDv4</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>esgiqr52s2ezaxlhyi7nucsfij</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>E55CtqYNqva1mcmaa877eoJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>EkZEI91LRMgus-EfbQUioJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>K0oEsdooJG5kbywVjft3Au</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>HGZFYrJh4278igy3UQFJXc</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv5">
-<section id="appendix-C.7">
+<section id="appendix-C.8">
         <h3 id="name-uuidv5">
-<a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-uuidv5" class="section-name selfRef">UUIDv5</a>
+<a href="#appendix-C.8" class="section-number selfRef">C.8. </a><a href="#name-uuidv5" class="section-name selfRef">UUIDv5</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-sec"></span><div id="exampleUUIDv5">
-<table class="center" id="table-17">
+<table class="center" id="table-25">
           <caption>
-<a href="#table-17" class="selfRef">Table 17</a>:
+<a href="#table-25" class="selfRef">Table 25</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-sec" class="selfRef">UUID Test Vectors for RFC9562, Section A.4: UUIDv5</a>
           </caption>
 <thead>
@@ -4166,7 +4872,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>5VB6AZF94XB8Q5F14SJTHBN6M8</code>
@@ -4189,7 +4895,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>6nTLogGvw2vmQjtATLqvLq</code>
@@ -4198,10 +4904,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>BaXm0PEMkU5w7EKQaysNQO</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>1QNcqF4CaKvmx4AGQoiDGE</code>
 </td>
             </tr>
             <tr>
@@ -4228,7 +4943,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>AhO_UTZbKciKsHO_e9uacV</code>
 </td>
             </tr>
             <tr>
@@ -4243,17 +4958,67 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uuid-te"></span><div id="exampleUUIDv5prefix">
+<table class="center" id="table-26">
+          <caption>
+<a href="#table-26" class="selfRef">Table 26</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-te" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.4: UUIDv5</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>ff3lgk7pje5ullyjgmwuk5jvcj</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>F2K15VFLUBD326h169SNPjJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>FLtZlfeknaLXhJmWorqaiJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>H0VhGlmNXgTHGeRqD3DcUU</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>FipaKxuHSLXtMW8aLcfePX</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv6">
-<section id="appendix-C.8">
+<section id="appendix-C.9">
         <h3 id="name-uuidv6">
-<a href="#appendix-C.8" class="section-number selfRef">C.8. </a><a href="#name-uuidv6" class="section-name selfRef">UUIDv6</a>
+<a href="#appendix-C.9" class="section-number selfRef">C.9. </a><a href="#name-uuidv6" class="section-name selfRef">UUIDv6</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-sect"></span><div id="exampleUUIDv6">
-<table class="center" id="table-18">
+<table class="center" id="table-27">
           <caption>
-<a href="#table-18" class="selfRef">Table 18</a>:
+<a href="#table-27" class="selfRef">Table 27</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-sect" class="selfRef">UUID Test Vectors for RFC9562, Section A.5: UUIDv6</a>
           </caption>
 <thead>
@@ -4303,7 +5068,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>3V4M2K1359NG1CY8KXNXXKPR8R</code>
@@ -4326,7 +5091,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>4oVbpzb8BpnTH1mg11dmWd</code>
@@ -4335,10 +5100,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>6FuGgfRpa7N6YbrlxT6FQ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>w5k6WVHfQxDwORhbnJw5G</code>
 </td>
             </tr>
             <tr>
@@ -4365,7 +5139,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>6g_0I1BePk1nm8xfrgvNGV</code>
 </td>
             </tr>
             <tr>
@@ -4380,17 +5154,67 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uuid-tes"></span><div id="exampleUUIDv6prefix">
+<table class="center" id="table-28">
+          <caption>
+<a href="#table-28" class="selfRef">Table 28</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-tes" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.5: UUIDv6</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>gd3euctbdfkyahse7nppm5wcgl</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>GrxRCnDiX4mxSq8bFQjT3_L</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>GHslBTCMqsAPIn2vezthGL</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>GWDoX3DScmUiFyjHO1pLJW</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>FTmJ4B7mdf$AE7bqjTnhW5</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv7">
-<section id="appendix-C.9">
+<section id="appendix-C.10">
         <h3 id="name-uuidv7">
-<a href="#appendix-C.9" class="section-number selfRef">C.9. </a><a href="#name-uuidv7" class="section-name selfRef">UUIDv7</a>
+<a href="#appendix-C.10" class="section-number selfRef">C.10. </a><a href="#name-uuidv7" class="section-name selfRef">UUIDv7</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-secti"></span><div id="exampleUUIDv7">
-<table class="center" id="table-19">
+<table class="center" id="table-29">
           <caption>
-<a href="#table-19" class="selfRef">Table 19</a>:
+<a href="#table-29" class="selfRef">Table 29</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti" class="selfRef">UUID Test Vectors for RFC9562, Section A.6: UUIDv7</a>
           </caption>
 <thead>
@@ -4440,7 +5264,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>05ZJ5RKSP1YC7664VG60R1SSHW</code>
@@ -4463,7 +5287,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>BihbxwwQ4NZZpKRH9JDCz</code>
@@ -4472,10 +5296,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>CzFyajyRd5A9oiF8QCBUD</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2p5oQZoHTv0zeY5yG21K3</code>
 </td>
             </tr>
             <tr>
@@ -4502,7 +5335,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>-MwXsbakUBDNlCkB2-RtYk</code>
 </td>
             </tr>
             <tr>
@@ -4517,17 +5350,67 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
+<span id="name-uuid-ncname-base62id-base64uuid-tes-2"></span><div id="exampleUUIDv7prefix">
+<table class="center" id="table-30">
+          <caption>
+<a href="#table-30" class="selfRef">Table 30</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-tes-2" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.6: UUIDv7</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>haf7sfytzwdgdrrg4bqgaoompj</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>H3RrXaX7uTM6qdwrXwpC6_J</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>HAX8i4nmwzDjE3AwMBzmPJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>FcxAExHzEpSVJEpfkUXQYJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>F0UmAXTQ0wktY3r$kB0naE</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 </section>
 </div>
 <div id="test_vectors_uuidv8">
-<section id="appendix-C.10">
+<section id="appendix-C.11">
         <h3 id="name-uuidv8">
-<a href="#appendix-C.10" class="section-number selfRef">C.10. </a><a href="#name-uuidv8" class="section-name selfRef">UUIDv8</a>
+<a href="#appendix-C.11" class="section-number selfRef">C.11. </a><a href="#name-uuidv8" class="section-name selfRef">UUIDv8</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-secti-2"></span><div id="exampleUUIDv8time">
-<table class="center" id="table-20">
+<table class="center" id="table-31">
           <caption>
-<a href="#table-20" class="selfRef">Table 20</a>:
+<a href="#table-31" class="selfRef">Table 31</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti-2" class="selfRef">UUID Test Vectors for RFC9562, Section B.1: UUIDv8</a>
           </caption>
 <thead>
@@ -4577,7 +5460,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>4J4YKB9EWA7013P96BAZD4C1R0</code>
@@ -4600,7 +5483,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>5WhDz2zW6g9mHu7EP9hoVq</code>
@@ -4609,10 +5492,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>BG6ufXDWs4d4Dd5uoJIAi0</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>16wkVN3MiuTu3Tvke980Yq</code>
 </td>
             </tr>
             <tr>
@@ -4639,7 +5531,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>87bdfHvXYV1DmIAKxd50k-</code>
 </td>
             </tr>
             <tr>
@@ -4654,10 +5546,60 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
           </tbody>
         </table>
 </div>
-<span id="name-uuid-test-vectors-for-rfc9562-secti-3"></span><div id="exampleUUIDv8name">
-<table class="center" id="table-21">
+<span id="name-uuid-ncname-base62id-base64uuid-tes-3"></span><div id="exampleUUIDv8timeprefix">
+<table class="center" id="table-32">
           <caption>
-<a href="#table-21" class="selfRef">Table 21</a>:
+<a href="#table-32" class="selfRef">Table 32</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-tes-3" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section B.1: UUIDv8</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>iese6tljo4lqa5sjs2x3jdaoai</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>I22HpMAy5M181AjPFG7eLXI</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>IJInprS7i4A7JMtX2kYHAI</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Gh4ovtlXgG1ON4DKQNdPn6</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>FZXTahAi9D$7v8BhMqZN6$</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span id="name-uuid-test-vectors-for-rfc9562-secti-3"></span><div id="exampleUUIDv8name">
+<table class="center" id="table-33">
+          <caption>
+<a href="#table-33" class="selfRef">Table 33</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti-3" class="selfRef">UUID Test Vectors for RFC9562, Section B.2: UUIDv8</a>
           </caption>
 <thead>
@@ -4707,7 +5649,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base32</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#DCB32" class="cite xref">DCB32</a>]</span>
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>BGA6P51WAA5FV4WA6XEGVWFVYR</code>
@@ -4730,7 +5672,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base58</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#Bitcoin" class="cite xref">Bitcoin</a>]</span>
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>CNV2iY4mKiTS1uw8RxapEH</code>
@@ -4739,10 +5681,19 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Base62</td>
               <td class="text-left" rowspan="1" colspan="1">
-                <span>[<a href="#IEEEBase62" class="cite xref">IEEEBase62</a>]</span>
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>CxumvfWqhqp4Kq4BkCGR1s</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2nkclVMgXgfuAgu1a26Hri</code>
 </td>
             </tr>
             <tr>
@@ -4769,7 +5720,7 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
                 <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
 </td>
               <td class="text-left" rowspan="1" colspan="1">
-                <code>TODO</code>
+                <code>M0Gf42lHXjqIXYSS2U6vxV</code>
 </td>
             </tr>
             <tr>
@@ -4779,6 +5730,253 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 </td>
               <td class="text-left" rowspan="1" colspan="1">
                 <code>tOH@/jw}7nLzRq84E%t?</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span id="name-uuid-ncname-base62id-base64uuid-tes-4"></span><div id="exampleUUIDv8nameprefix">
+<table class="center" id="table-34">
+          <caption>
+<a href="#table-34" class="selfRef">Table 34</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-tes-4" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section B.2: UUIDv8</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>ilqkgwfb4kkx5hcrxlug7d67wj</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>I3aR2J7aw1BJj4jJvfuWTXJ</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>IXBRrFDxSr9OKN10N8fv2J</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>INshC24rV2DOUHBbMGbh5y</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>GR45gJE499zOD9CpoCwUjq</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</section>
+</div>
+<div id="test_vectors_microsoft_uuid">
+<section id="appendix-C.12">
+        <h3 id="name-microsoft-uuid">
+<a href="#appendix-C.12" class="section-number selfRef">C.12. </a><a href="#name-microsoft-uuid" class="section-name selfRef">Microsoft UUID</a>
+        </h3>
+<p id="appendix-C.12-1">The following UUID <code>00000013-0000-0000-c000-000000000000</code> is for <code>Microsoft.Azure.Portal</code> and ensures this specification also includes non IETF/DCE variants of UUIDs.<a href="#appendix-C.12-1" class="pilcrow">¶</a></p>
+<span id="name-uuid-test-vectors-for-micro"></span><div id="exampleMicrosoftUUID">
+<table class="center" id="table-35">
+          <caption>
+<a href="#table-35" class="selfRef">Table 35</a>:
+<a href="#name-uuid-test-vectors-for-micro" class="selfRef">UUID Test Vectors for Microsoft.Azure.Portal</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Variant</th>
+              <th class="text-left" rowspan="1" colspan="1">Microsoft.Azure.Portal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base16</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>00000013-0000-0000-c000-000000000000</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base16</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-8" class="relref">Section 8</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>0000001300000000C000000000000000</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAAEYAAAAABQAAAAAAAAAAAA</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>000004O000001G000000000000</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>000004R000001G000000000000</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base36</td>
+              <td class="text-left" rowspan="1" colspan="1">---</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>41Y09GGWTDKLN13WMO74</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base52</td>
+              <td class="text-left" rowspan="1" colspan="1">---</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>KGlWYrtEyPFBiZpPts</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>2anhPihXPV7NXZKLC7</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>fjupi4ia0Gz3Pwu9y</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base62</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>VZkfYuYQq6ptFmkzo</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAEwAAAADAAAAAAAAAAA</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAEwAAAADAAAAAAAAAAA</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>----3k----2-----------</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Base85</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Z85" class="cite xref">Z85</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>0000j00000ZYjum00000</code>
+</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span id="name-uuid-ncname-base62id-base64uuid-tes-5"></span><div id="exampleMicrosoftUUIDprefix">
+<table class="center" id="table-36">
+          <caption>
+<a href="#table-36" class="selfRef">Table 36</a>:
+<a href="#name-uuid-ncname-base62id-base64uuid-tes-5" class="selfRef">UUID-NCName, Base62id, Base64uuid Test Vectors for Microsoft.Azure.Portal</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+              <th class="text-left" rowspan="1" colspan="1">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-32</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>aaaaaaeyaaaaaaaaaaaaaaaaam</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-58</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>A111Mo9hVUdmNWqcCExF__M</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">UUID-NCName-64</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>AAAAAEwAAAAAAAAAAAAAAM</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>Fa84R2HvcuS2kQOPfUIAE4</code>
+</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">
+                <span>[<a href="#Base64uuid" class="cite xref">Base64uuid</a>]</span>
+</td>
+              <td class="text-left" rowspan="1" colspan="1">
+                <code>F$$$$I$$$$$B$$$$$$$$$$</code>
 </td>
             </tr>
           </tbody>
@@ -4903,6 +6101,10 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 - https://github.com/boundary/flake
 - https://github.com/segmentio/ksuid
 - https://www.jsdelivr.com/package/npm/uuid-encoder
+- https://grokipedia.com/page/Base62
+- https://repost.aws/questions/QUPyiPyPsTTz6bnss1nQLoiQ/is-qldb-document-id-a-globally-unique-uuid
+- https://hexdocs.pm/base62_uuid/readme.html
+- https://github.com/lucasmichot/uuid62
 </pre><a href="#appendix-D.7-1" class="pilcrow">¶</a>
 </div>
 </section>

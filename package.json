@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "prepare": "husky && kdrfc -rthv ./draft-davis-uuidrev-alt-uuid-encoding-methods.md && mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.txt ./docs/ && mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.html ./docs/ && mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.xml ./docs/",
+    "lint": "kdrfc -ir ./draft-davis-uuidrev-alt-uuid-encoding-methods.md > idnits.txt && rm -f ./draft-davis-uuidrev-alt-uuid-encoding-methods.txt ./draft-davis-uuidrev-alt-uuid-encoding-methods.xml"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

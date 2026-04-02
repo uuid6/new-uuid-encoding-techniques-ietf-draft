@@ -1,2 +1,5 @@
 .vscode
 .refcache
+node_modules/
+package-lock.json
+idnits.txt

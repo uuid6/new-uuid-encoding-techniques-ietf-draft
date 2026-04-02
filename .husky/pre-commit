@@ -1,0 +1,7 @@
+kdrfc -rthv ./draft-davis-uuidrev-alt-uuid-encoding-methods.md
+
+mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.txt ./docs/
+mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.html ./docs/
+mv ./draft-davis-uuidrev-alt-uuid-encoding-methods.xml ./docs/
+
+git add docs/draft-davis-uuidrev-alt-uuid-encoding-methods.txt docs/draft-davis-uuidrev-alt-uuid-encoding-methods.html docs/draft-davis-uuidrev-alt-uuid-encoding-methods.xml
