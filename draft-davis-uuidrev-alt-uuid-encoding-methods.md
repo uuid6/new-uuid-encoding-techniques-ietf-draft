@@ -222,7 +222,7 @@ If you implement a BaseXX alphabet not covered in the sections below, consult th
 For a quick comparison of alphabets, see {{alphabetTable}}.
 
 | Encoding | Variant                | Alphabet Order                                                                            |
-| Base16   | {{RFC9562, Section 4}} | `0123456789ABCDEF` with dash `-` characters added                                         |
+| Base16   | {{RFC9562, Section 4}} | `0123456789ABCDEF` with four dash/hyphen `-` characters added                                         |
 | Base16   | {{RFC4648, Section 8}} | `0123456789ABCDEF`                                                                        |
 | Base32   | {{RFC4648, Section 6}} | `ABCDEFGHIJKLMNOPQRSTUVWXYZ234567`                                                        |
 | Base32   | {{RFC4648, Section 7}} | `0123456789ABCDEFGHIJKLMNOPQRSTUV`                                                        |
@@ -238,7 +238,19 @@ For a quick comparison of alphabets, see {{alphabetTable}}.
 | Base85   | {{Z85}}                | `0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#`   |
 {: #alphabetTable title='Alt UUID Encoding Alphabet Comparison'}
 
-Note: All UUID examples in this document are alternate encodings of {{RFC9562, Section 4}}'s Example UUID starting from either Figure 2 (binary) or Figure 3 (integer).
+There also exist some algorithms that perform some pre-processing on the binary encoding of the UUID before encoding it as one or more of BaseXX Alphabets from the {{alphabetTable}} for very specific application use-cases.
+The specifics about each algorithm are covered in their own documents but are included here for completeness and comparison purposes; see {{best_practice_markup}}{: format="title"} and {{best_practice_database_keys}}{: format="title"} for the real-world problems these solve within databases and other applications.
+
+The {{bitSwizzleTable}} table compares these different algorithms.
+
+| Encoding               | Alphabet(s) and notes                                               |
+|------------------------|---------------------------------------------------------------------|
+| {{NCNAME}}             | {{RFC4648, Section 6}}, {{Base58btc}}, {{RFC4648, Section 5}}<br>Version and Variant extracted and placed at the start and end of the layout to "Bookend". 26, 23 and 22 character outputs for the different alphabets in use.      |
+| {{Base62id}}           | {{Base62sort}}<br>130-bit post-processed UUID value by appending `0b10`, 22 characters after encoding                                                      |
+| {{Base64uuid}}         | `$0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz`<br>132-bit post-processed UUID value by appending `0b0100`, 22 characters after encoding |
+{: #bitSwizzleTable title='Comparison of UUID Pre-processing Algorithms'}
+
+**Note:** All UUID examples in this document are alternate encodings of {{RFC9562, Section 4}}'s Example UUID starting from either Figure 2 (binary) or Figure 3 (integer).
 Each section has a few example encodings; any UUID featured in RFC9562 can be found in the {{test_vectors}} table converted to the corresponding BaseXX alphabet encoding.
 
 ## Base32 {#Base32}
@@ -252,7 +264,9 @@ Base32 is often case-insensitive: lowercase letters are frequently treated the s
 {{best_practice_special}}{: format="title"} are rarely used with Base32, except for {{best_practice_padding}}{: format="title"} or {{best_practice_checksums}}{: format="title"} features, which can often be omitted.
 
 Base32 is a strong choice when available.
-Base32hex ({{RFC4648}}) and Base32 for Humans ({{Base32human}}) are recommended options for a 26-character UUID that works well for both machines and humans.
+The standard Base32 alphabet ({{RFC4648, Section 6}}) is not recommended for new UUID implementations because its alphabet does not preserve binary sort order; libraries currently providing this encoding need not deprecate it, but new implementations should use Base32hex or Base32 for Humans instead.
+Base32hex ({{RFC4648, Section 7}}) is recommended when sorting is required.
+Base32 for Humans ({{Base32human}}) is recommended when both sorting and human readability are required.
 See {{sampleBase32HexUUID}} and {{sampleBase32human}} for examples.
 
 Z-Base-32 {{ZB32}}{: format="title"} makes many changes to the underlying alphabet to accommodate a specific use case and is not recommended for UUIDs.
@@ -279,6 +293,8 @@ Base36 also compresses leading null bytes (see {{best_practice_compression}}) wh
 
 Base36 is reasonably available ({{best_practice_availability}}) but does not have concrete specifications outlined by a standards body.
 
+Base36 is recommended when variable-length UUIDs are not a problem for the application.
+
 See {{sampleBase36}} for an example.
 
 ~~~
@@ -296,6 +312,8 @@ Base52 also compresses leading null bytes (see {{best_practice_compression}}) wh
 
 Base52 does not have concrete specifications outlined by a standards body, but it is reasonably easy to implement.
 
+Base52 is recommended when sorting is required, special characters and digits pose problems, and variable-length UUIDs are not a problem.
+
 See {{sampleBase52}} for an example.
 
 ~~~
@@ -311,6 +329,8 @@ Base58 typically omits {{best_practice_padding}}{: format="title"}, and most imp
 Base58 also compresses leading null bytes (see {{best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.
 
 Base58 {{best_practice_availability}}{: format="title"} varies, but the format is well-known and commonly used for UUIDs in practice.
+
+Base58 is recommended when sorting and human readability are required, and variable-length UUIDs are not a problem.
 
 See {{sampleBase58}} for an example.
 
@@ -330,6 +350,9 @@ Additionally, {{Base62ieee}} includes padding while {{Base62sort}} does not.
 
 {{Base62ieee}} also compresses leading null bytes (see {{best_practice_compression}}) which may be desirable to further reduce the size of the encoded UUID.
 
+{{Base62ieee}} is recommended when variable-length UUIDs are not a problem.
+{{Base62sort}} is recommended when sorting is required and special characters or digits pose problems.
+
 See {{sampleBase62}} for an example.
 
 ~~~
@@ -344,9 +367,9 @@ Base64 encodes a 128-bit UUID into a 22-character string (6 bits per character),
 Because symbols are involved, many other permutations exist and this document cannot cover them all; see {{best_practice_usage}}{: format="title"} when selecting an alphabet.
 The most common variants are the Base64 alphabet in {{RFC4648, Section 4}}, Base64url in {{RFC4648, Section 5}} and Base64sort ({{Base64sort}}) (also known as Base64lex).
 
-Base64 is recommended when maximum compactness is desired without {{best_practice_compression}}{: format="title"}.
-For most use cases, Base64url ({{RFC4648, Section 5}}) is encouraged because it is safe for URLs, filenames and {{best_practice_applications}}{: format="title"} use cases.
-When lexicographical sorting that matches binary order is critical (for example, with UUIDv6 or UUIDv7), consider `Base64sort` ({{Base64sort}}).
+The standard Base64 alphabet ({{RFC4648, Section 4}}) is not recommended for new UUID implementations; libraries currently providing this encoding need not deprecate it, but new implementations should use Base64url or Base64sort instead.
+Base64url ({{RFC4648, Section 5}}) is recommended for most use cases because it is safe for URLs, filenames and {{best_practice_applications}}{: format="title"} use cases.
+Base64sort ({{Base64sort}}) is recommended when lexicographical sorting that matches binary order is critical (for example, with UUIDv6 or UUIDv7).
 
 Base64 alphabets enjoy widespread availability ({{best_practice_availability}}{: format="title"}) and are far more common than Base32 as per an analysis of RFC4648 alphabet usage in the wild {{RFC4648_Usage_Report}}.
 
@@ -375,7 +398,7 @@ Common variants include Z85, {{RFC1924}} Base85, and ASCII85.
 Some Base85 variants include compression techniques for certain byte sequences (see {{best_practice_compression}}{: format="title"}).
 Those techniques are not universal across all Base85 alphabets.
 
-Z85 is the recommended Base85 variant for UUIDs when Base85 is desired.
+Z85 is the recommended Base85 variant for UUIDs when symbols are not a concern.
 
 See {{sampleBase85}} for an example.
 
@@ -783,28 +806,6 @@ The distribution (and naming) of the encoding algorithm among disparate systems 
 In practice this is seldom an issue because most implementations that need to parse UUIDs are aware of the encoding format used by their peers.
 For example, the sender and receiver of a Base64url-encoded UUID are often within the same application boundary.
 It is uncommon for two different systems to exchange UUIDs in a way that requires the receiver to parse an alternate-format UUID back into binary; typically the receiver treats the received UUID as an opaque string.
-
-# Recommendations {#recommendations}
-
-{{recommendationTable}} below provides an at-a-glance set of recommendations for each BaseXX alphabet described in this document for new implementations looking to introduce alternate encodings with UUID.
-
-While some rows state "Not Recommended", if a library is currently providing this alternate encoding; they may continue to do so without deprecating, removing or otherwise undoing existing functionality.
-
-| Encoding | Variant                | Recommendation                                                                                                        |
-|----------|------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| Base32   | {{RFC4648, Section 6}} | Not Recommended with UUID. Leverage Base32hex or Base32 for Humans.                                                   |
-| Base32   | {{RFC4648, Section 7}} | Recommended when sorting is required.                                                                                 |
-| Base32   | {{Base32human}}        | Recommended when sorting and human usage is required.                                                                 |
-| Base36   | ---                    | Not Recommended with UUID. Leverage Base32hex or Base32 for Humans.                                                   |
-| Base52   | ---                    | Recommended when sorting is required, special characters/digits pose problems, and variable-length UUIDs are not a problem. |
-| Base58   | {{Base58btc}}          | Recommended when sorting and human usage is required, and variable-length UUIDs are not a problem.                    |
-| Base62   | {{Base62ieee}}         | Recommended when variable-length UUIDs are not a problem.                                                             |
-| Base62   | {{Base62sort}}         | Recommended when sorting is required and special characters/digits pose problems.                                     |
-| Base64   | {{RFC4648, Section 4}} | Not Recommended with UUID. Leverage Base64url or Base64sort.                                                          |
-| Base64   | {{RFC4648, Section 5}} | Recommended for most use cases.                                                                                       |
-| Base64   | {{Base64sort}}         | Recommended when sorting is required.                                                                                 |
-| Base85   | {{Z85}}                | Recommended when symbols are not a concern.                                                                           |
-{: #recommendationTable title='General Guidance for Alternate UUID Encoding Recommendations'}
 
 # Security Considerations {#security_considerations}
 

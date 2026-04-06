@@ -5,8 +5,8 @@
 uuidrev                                                      K. R. Davis
 Internet-Draft                                             Cisco Systems
 Updates: 9562 (if approved)                                 BGP. Peabody
-Intended status: Standards Track                            2 April 2026
-Expires: 4 October 2026
+Intended status: Standards Track                            6 April 2026
+Expires: 8 October 2026
 
 
                     Alternate UUID Encoding Methods
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Davis & Peabody          Expires 4 October 2026                 [Page 1]
+Davis & Peabody          Expires 8 October 2026                 [Page 1]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -68,7 +68,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 October 2026.
+   This Internet-Draft will expire on 8 October 2026.
 
 Copyright Notice
 
@@ -93,70 +93,69 @@ Table of Contents
    3.  Alternate UUID Encoding Methods . . . . . . . . . . . . . . .   5
      3.1.  Base32  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      3.2.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     3.3.  Base52  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.3.  Base52  . . . . . . . . . . . . . . . . . . . . . . . . .   9
      3.4.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     3.5.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     3.5.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  10
      3.6.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  10
      3.7.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   4.  UUID Encoding Best Practices  . . . . . . . . . . . . . . . .  11
-     4.1.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . .  11
+   4.  UUID Encoding Best Practices  . . . . . . . . . . . . . . . .  12
+     4.1.  Usage . . . . . . . . . . . . . . . . . . . . . . . . . .  12
      4.2.  Maximum Character Length  . . . . . . . . . . . . . . . .  12
-     4.3.  Padding Characters  . . . . . . . . . . . . . . . . . . .  13
-     4.4.  Checksum Characters . . . . . . . . . . . . . . . . . . .  15
-     4.5.  Special Characters  . . . . . . . . . . . . . . . . . . .  17
-     4.6.  Character Exclusions  . . . . . . . . . . . . . . . . . .  18
-     4.7.  Case Sensitivity  . . . . . . . . . . . . . . . . . . . .  20
+     4.3.  Padding Characters  . . . . . . . . . . . . . . . . . . .  14
+     4.4.  Checksum Characters . . . . . . . . . . . . . . . . . . .  16
+     4.5.  Special Characters  . . . . . . . . . . . . . . . . . . .  18
+     4.6.  Character Exclusions  . . . . . . . . . . . . . . . . . .  19
+     4.7.  Case Sensitivity  . . . . . . . . . . . . . . . . . . . .  21
 
 
 
-Davis & Peabody          Expires 4 October 2026                 [Page 2]
+Davis & Peabody          Expires 8 October 2026                 [Page 2]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
 
-     4.8.  Sorting and Ordering  . . . . . . . . . . . . . . . . . .  21
-     4.9.  Compressing Characters  . . . . . . . . . . . . . . . . .  23
-     4.10. Encoding Availability . . . . . . . . . . . . . . . . . .  24
-     4.11. Computation . . . . . . . . . . . . . . . . . . . . . . .  24
-     4.12. Application Specific  . . . . . . . . . . . . . . . . . .  25
-       4.12.1.  URI, URL, URN  . . . . . . . . . . . . . . . . . . .  26
-       4.12.2.  DNS Record . . . . . . . . . . . . . . . . . . . . .  26
-       4.12.3.  XML, HTML, CSS . . . . . . . . . . . . . . . . . . .  26
-       4.12.4.  Database Keys  . . . . . . . . . . . . . . . . . . .  26
-   5.  Parsing . . . . . . . . . . . . . . . . . . . . . . . . . . .  27
-   6.  Recommendations . . . . . . . . . . . . . . . . . . . . . . .  27
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  29
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  29
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  29
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  29
+     4.8.  Sorting and Ordering  . . . . . . . . . . . . . . . . . .  22
+     4.9.  Compressing Characters  . . . . . . . . . . . . . . . . .  24
+     4.10. Encoding Availability . . . . . . . . . . . . . . . . . .  25
+     4.11. Computation . . . . . . . . . . . . . . . . . . . . . . .  25
+     4.12. Application Specific  . . . . . . . . . . . . . . . . . .  26
+       4.12.1.  URI, URL, URN  . . . . . . . . . . . . . . . . . . .  27
+       4.12.2.  DNS Record . . . . . . . . . . . . . . . . . . . . .  27
+       4.12.3.  XML, HTML, CSS . . . . . . . . . . . . . . . . . . .  27
+       4.12.4.  Database Keys  . . . . . . . . . . . . . . . . . . .  27
+   5.  Parsing . . . . . . . . . . . . . . . . . . . . . . . . . . .  28
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  28
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  29
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  29
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  29
    Appendix A.  Acknowledgments  . . . . . . . . . . . . . . . . . .  31
-   Appendix B.  Changelog  . . . . . . . . . . . . . . . . . . . . .  32
+   Appendix B.  Changelog  . . . . . . . . . . . . . . . . . . . . .  31
    Appendix C.  Test Vectors . . . . . . . . . . . . . . . . . . . .  32
      C.1.  Generic UUID  . . . . . . . . . . . . . . . . . . . . . .  32
      C.2.  NIL UUID  . . . . . . . . . . . . . . . . . . . . . . . .  33
      C.3.  MAX UUID  . . . . . . . . . . . . . . . . . . . . . . . .  35
      C.4.  UUIDv1  . . . . . . . . . . . . . . . . . . . . . . . . .  36
-     C.5.  UUIDv2  . . . . . . . . . . . . . . . . . . . . . . . . .  38
+     C.5.  UUIDv2  . . . . . . . . . . . . . . . . . . . . . . . . .  37
      C.6.  UUIDv3  . . . . . . . . . . . . . . . . . . . . . . . . .  39
      C.7.  UUIDv4  . . . . . . . . . . . . . . . . . . . . . . . . .  40
-     C.8.  UUIDv5  . . . . . . . . . . . . . . . . . . . . . . . . .  42
+     C.8.  UUIDv5  . . . . . . . . . . . . . . . . . . . . . . . . .  41
      C.9.  UUIDv6  . . . . . . . . . . . . . . . . . . . . . . . . .  43
      C.10. UUIDv7  . . . . . . . . . . . . . . . . . . . . . . . . .  44
-     C.11. UUIDv8  . . . . . . . . . . . . . . . . . . . . . . . . .  46
-     C.12. Microsoft UUID  . . . . . . . . . . . . . . . . . . . . .  49
+     C.11. UUIDv8  . . . . . . . . . . . . . . . . . . . . . . . . .  45
+     C.12. Microsoft UUID  . . . . . . . . . . . . . . . . . . . . .  48
    Appendix D.  Example UUID Base Encoding Tools, Libraries, and
-           resources . . . . . . . . . . . . . . . . . . . . . . . .  51
-     D.1.  Base32, Base  . . . . . . . . . . . . . . . . . . . . . .  51
-     D.2.  Base32, Hex . . . . . . . . . . . . . . . . . . . . . . .  51
-     D.3.  Base32, Crockford . . . . . . . . . . . . . . . . . . . .  51
-     D.4.  Base32, NCNAME  . . . . . . . . . . . . . . . . . . . . .  52
-     D.5.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .  52
-     D.6.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .  52
-     D.7.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  52
-     D.8.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  52
-     D.9.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  53
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  53
+           resources . . . . . . . . . . . . . . . . . . . . . . . .  50
+     D.1.  Base32, Base  . . . . . . . . . . . . . . . . . . . . . .  50
+     D.2.  Base32, Hex . . . . . . . . . . . . . . . . . . . . . . .  50
+     D.3.  Base32, Crockford . . . . . . . . . . . . . . . . . . . .  50
+     D.4.  Base32, NCNAME  . . . . . . . . . . . . . . . . . . . . .  51
+     D.5.  Base36  . . . . . . . . . . . . . . . . . . . . . . . . .  51
+     D.6.  Base58  . . . . . . . . . . . . . . . . . . . . . . . . .  51
+     D.7.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  51
+     D.8.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  51
+     D.9.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  52
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  52
 
 
 
@@ -165,7 +164,8 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                 [Page 3]
+
+Davis & Peabody          Expires 8 October 2026                 [Page 3]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -221,7 +221,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                 [Page 4]
+Davis & Peabody          Expires 8 October 2026                 [Page 4]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -277,7 +277,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                 [Page 5]
+Davis & Peabody          Expires 8 October 2026                 [Page 5]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -285,7 +285,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    +========+=============+=====================================================================================+
    |Encoding|Variant      |Alphabet Order                                                                       |
    +========+=============+=====================================================================================+
-   |Base16  |[RFC9562],   |0123456789ABCDEF with dash - characters added                                        |
+   |Base16  |[RFC9562],   |0123456789ABCDEF with four dash/hyphen - characters added                            |
    |        |Section 4    |                                                                                     |
    +--------+-------------+-------------------------------------------------------------------------------------+
    |Base16  |[RFC4648],   |0123456789ABCDEF                                                                     |
@@ -322,21 +322,49 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
                Table 1: Alt UUID Encoding Alphabet Comparison
 
-   Note: All UUID examples in this document are alternate encodings of
+   There also exist some algorithms that perform some pre-processing on
+   the binary encoding of the UUID before encoding it as one or more of
+   BaseXX Alphabets from the Table 1 for very specific application use-
+   cases.  The specifics about each algorithm are covered in their own
+   documents but are included here for completeness and comparison
+   purposes; see XML, HTML, CSS and Database Keys for the real-world
+   problems these solve within databases and other applications.
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                 [Page 6]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
+   The Table 2 table compares these different algorithms.
+
+   +============+================================================================+
+   |Encoding    |Alphabet(s) and notes                                           |
+   +============+================================================================+
+   |[NCNAME]    |[RFC4648], Section 6, [Base58btc], [RFC4648], Section 5         |
+   |            |Version and Variant extracted and placed at the start and end of|
+   |            |the layout to "Bookend". 26, 23 and 22 character outputs for the|
+   |            |different alphabets in use.                                     |
+   +------------+----------------------------------------------------------------+
+   |[Base62id]  |[Base62sort]                                                    |
+   |            |130-bit post-processed UUID value by appending 0b10, 22         |
+   |            |characters after encoding                                       |
+   +------------+----------------------------------------------------------------+
+   |[Base64uuid]|$0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz|
+   |            |132-bit post-processed UUID value by appending 0b0100, 22       |
+   |            |characters after encoding                                       |
+   +------------+----------------------------------------------------------------+
+
+           Table 2: Comparison of UUID Pre-processing Algorithms
+
+   *Note:* All UUID examples in this document are alternate encodings of
    [RFC9562], Section 4's Example UUID starting from either Figure 2
    (binary) or Figure 3 (integer).  Each section has a few example
    encodings; any UUID featured in RFC9562 can be found in the
    Appendix C table converted to the corresponding BaseXX alphabet
    encoding.
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                 [Page 6]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
 
 3.1.  Base32
 
@@ -358,10 +386,23 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    rarely used with Base32, except for Padding Characters or Checksum
    Characters features, which can often be omitted.
 
-   Base32 is a strong choice when available.  Base32hex ([RFC4648]) and
-   Base32 for Humans ([Base32human]) are recommended options for a
-   26-character UUID that works well for both machines and humans.  See
-   Figure 1 and Figure 2 for examples.
+
+
+
+Davis & Peabody          Expires 8 October 2026                 [Page 7]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
+   Base32 is a strong choice when available.  The standard Base32
+   alphabet ([RFC4648], Section 6) is not recommended for new UUID
+   implementations because its alphabet does not preserve binary sort
+   order; libraries currently providing this encoding need not deprecate
+   it, but new implementations should use Base32hex or Base32 for Humans
+   instead.  Base32hex ([RFC4648], Section 7) is recommended when
+   sorting is required.  Base32 for Humans ([Base32human]) is
+   recommended when both sorting and human readability are required.
+   See Figure 1 and Figure 2 for examples.
 
    Z-Base-32 human-oriented base-32 encoding makes many changes to the
    underlying alphabet to accommodate a specific use case and is not
@@ -381,19 +422,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
             Figure 2: Example UUID encoded as Base32 for Humans
 
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                 [Page 7]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
 3.2.  Base36
 
    Base36 alphabets are similar to Base32 but use about 5.1699 bits per
@@ -409,7 +437,18 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    Base36 is reasonably available (Section 4.10) but does not have
    concrete specifications outlined by a standards body.
 
+   Base36 is recommended when variable-length UUIDs are not a problem
+   for the application.
+
    See Figure 3 for an example.
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                 [Page 8]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    EOSWZOLG3BSX0ZN8OTQ1P8OOM
 
@@ -432,23 +471,15 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    Base52 does not have concrete specifications outlined by a standards
    body, but it is reasonably easy to implement.
 
+   Base52 is recommended when sorting is required, special characters
+   and digits pose problems, and variable-length UUIDs are not a
+   problem.
+
    See Figure 4 for an example.
 
    FraqvVvqUBoEOFXsPYOPwUm
 
                   Figure 4: Example UUID encoded as Base52
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                 [Page 8]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
 
 3.4.  Base58
 
@@ -464,6 +495,16 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
    Base58 Encoding Availability varies, but the format is well-known and
    commonly used for UUIDs in practice.
+
+   Base58 is recommended when sorting and human readability are
+   required, and variable-length UUIDs are not a problem.
+
+
+
+Davis & Peabody          Expires 8 October 2026                 [Page 9]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    See Figure 5 for an example.
 
@@ -491,20 +532,15 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    which may be desirable to further reduce the size of the encoded
    UUID.
 
+   [Base62ieee] is recommended when variable-length UUIDs are not a
+   problem.  [Base62sort] is recommended when sorting is required and
+   special characters or digits pose problems.
+
    See Figure 6 for an example.
 
    HiLegqjbBwUc0Q8tJ3ffs6
 
               Figure 6: Example UUID encoded as IEEE's Base62
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                 [Page 9]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
 
 3.6.  Base64
 
@@ -519,12 +555,22 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    Section 4, Base64url in [RFC4648], Section 5 and Base64sort
    ([Base64sort]) (also known as Base64lex).
 
-   Base64 is recommended when maximum compactness is desired without
-   Compressing Characters.  For most use cases, Base64url ([RFC4648],
-   Section 5) is encouraged because it is safe for URLs, filenames and
-   Application Specific use cases.  When lexicographical sorting that
-   matches binary order is critical (for example, with UUIDv6 or
-   UUIDv7), consider Base64sort ([Base64sort]).
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 10]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
+   The standard Base64 alphabet ([RFC4648], Section 4) is not
+   recommended for new UUID implementations; libraries currently
+   providing this encoding need not deprecate it, but new
+   implementations should use Base64url or Base64sort instead.
+   Base64url ([RFC4648], Section 5) is recommended for most use cases
+   because it is safe for URLs, filenames and Application Specific use
+   cases.  Base64sort ([Base64sort]) is recommended when lexicographical
+   sorting that matches binary order is critical (for example, with
+   UUIDv6 or UUIDv7).
 
    Base64 alphabets enjoy widespread availability (Encoding
    Availability) and are far more common than Base32 as per an analysis
@@ -547,21 +593,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
      Figure 9: Example UUID encoded using the Base64 Lexicographically
            sortable and Filename safe alphabet (without padding)
 
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 10]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
 3.7.  Base85
 
    Base85 encodes 4 bytes as 5 characters (about 6.409 bits per
@@ -575,10 +606,17 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    sequences (see Compressing Characters).  Those techniques are not
    universal across all Base85 alphabets.
 
-   Z85 is the recommended Base85 variant for UUIDs when Base85 is
-   desired.
+   Z85 is the recommended Base85 variant for UUIDs when symbols are not
+   a concern.
 
    See Figure 10 for an example.
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 11]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    {-iekEE4M)R!2>3:Stl>
 
@@ -610,14 +648,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    Datastores (see [RFC9562]) care about case sensitivity, alphabet
    ordering, and encoded length because these factors affect sorting,
    storage, and performance at scale.  UUIDs transmitted between
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 11]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
    machines benefit from extremely compact encodings to reduce bytes on
    the wire and improve behavior on limited-MTU or high-latency
    networks.
@@ -633,6 +663,16 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    The number of characters/symbols in a given encoding alphabet is
    directly correlated to the size of the alternate UUID encoding
    output.
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 12]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    As a starting point the encodings defined by RFC9562 are Binary,
    Integer, and Hex. Base02 (Binary) version of a UUID is 128 characters
@@ -664,12 +704,28 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    UUID, convert the binary form of UUID MAX from [RFC9562],
    Section 5.10.
 
-   Table 2 details the maximum length of various BaseXX Encoding methods
+   Table 3 details the maximum length of various BaseXX Encoding methods
    with UUID MAX, without padding present.
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 12]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 13]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -706,7 +762,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
       | Base85   | [Z85]                | 20                       |
       +----------+----------------------+--------------------------+
 
-               Table 2: Alt UUID Encoding Length Comparison
+               Table 3: Alt UUID Encoding Length Comparison
 
 4.3.  Padding Characters
 
@@ -725,7 +781,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 13]
+Davis & Peabody          Expires 8 October 2026                [Page 14]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -743,7 +799,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    Since UUIDs defined by [RFC9562] are always 128 bits, padding MAY be
    omitted and the resulting output will always be the same length.
 
-   Table 3 compares padding usage among the BaseXX encoding methods in
+   Table 4 compares padding usage among the BaseXX encoding methods in
    this document.
 
 
@@ -781,7 +837,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 14]
+Davis & Peabody          Expires 8 October 2026                [Page 15]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -818,7 +874,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
              | Base85   | [Z85]                | N          |
              +----------+----------------------+------------+
 
-              Table 3: Alt UUID Encoding Padding Comparison
+              Table 4: Alt UUID Encoding Padding Comparison
 
 4.4.  Checksum Characters
 
@@ -837,7 +893,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 15]
+Davis & Peabody          Expires 8 October 2026                [Page 16]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -851,7 +907,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    For applications that simply care about generating UUIDs but do not
    need to parse, checksums MAY be omitted entirely.
 
-   Table 4 compares checksum usage among the BaseXX encoding methods in
+   Table 5 compares checksum usage among the BaseXX encoding methods in
    this document.
 
           +==========+======================+==================+
@@ -886,14 +942,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
           | Base85   | [Z85]                | N                |
           +----------+----------------------+------------------+
 
-              Table 4: Alt UUID Encoding Checksum Comparison
+              Table 5: Alt UUID Encoding Checksum Comparison
 
 
 
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 16]
+Davis & Peabody          Expires 8 October 2026                [Page 17]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -923,7 +979,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    When evaluating a baseXX encoding, care must be taken to ensure the
    special characters are compatible with the desired use case.
 
-   Table 5 compares special character inclusions among the BaseXX
+   Table 6 compares special character inclusions among the BaseXX
    encoding methods in this document.
 
 
@@ -949,7 +1005,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 17]
+Davis & Peabody          Expires 8 October 2026                [Page 18]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -986,7 +1042,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
       | Base85   | [Z85]                | Y (numerous, see Table 1) |
       +----------+----------------------+---------------------------+
 
-          Table 5: Alt UUID Encoding Special Character Comparison
+          Table 6: Alt UUID Encoding Special Character Comparison
 
 4.6.  Character Exclusions
 
@@ -1005,7 +1061,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 18]
+Davis & Peabody          Expires 8 October 2026                [Page 19]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1041,7 +1097,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    problems while also verifying that sorting is not impacted if sorting
    is a requirement.
 
-   Table 6 compares character exclusions among the BaseXX encoding
+   Table 7 compares character exclusions among the BaseXX encoding
    methods in this document.
 
 
@@ -1061,7 +1117,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 19]
+Davis & Peabody          Expires 8 October 2026                [Page 20]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1098,7 +1154,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
         | Base85   | [Z85]                | N                    |
         +----------+----------------------+----------------------+
 
-        Table 6: Alt UUID Encoding Character Exclusion Comparison
+        Table 7: Alt UUID Encoding Character Exclusion Comparison
 
 4.7.  Case Sensitivity
 
@@ -1117,7 +1173,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 20]
+Davis & Peabody          Expires 8 October 2026                [Page 21]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1125,7 +1181,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    The BaseXX alphabet used also changes comparison logic: "aBc" does
    not necessarily equal "AbC" in all encodings.
 
-   Table 7 compares case sensitivity among the BaseXX encoding methods
+   Table 8 compares case sensitivity among the BaseXX encoding methods
    in this document.
 
            +==========+======================+================+
@@ -1160,7 +1216,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
            | Base85   | [Z85]                | Y              |
            +----------+----------------------+----------------+
 
-               Table 7: Alt UUID Encoding Case Sensitivity
+               Table 8: Alt UUID Encoding Case Sensitivity
                                 Comparison
 
 4.8.  Sorting and Ordering
@@ -1173,7 +1229,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 21]
+Davis & Peabody          Expires 8 October 2026                [Page 22]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1214,7 +1270,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
                Figure 11: Alphabet Ordering Comparison
 
-   Table 8 compares binary sorting among the BaseXX encoding methods in
+   Table 9 compares binary sorting among the BaseXX encoding methods in
    this document.
 
 
@@ -1229,7 +1285,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 22]
+Davis & Peabody          Expires 8 October 2026                [Page 23]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1266,7 +1322,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
       | Base85   | [Z85]                | N                        |
       +----------+----------------------+--------------------------+
 
-              Table 8: Alt UUID Encoding Sorting Comparison
+              Table 9: Alt UUID Encoding Sorting Comparison
 
 4.9.  Compressing Characters
 
@@ -1285,7 +1341,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 23]
+Davis & Peabody          Expires 8 October 2026                [Page 24]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1341,13 +1397,13 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 24]
+Davis & Peabody          Expires 8 October 2026                [Page 25]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
 
-   Table 9 compares bits per character among the BaseXX encoding methods
-   in this document.
+   Table 10 compares bits per character among the BaseXX encoding
+   methods in this document.
 
          +==========+======================+====================+
          | Encoding | Variant              | Bits per Character |
@@ -1381,7 +1437,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
          | Base85   | [Z85]                | 6.409              |
          +----------+----------------------+--------------------+
 
-                Table 9: Alt UUID Encoding Bits Comparison
+               Table 10: Alt UUID Encoding Bits Comparison
 
 4.12.  Application Specific
 
@@ -1397,7 +1453,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 25]
+Davis & Peabody          Expires 8 October 2026                [Page 26]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1453,7 +1509,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 26]
+Davis & Peabody          Expires 8 October 2026                [Page 27]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1500,96 +1556,29 @@ Base64uuid: $0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
    the receiver to parse an alternate-format UUID back into binary;
    typically the receiver treats the received UUID as an opaque string.
 
-6.  Recommendations
-
-   Table 10 below provides an at-a-glance set of recommendations for
-   each BaseXX alphabet described in this document for new
-   implementations looking to introduce alternate encodings with UUID.
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 27]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
-   While some rows state "Not Recommended", if a library is currently
-   providing this alternate encoding; they may continue to do so without
-   deprecating, removing or otherwise undoing existing functionality.
-
-    +==========+===============+=====================================+
-    | Encoding | Variant       | Recommendation                      |
-    +==========+===============+=====================================+
-    | Base32   | [RFC4648],    | Not Recommended with UUID.          |
-    |          | Section 6     | Leverage Base32hex or Base32 for    |
-    |          |               | Humans.                             |
-    +----------+---------------+-------------------------------------+
-    | Base32   | [RFC4648],    | Recommended when sorting is         |
-    |          | Section 7     | required.                           |
-    +----------+---------------+-------------------------------------+
-    | Base32   | [Base32human] | Recommended when sorting and human  |
-    |          |               | usage is required.                  |
-    +----------+---------------+-------------------------------------+
-    | Base36   | ---           | Not Recommended with UUID.          |
-    |          |               | Leverage Base32hex or Base32 for    |
-    |          |               | Humans.                             |
-    +----------+---------------+-------------------------------------+
-    | Base52   | ---           | Recommended when sorting is         |
-    |          |               | required, special characters/digits |
-    |          |               | pose problems, and variable-length  |
-    |          |               | UUIDs are not a problem.            |
-    +----------+---------------+-------------------------------------+
-    | Base58   | [Base58btc]   | Recommended when sorting and human  |
-    |          |               | usage is required, and variable-    |
-    |          |               | length UUIDs are not a problem.     |
-    +----------+---------------+-------------------------------------+
-    | Base62   | [Base62ieee]  | Recommended when variable-length    |
-    |          |               | UUIDs are not a problem.            |
-    +----------+---------------+-------------------------------------+
-    | Base62   | [Base62sort]  | Recommended when sorting is         |
-    |          |               | required and special characters/    |
-    |          |               | digits pose problems.               |
-    +----------+---------------+-------------------------------------+
-    | Base64   | [RFC4648],    | Not Recommended with UUID.          |
-    |          | Section 4     | Leverage Base64url or Base64sort.   |
-    +----------+---------------+-------------------------------------+
-    | Base64   | [RFC4648],    | Recommended for most use cases.     |
-    |          | Section 5     |                                     |
-    +----------+---------------+-------------------------------------+
-    | Base64   | [Base64sort]  | Recommended when sorting is         |
-    |          |               | required.                           |
-    +----------+---------------+-------------------------------------+
-    | Base85   | [Z85]         | Recommended when symbols are not a  |
-    |          |               | concern.                            |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 28]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
-    +----------+---------------+-------------------------------------+
-
-          Table 10: General Guidance for Alternate UUID Encoding
-                             Recommendations
-
-7.  Security Considerations
+6.  Security Considerations
 
    Section Checksum Characters addresses the primary security-related
    concern in this document: data-integrity validation for UUIDs
    transmitted over the wire.
 
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 28]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
    No additional security considerations are identified.
 
-8.  IANA Considerations
+7.  IANA Considerations
 
    This document has no IANA actions.
 
-9.  References
+8.  References
 
-9.1.  Normative References
+8.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1608,23 +1597,11 @@ Internet-Draft              alt-uuid-encoding                 April 2026
               IDentifiers (UUIDs)", RFC 9562, DOI 10.17487/RFC9562, May
               2024, <https://www.rfc-editor.org/rfc/rfc9562>.
 
-9.2.  Informative References
+8.2.  Informative References
 
    [Base32human]
               Crockford, D. and K. Davis, "Base32 for Humans", April
               2026, <https://github.com/douglascrockford/Base32>.
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 29]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
 
    [Base58btc]
               Bitcoin, "Bitcoin Base58 Implementation", commit fae71d3,
@@ -1640,6 +1617,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    [Base62id] Prokhorenko, S., "Base62id Encoding Specification for
               Binary UUIDs", April 2026,
               <https://github.com/sergeyprokhorenko/Base62id/>.
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 29]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    [Base62ieee]
               IEEE, "A secure, lossless, and compressed Base62
@@ -1675,13 +1660,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    [HTML]     whatwg, "HTML Living Standard", November 2025,
               <https://html.spec.whatwg.org/>.
 
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 30]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
    [NCNAME]   Taylor, D., "Compact UUIDs for Constrained Grammars",
               September 2025, <https://datatracker.ietf.org/doc/draft-
               taylor-uuid-ncname/>.
@@ -1693,6 +1671,16 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    [RFC20]    Cerf, V., "ASCII format for network interchange", STD 80,
               RFC 20, DOI 10.17487/RFC0020, October 1969,
               <https://www.rfc-editor.org/rfc/rfc20>.
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 30]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
@@ -1730,14 +1718,6 @@ Appendix A.  Acknowledgments
    *  Sergey Prokhorenko for continuously ensuring we work on this
       document.
 
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 31]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
    As well as all of those in the IETF community and on GitHub who
    contributed to the discussions which resulted in this document.
 
@@ -1746,6 +1726,17 @@ Appendix B.  Changelog
    draft-00:
 
    *  Initial Release
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 31]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
 Appendix C.  Test Vectors
 
@@ -1786,14 +1777,6 @@ C.1.  Generic UUID
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | EOSWZOLG3BSX0ZN8OTQ1P8OOM            |
     +----------+---------------+--------------------------------------+
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 32]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     | Base52   | ---           | FraqvVvqUBoEOFXsPYOPwUm              |
     +----------+---------------+--------------------------------------+
     | Base58   | [Base58btc]   | Xe22UfxT3rxcKJEAfL5373               |
@@ -1803,6 +1786,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     | Base62   | [Base62sort]  | 7YBUWgZR1mKSqGyj9tVViw               |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | +B1Prn3sEdCnZQCgyR5r9g               |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 32]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | -B1Prn3sEdCnZQCgyR5r9g               |
@@ -1842,14 +1833,6 @@ C.2.  NIL UUID
     +----------+---------------+--------------------------------------+
     | Base16   | [RFC4648],    | 00000000000000000000000000000000     |
     |          | Section 8     |                                      |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 33]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     +----------+---------------+--------------------------------------+
     | Base32   | [RFC4648],    | AAAAAAAAAAAAAAAAAAAAAAAAAA           |
     |          | Section 6     |                                      |
@@ -1859,6 +1842,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | 00000000000000000000000000           |
     +----------+---------------+--------------------------------------+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 33]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     | Base36   | ---           | 0                                    |
     +----------+---------------+--------------------------------------+
     | Base52   | ---           | A                                    |
@@ -1882,30 +1873,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
        Table 13: UUID Test Vectors for RFC9562, Section 5.9: Nil UUID
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 34]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
               +================+============================+
               | Encoding       | Output                     |
               +================+============================+
@@ -1923,6 +1890,21 @@ Internet-Draft              alt-uuid-encoding                 April 2026
                 Table 14: UUID-NCName, Base62id, Base64uuid
                  Test Vectors for RFC9562, Section 5.9: Nil
                                     UUID
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 34]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
 C.3.  MAX UUID
 
@@ -1954,14 +1936,6 @@ C.3.  MAX UUID
     | Base62   | [Base62sort]  | 7n42DGM5Tflk9n8mt7Fhc7               |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | /////////////////////w               |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 35]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | _____________________w               |
@@ -1973,6 +1947,20 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     +----------+---------------+--------------------------------------+
 
       Table 15: UUID Test Vectors for RFC9562, Section 5.10: MAX UUID
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 35]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
               +================+============================+
               | Encoding       | Output                     |
@@ -2010,14 +1998,6 @@ C.4.  UUIDv1
     |          | Section 7     |                                      |
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | R8SAP04M2G8YSCY8KXNXXKPR8R           |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 36]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | BHW3F9QSZLQPYH8GTZ35HZ4UE            |
     +----------+---------------+--------------------------------------+
@@ -2030,6 +2010,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     | Base62   | [Base62sort]  | 5uRfL2yjhnArtoQfhtK5hO               |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | wjKrAJQUEeyzyJ9r3s7YRg               |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 36]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | wjKrAJQUEeyzyJ9r3s7YRg               |
@@ -2060,20 +2048,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
                    Test Vectors for RFC9562, Section A.1:
                                    UUIDv1
 
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 37]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
 C.5.  UUIDv2
 
     +==========+===============+======================================+
@@ -2092,6 +2066,14 @@ C.5.  UUIDv2
     |          | Section 7     |                                      |
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | 00007T6BQ4GYNCG10025N1P8M4           |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 37]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | 5XJERAFS5KNNNG5WAM10H                |
     +----------+---------------+--------------------------------------+
@@ -2116,20 +2098,6 @@ C.5.  UUIDv2
 
             Table 19: UUID Test Vectors for DCE Security: UUIDv2
 
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 38]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
               +================+============================+
               | Encoding       | Output                     |
               +================+============================+
@@ -2146,6 +2114,21 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
                 Table 20: UUID-NCName, Base62id, Base64uuid
                    Test Vectors for DCE Security: UUIDv2
+
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 38]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
 C.6.  UUIDv3
 
@@ -2178,14 +2161,6 @@ C.6.  UUIDv3
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | XfQYgTrtNRWIpy9KgUzwng               |
     |          | Section 4     |                                      |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 39]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | XfQYgTrtNRWIpy9KgUzwng               |
     |          | Section 5     |                                      |
@@ -2196,6 +2171,20 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     +----------+---------------+--------------------------------------+
 
         Table 21: UUID Test Vectors for RFC9562, Section A.2: UUIDv3
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 39]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
               +================+============================+
               | Encoding       | Output                     |
@@ -2234,14 +2223,6 @@ C.7.  UUIDv4
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | J68GHXTJT51J16XCZ13XPGA8N0           |
     +----------+---------------+--------------------------------------+
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 40]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     | Base36   | ---           | 8M8SCPFUGFIJ4QENJ0IG77QG8            |
     +----------+---------------+--------------------------------------+
     | Base52   | ---           | DWDhSoKPZRoqkgBWaJcOckY              |
@@ -2253,6 +2234,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     | Base62   | [Base62sort]  | 2rHpz41xnmmjQ14tXiiRby               |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | kZEI91LRQyCbrPhH20FIqA               |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 40]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | kZEI91LRQyCbrPhH20FIqA               |
@@ -2283,21 +2272,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
                    Test Vectors for RFC9562, Section A.3:
                                    UUIDv4
 
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 41]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
 C.8.  UUIDv5
 
     +==========+===============+======================================+
@@ -2316,6 +2290,14 @@ C.8.  UUIDv5
     |          | Section 7     |                                      |
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | 5VB6AZF94XB8Q5F14SJTHBN6M8           |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 41]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | 2RTO2O5WTBFMSYWZX7KHQ1Z8I            |
     +----------+---------------+--------------------------------------+
@@ -2340,20 +2322,6 @@ C.8.  UUIDv5
 
         Table 25: UUID Test Vectors for RFC9562, Section A.4: UUIDv5
 
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 42]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
               +================+============================+
               | Encoding       | Output                     |
               +================+============================+
@@ -2371,6 +2339,20 @@ Internet-Draft              alt-uuid-encoding                 April 2026
                 Table 26: UUID-NCName, Base62id, Base64uuid
                    Test Vectors for RFC9562, Section A.4:
                                    UUIDv5
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 42]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
 C.9.  UUIDv6
 
@@ -2402,14 +2384,6 @@ C.9.  UUIDv6
     | Base62   | [Base62sort]  | w5k6WVHfQxDwORhbnJw5G                |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | HslBTCMqawCzyJ9r3s7YRg               |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 43]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | HslBTCMqawCzyJ9r3s7YRg               |
@@ -2421,6 +2395,20 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     +----------+---------------+--------------------------------------+
 
         Table 27: UUID Test Vectors for RFC9562, Section A.5: UUIDv6
+
+
+
+
+
+
+
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 43]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
 
               +================+============================+
               | Encoding       | Output                     |
@@ -2458,14 +2446,6 @@ C.10.  UUIDv7
     |          | Section 7     |                                      |
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | 05ZJ5RKSP1YC7664VG60R1SSHW           |
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 44]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | 36TWI214QWJ7MGSVQ83NM8WF             |
     +----------+---------------+--------------------------------------+
@@ -2478,6 +2458,14 @@ Internet-Draft              alt-uuid-encoding                 April 2026
     | Base62   | [Base62sort]  | 2p5oQZoHTv0zeY5yG21K3                |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | AX8i4nmwfMOYxNwMDAc5jw               |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 44]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     |          | Section 4     |                                      |
     +----------+---------------+--------------------------------------+
     | Base64   | [RFC4648],    | AX8i4nmwfMOYxNwMDAc5jw               |
@@ -2508,20 +2496,6 @@ Internet-Draft              alt-uuid-encoding                 April 2026
                    Test Vectors for RFC9562, Section A.6:
                                    UUIDv7
 
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 45]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
-
 C.11.  UUIDv8
 
     +==========+===============+======================================+
@@ -2540,6 +2514,14 @@ C.11.  UUIDv8
     |          | Section 7     |                                      |
     +----------+---------------+--------------------------------------+
     | Base32   | [Base32human] | 4J4YKB9EWA7013P96BAZD4C1R0           |
+
+
+
+Davis & Peabody          Expires 8 October 2026                [Page 45]
+
+Internet-Draft              alt-uuid-encoding                 April 2026
+
+
     +----------+---------------+--------------------------------------+
     | Base36   | ---           | 25VHD0YEN79F79OO0TV0BAE9S            |
     +----------+---------------+--------------------------------------+
@@ -2563,20 +2545,6 @@ C.11.  UUIDv8
     +----------+---------------+--------------------------------------+
 
         Table 31: UUID Test Vectors for RFC9562, Section B.1: UUIDv8
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 46]
-
-Internet-Draft              alt-uuid-encoding                 April 2026
-
 
               +================+============================+
               | Encoding       | Output                     |
@@ -2605,31 +2573,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Davis & Peabody          Expires 4 October 2026                [Page 47]
+Davis & Peabody          Expires 8 October 2026                [Page 46]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2685,7 +2629,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 48]
+Davis & Peabody          Expires 8 October 2026                [Page 47]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2741,7 +2685,7 @@ C.12.  Microsoft UUID
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 49]
+Davis & Peabody          Expires 8 October 2026                [Page 48]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2797,7 +2741,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 50]
+Davis & Peabody          Expires 8 October 2026                [Page 49]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2853,7 +2797,7 @@ D.3.  Base32, Crockford
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 51]
+Davis & Peabody          Expires 8 October 2026                [Page 50]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2909,7 +2853,7 @@ D.8.  Base64
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 52]
+Davis & Peabody          Expires 8 October 2026                [Page 51]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2965,4 +2909,4 @@ Authors' Addresses
 
 
 
-Davis & Peabody          Expires 4 October 2026                [Page 53]
+Davis & Peabody          Expires 8 October 2026                [Page 52]
