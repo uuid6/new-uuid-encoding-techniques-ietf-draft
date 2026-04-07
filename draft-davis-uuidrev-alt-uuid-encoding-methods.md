@@ -1,11 +1,10 @@
 ---
 title: Alternate UUID Encoding Methods
 abbrev: alt-uuid-encoding
-category: std
+category: info
 
 docname: draft-davis-uuidrev-alt-uuid-encoding-methods-00
 submissiontype: IETF
-updates: '9562'
 date: 2026
 consensus: true
 v: 3
@@ -119,12 +118,6 @@ informative:
     author:
     - name: Kyzer Davis
     date: 2025-12
-  Base64uuid:
-    target: https://github.com/sergeyprokhorenko/Base64UUID
-    title: The Base64UUID Encoding and Choice of Encoding for UUID
-    author:
-    - name: Sergey Prokhorenko
-    date: 2026-04
   Base58btc:
     target: https://github.com/bitcoin/bitcoin/blob/master/src/base58.cpp
     title: Bitcoin Base58 Implementation
@@ -247,7 +240,6 @@ The {{bitSwizzleTable}} table compares these different algorithms.
 |------------------------|---------------------------------------------------------------------|
 | {{NCNAME}}             | {{RFC4648, Section 6}}, {{Base58btc}}, {{RFC4648, Section 5}}<br>Version and Variant extracted and placed at the start and end of the layout to "Bookend". 26, 23 and 22 character outputs for the different alphabets in use.      |
 | {{Base62id}}           | {{Base62sort}}<br>130-bit post-processed UUID value by appending `0b10`, 22 characters after encoding                                                      |
-| {{Base64uuid}}         | `$0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz`<br>132-bit post-processed UUID value by appending `0b0100`, 22 characters after encoding |
 {: #bitSwizzleTable title='Comparison of UUID Pre-processing Algorithms'}
 
 **Note:** All UUID examples in this document are alternate encodings of {{RFC9562, Section 4}}'s Example UUID starting from either Figure 2 (binary) or Figure 3 (integer).
@@ -426,6 +418,10 @@ Datastores (see {{RFC9562}}) care about case sensitivity, alphabet ordering, and
 UUIDs transmitted between machines benefit from extremely compact encodings to reduce bytes on the wire and improve behavior on limited-MTU or high-latency networks.
 
 For resource-constrained devices such as IoT endpoints, prefer encodings that are computationally inexpensive to encode and decode.
+
+For a given application use case (database key, network transmission, logging, etc.), implementations SHOULD choose exactly one BaseXX encoding and MUST NOT mix different BaseXX encodings for the same purpose.
+Mixing encodings breaks assumptions about encoded length and sort order and complicates comparison logic.
+For example, if an application stores UUIDs as Base32 in a database, it should not also accept or produce Base62-encoded UUIDs for the same field.
 
 The general statement by the authors is as follows: there is no single correct choice to cover every scenario.
 
@@ -742,6 +738,18 @@ While non–power-of-two alphabets like Base36, Base58, or Base62 use approximat
 | Base85   | {{Z85}}                | 6.409                |
 {: #bitsTable title='Alt UUID Encoding Bits Comparison'}
 
+## Parsing {#parsing}
+
+This document focuses on generating UUIDs via alternate formats rather than parsing UUIDs of alternate encoding formats.
+The generic default for any existing `uuid_parse(uuid)` function SHOULD remain that of {{RFC9562, Section 4}} hex-and-dash string format.
+
+Implementors MAY provide parse functionality to parse UUIDs of alternate formats such as `uuid_parse(uuid, encoding="base64url")`.
+The distribution (and naming) of the encoding algorithm among disparate systems is outside of the scope of this document.
+
+In practice this is seldom an issue because most implementations that need to parse UUIDs are aware of the encoding format used by their peers.
+For example, the sender and receiver of a Base64url-encoded UUID are often within the same application boundary.
+It is uncommon for two different systems to exchange UUIDs in a way that requires the receiver to parse an alternate-format UUID back into binary; typically the receiver treats the received UUID as an opaque string.
+
 ## Application Specific {#best_practice_applications}
 
 Some applications have very specific restrictions which may influence the alternate UUID encoding selection.
@@ -771,7 +779,7 @@ Thus for XML, HTML, and CSS it is advantageous to use some advanced methods such
 {: spacing="compact"}
 
 - Leveraging the alternate UUID encoding technique defined via {{NCNAME}} (UUID-NCName-32, UUID-NCName-58 or UUID-NCName-64) to ensure that the first digit is always an uppercase alphabet character.
-- An alternative algorithm to the NCNAME method is to prefix a value like `b0100` or `b10` as seen in {{Base62id}} or {{Base64uuid}} to ensure the first character is always a letter.
+- An alternative algorithm to the NCNAME method is to prefix a value like `b10` as seen in {{Base62id}} to ensure the first character is always a letter.
 - Utilize {{Base52}} which ensures the output UUID does not start with a special character or digit.
 - Simply prefix the first non-digit/non-special character in the given alphabet.
   For example, if uppercase A is available, prefix this character to satisfy the constraints.
@@ -782,30 +790,7 @@ Databases often have specific requirements for keys such as case sensitivity, so
 
 When using alternate UUID encodings as database keys, it is important to consider these requirements and select an encoding that meets them.
 
-Database implementors should consider {{Base62id}} or {{Base64uuid}} when using alternate UUID encodings as database keys to ensure the first character is an uppercase alphabet character and the output is compact.
-
-Base62id is preferred over Base64uuid due to the lack of special characters in the alphabet which can cause issues with sorting and other database operations.
-
-It should also be noted that Base64uuid differs from Base64sort in that the hyphen character (-) in the first position of the alphabet is replaced with a dollar sign ($) as seen in {{base64sortuuid}}.
-
-~~~
-Base64sort: -0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
-Base64uuid: $0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz
-~~~
-{: #base64sortuuid title='Comparison of Base64sort and Base64uuid Alphabets'}
-
-
-# Parsing {#parsing}
-
-This document focuses on generating UUIDs via alternate formats rather than parsing UUIDs of alternate encoding formats.
-The generic default for any existing `uuid_parse(uuid)` function SHOULD remain that of {{RFC9562, Section 4}} hex-and-dash string format.
-
-Implementors MAY provide parse functionality to parse UUIDs of alternate formats such as `uuid_parse(uuid, encoding="base64url")`.
-The distribution (and naming) of the encoding algorithm among disparate systems is outside of the scope of this document.
-
-In practice this is seldom an issue because most implementations that need to parse UUIDs are aware of the encoding format used by their peers.
-For example, the sender and receiver of a Base64url-encoded UUID are often within the same application boundary.
-It is uncommon for two different systems to exchange UUIDs in a way that requires the receiver to parse an alternate-format UUID back into binary; typically the receiver treats the received UUID as an opaque string.
+Database implementors should consider {{Base62id}} when using alternate UUID encodings as database keys to ensure the first character is an uppercase alphabet character and the output is compact.
 
 # Security Considerations {#security_considerations}
 
@@ -849,7 +834,7 @@ All of the BaseXX Alphabets described in this document and others not described 
 
 The NCNAME test vectors (UUID-NCName-32, UUID-NCName-58, and UUID-NCName-64) are direct copies from the appendix of {{NCNAME}}.
 
-Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} which are not included in the main body of the document but are included here for reference.
+Each section also includes test vectors for {{Base62id}} which are not included in the main body of the document but are included here for reference.
 
 ## Generic UUID
 
@@ -876,8 +861,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `B7wc88dU4e3NyJEj3e944DK`              |
 | UUID-NCName-64         | `B-B1Prn3sHQdlAKDJHmv2K`               |
 | {{Base62id}}           | `N8JYxDHbz7rx9rGIw80uxC`               |
-| {{Base64uuid}}         | `Is6JyiUTkGo9S_$9286ajq`               |
-{: #exampleUUIDprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 4'}
+{: #exampleUUIDprefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section 4'}
 
 ## NIL UUID  {#test_vectors_nil_uuid}
 
@@ -904,8 +888,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `A111111111111111______A`              |
 | UUID-NCName-64         | `AAAAAAAAAAAAAAAAAAAAAA`               |
 | {{Base62id}}           | `Fa84QWiAxLXUJaHZmEVPEG`               |
-| {{Base64uuid}}         | `F$$$$$$$$$$$$$$$$$$$$$`                |
-{: #exampleUUIDvNILprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 5.9: Nil UUID'}
+{: #exampleUUIDvNILprefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section 5.9: Nil UUID'}
 
 ## MAX UUID  {#test_vectors_max_uuid}
 
@@ -932,8 +915,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `P8AQGAut7N92awznwCnjuQP`              |
 | UUID-NCName-64         | `P____________________P`               |
 | {{Base62id}}           | `NNC6dn4GR1JETNQMfLl6qN`               |
-| {{Base64uuid}}         | `Izzzzzzzzzzzzzzzzzzzzz`               |
-{: #exampleUUIDvMAXprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section 5.10: MAX UUID'}
+{: #exampleUUIDvMAXprefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section 5.10: MAX UUID'}
 
 ## UUIDv1 {#test_vectors_uuidv1}
 
@@ -960,8 +942,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `B6S7oX73gv2Y1iTENdXX8hL`              |
 | UUID-NCName-64         | `BwjKrAJQUHsPIn2vezthGL`               |
 | {{Base62id}}           | `LUZjlZguf8iMDOiFU7pUve`               |
-| {{Base64uuid}}         | `I1Beg$_0FGvAE7bqjTnhW5`               |
-{: #exampleUUIDv1prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.1: UUIDv1'}
+{: #exampleUUIDv1prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.1: UUIDv1'}
 
 ## UUIDv2 {#test_vectors_uuidv2}
 
@@ -988,8 +969,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `C11KtP6Y9P3rRkvh2N1e__L`              |
 | UUID-NCName-64         | `CAAAD6Mu5HqIBAARahsihL`               |
 | {{Base62id}}           | `Fa84rLxnBVA2JNUzzkiHwn`               |
-| {{Base64uuid}}         | `F$$$EcmvZWuf70$$GPWgXW`               |
-{: #exampleUUIDv2prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for DCE Security: UUIDv2'}
+{: #exampleUUIDv2prefix title='UUID-NCName, Base62id Test Vectors for DCE Security: UUIDv2'}
 
 ## UUIDv3 {#test_vectors_uuidv3}
 
@@ -1016,8 +996,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `D3dTNMAmevR4NFAakRDtLdI`              |
 | UUID-NCName-64         | `DXfQYgTrtUVinL0qBTPCeI`               |
 | {{Base62id}}           | `IRPuPak8l8KDjbMTJxDqqE`               |
-| {{Base64uuid}}         | `GSx0X0Diop4NXbAoe0IE1T`               |
-{: #exampleUUIDv3prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.2: UUIDv3'}
+{: #exampleUUIDv3prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.2: UUIDv3'}
 
 ## UUIDv4 {#test_vectors_uuidv4}
 
@@ -1044,8 +1023,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `E55CtqYNqva1mcmaa877eoJ`              |
 | UUID-NCName-64         | `EkZEI91LRMgus-EfbQUioJ`               |
 | {{Base62id}}           | `K0oEsdooJG5kbywVjft3Au`               |
-| {{Base64uuid}}         | `HGZFYrJh4278igy3UQFJXc`               |
-{: #exampleUUIDv4prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.3: UUIDv4'}
+{: #exampleUUIDv4prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.3: UUIDv4'}
 
 ## UUIDv5 {#test_vectors_uuidv5}
 
@@ -1072,8 +1050,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `F2K15VFLUBD326h169SNPjJ`              |
 | UUID-NCName-64         | `FLtZlfeknaLXhJmWorqaiJ`               |
 | {{Base62id}}           | `H0VhGlmNXgTHGeRqD3DcUU`               |
-| {{Base64uuid}}         | `FipaKxuHSLXtMW8aLcfePX`               |
-{: #exampleUUIDv5prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.4: UUIDv5'}
+{: #exampleUUIDv5prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.4: UUIDv5'}
 
 ## UUIDv6 {#test_vectors_uuidv6}
 
@@ -1100,8 +1077,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `GrxRCnDiX4mxSq8bFQjT3_L`              |
 | UUID-NCName-64         | `GHslBTCMqsAPIn2vezthGL`               |
 | {{Base62id}}           | `GWDoX3DScmUiFyjHO1pLJW`               |
-| {{Base64uuid}}         | `FTmJ4B7mdf$AE7bqjTnhW5`               |
-{: #exampleUUIDv6prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.5: UUIDv6'}
+{: #exampleUUIDv6prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.5: UUIDv6'}
 
 ## UUIDv7 {#test_vectors_uuidv7}
 
@@ -1128,8 +1104,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `H3RrXaX7uTM6qdwrXwpC6_J`              |
 | UUID-NCName-64         | `HAX8i4nmwzDjE3AwMBzmPJ`               |
 | {{Base62id}}           | `FcxAExHzEpSVJEpfkUXQYJ`               |
-| {{Base64uuid}}         | `F0UmAXTQ0wktY3r$kB0naE`               |
-{: #exampleUUIDv7prefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section A.6: UUIDv7'}
+{: #exampleUUIDv7prefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section A.6: UUIDv7'}
 
 ## UUIDv8 {#test_vectors_uuidv8}
 
@@ -1156,8 +1131,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `I22HpMAy5M181AjPFG7eLXI`              |
 | UUID-NCName-64         | `IJInprS7i4A7JMtX2kYHAI`               |
 | {{Base62id}}           | `Gh4ovtlXgG1ON4DKQNdPn6`               |
-| {{Base64uuid}}         | `FZXTahAi9D$7v8BhMqZN6$`               |
-{: #exampleUUIDv8timeprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section B.1: UUIDv8'}
+{: #exampleUUIDv8timeprefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section B.1: UUIDv8'}
 
 | Encoding | Variant                | RFC9562, Section B.2                   |
 | Base16   | {{RFC9562, Section 4}} | `5c146b14-3c52-8afd-938a-375d0df1fbf6` |
@@ -1182,8 +1156,7 @@ Each section also includes test vectors for {{Base62id}} and {{Base64uuid}} whic
 | UUID-NCName-58         | `I3aR2J7aw1BJj4jJvfuWTXJ`              |
 | UUID-NCName-64         | `IXBRrFDxSr9OKN10N8fv2J`               |
 | {{Base62id}}           | `INshC24rV2DOUHBbMGbh5y`               |
-| {{Base64uuid}}         | `GR45gJE499zOD9CpoCwUjq`               |
-{: #exampleUUIDv8nameprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for RFC9562, Section B.2: UUIDv8'}
+{: #exampleUUIDv8nameprefix title='UUID-NCName, Base62id Test Vectors for RFC9562, Section B.2: UUIDv8'}
 
 ## Microsoft UUID {#test_vectors_microsoft_uuid}
 
@@ -1212,8 +1185,7 @@ The following UUID `00000013-0000-0000-c000-000000000000` is for `Microsoft.Azur
 | UUID-NCName-58         | `A111Mo9hVUdmNWqcCExF__M`              |
 | UUID-NCName-64         | `AAAAAEwAAAAAAAAAAAAAAM`               |
 | {{Base62id}}           | `Fa84R2HvcuS2kQOPfUIAE4`               |
-| {{Base64uuid}}         | `F$$$$I$$$$$B$$$$$$$$$$`                |
-{: #exampleMicrosoftUUIDprefix title='UUID-NCName, Base62id, Base64uuid Test Vectors for Microsoft.Azure.Portal'}
+{: #exampleMicrosoftUUIDprefix title='UUID-NCName, Base62id Test Vectors for Microsoft.Azure.Portal'}
 
 # Example UUID Base Encoding Tools, Libraries, and resources {#examples}
 
