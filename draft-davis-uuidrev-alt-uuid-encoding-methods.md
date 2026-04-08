@@ -419,6 +419,9 @@ UUIDs transmitted between machines benefit from extremely compact encodings to r
 
 For resource-constrained devices such as IoT endpoints, prefer encodings that are computationally inexpensive to encode and decode.
 
+For Large Language Model (LLM) applications, UUID encoding directly affects token consumption because each token maps to a variable number of characters and special characters often consume disproportionately more tokens.
+Shorter encodings that avoid special characters generally consume fewer tokens and reduce inference costs; .
+
 For a given application use case (database key, network transmission, logging, etc.), implementations SHOULD choose exactly one BaseXX encoding and MUST NOT mix different BaseXX encodings for the same purpose.
 Mixing encodings breaks assumptions about encoded length and sort order and complicates comparison logic.
 For example, if an application stores UUIDs as Base32 in a database, it should not also accept or produce Base62-encoded UUIDs for the same field.
@@ -755,6 +758,76 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
 Some applications have very specific restrictions which may influence the alternate UUID encoding selection.
 This section features a limited list compiling some known restrictions that implementations may consider while working with alternate UUID encodings.
 
+### LLM Token Efficiency {#best_practice_llm_tokens}
+
+Large Language Models (LLMs) process text using tokens: sub-word or character-level units whose boundaries depend on the model's tokenizer.
+Because UUID alternate encodings mix digits, uppercase letters, lowercase letters, and sometimes special characters in patterns that rarely appear in natural language, tokenizers often split them into many small tokens.
+Greater token consumption translates directly to higher inference cost, increased latency, and reduced effective context-window utilization.
+
+Tokenizer behavior varies substantially across vendors and model families.
+The token counts below were measured using the following tokenizers, which were current when this document was prepared:
+
+{: spacing="compact"}
+
+- [Anthropic](https://platform.claude.com/docs/en/build-with-claude/token-counting): Claude OPUS 4.6
+- [OpenAI](https://platform.openai.com/tokenizer): GPT5.x & O1/3
+- [xAI](https://docs.x.ai/developers/rest-api-reference/inference/other#tokenize-text): grok-4.20-0309-reasoning
+- [Google](https://ai.google.dev/api/tokens): Gemini 3.1 Pro Preview
+- Generic: ceil(character_length / 4), the common "1 token ~= 4 characters" heuristic
+
+**Note:** The token counts in {{tokenTableMax}} use the MAX UUID from {{test_vectors_max_uuid}} which consists largely of repeating characters.
+Repeating characters compress very aggressively in Byte-Pair Encoding based tokenizers, so these values represent a best-case (minimum token) scenario.
+{{tokenTableExample}} uses the Example UUID from {{test_vectors_generic_uuid}} whose mixed characters are more representative of typical UUIDs.
+Real-world token counts will more closely resemble the latter.
+
+{{tokenTableMax}} details the token count for the MAX UUID across various BaseXX Encoding methods and tokenizers.
+
+| Encoding | Variant                | Anthropic | OpenAI | xAI | Google | Generic |
+| Base16   | {{RFC9562, Section 4}} | 21        | 10     | 10  | 13     | 9       |
+| Base16   | {{RFC4648, Section 8}} | 7         | 4      | 2   | 9      | 8       |
+| Base32   | {{RFC4648, Section 6}} | 10        | 9      | 9   | 27     | 7       |
+| Base32   | {{RFC4648, Section 7}} | 27        | 13     | 13  | 14     | 7       |
+| Base32   | {{Base32human}}        | 15        | 13     | 13  | 14     | 7       |
+| Base36   | ---                    | 10        | 10     | 10  | 27     | 7       |
+| Base52   | ---                    | 21        | 15     | 15  | 16     | 6       |
+| Base58   | {{Base58btc}}          | 18        | 14     | 14  | 16     | 6       |
+| Base62   | {{Base62ieee}}         | 20        | 15     | 12  | 13     | 6       |
+| Base62   | {{Base62sort}}         | 22        | 17     | 17  | 19     | 6       |
+| Base64   | {{RFC4648, Section 4}} | 4         | 4      | 4   | 4      | 6       |
+| Base64   | {{RFC4648, Section 5}} | 4         | 3      | 3   | 4      | 6       |
+| Base64   | {{Base64sort}}         | 12        | 11     | 6   | 12     | 6       |
+| Base85   | {{Z85}}                | 20        | 20     | 20  | 21     | 5       |
+{: #tokenTableMax title='Alt UUID Encoding Token Count: MAX UUID'}
+
+{{tokenTableExample}} details the token count for a typical UUID ({{test_vectors_generic_uuid}}) across various BaseXX Encoding methods and tokenizers.
+
+| Encoding | Variant                | Anthropic | OpenAI | xAI | Google | Generic |
+| Base16   | {{RFC9562, Section 4}} | 26        | 25     | 21  | 33     | 9       |
+| Base16   | {{RFC4648, Section 8}} | 22        | 22     | 15  | 29     | 8       |
+| Base32   | {{RFC4648, Section 6}} | 22        | 17     | 16  | 19     | 7       |
+| Base32   | {{RFC4648, Section 7}} | 20        | 18     | 17  | 22     | 7       |
+| Base32   | {{Base32human}}        | 21        | 18     | 16  | 22     | 7       |
+| Base36   | ---                    | 22        | 17     | 17  | 18     | 7       |
+| Base52   | ---                    | 20        | 14     | 15  | 14     | 6       |
+| Base58   | {{Base58btc}}          | 17        | 15     | 14  | 18     | 6       |
+| Base62   | {{Base62ieee}}         | 20        | 14     | 16  | 17     | 6       |
+| Base62   | {{Base62sort}}         | 21        | 16     | 15  | 16     | 6       |
+| Base64   | {{RFC4648, Section 4}} | 20        | 16     | 14  | 18     | 6       |
+| Base64   | {{RFC4648, Section 5}} | 20        | 16     | 14  | 18     | 6       |
+| Base64   | {{Base64sort}}         | 21        | 16     | 14  | 17     | 6       |
+| Base85   | {{Z85}}                | 19        | 15     | 14  | 16     | 5       |
+{: #tokenTableExample title='Alt UUID Encoding Token Count: Example UUID'}
+
+Key takeaways:
+
+{: spacing="compact"}
+
+- The commonly cited "1 token ~= 4 characters" heuristic severely underestimates real token costs for UUIDs. The generic column predicts 5-9 tokens, but official tokenizers return 14-33 tokens for a typical UUID, a 2-4x underestimate.
+- Higher-base encodings (Base52+) generally produce fewer tokens than lower-base encodings (Base16, Base32) for typical UUIDs because the shorter character length outweighs the added alphabet complexity. For example, Base16 with hyphens costs 21-33 tokens across vendors while Base58-Base85 range from 14-19.
+- Removing the hyphens from the standard Base16 UUID representation saves 4-7 tokens depending on the vendor (e.g., xAI: 21 to 15, Google: 33 to 29 for the example UUID).
+- Base64 standard variants ({{RFC4648}} Section 4 and 5) are exceptionally efficient for repetitive inputs (3-4 tokens for MAX UUID) but converge with other high-base encodings (14-20 tokens) for typical UUIDs.
+- Token counts vary substantially across vendors for the same input; for example, the standard Base16 UUID representation ranges from 21 tokens (xAI) to 33 tokens (Google) for the same UUID. Applications sensitive to token costs should measure with their target model's tokenizer.
+
 ### URI, URL, URN {#best_practice_uri_url_urn}
 
 Uniform Resource Identifiers (URIs) have a specific list of reserved characters defined by {{RFC3986, Section 2.2}} which require percent encoding to be used.
@@ -836,7 +909,7 @@ The NCNAME test vectors (UUID-NCName-32, UUID-NCName-58, and UUID-NCName-64) are
 
 Each section also includes test vectors for {{Base62id}} which are not included in the main body of the document but are included here for reference.
 
-## Generic UUID
+## Generic UUID {#test_vectors_generic_uuid}
 
 | Encoding | Variant                | RFC9562, Section 4                     |
 | Base16   | {{RFC9562, Section 4}} | `f81d4fae-7dec-11d0-a765-00a0c91e6bf6` |

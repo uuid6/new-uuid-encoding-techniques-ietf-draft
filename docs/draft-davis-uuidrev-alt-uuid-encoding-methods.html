@@ -1234,7 +1234,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Davis &amp; Peabody</td>
-<td class="center">Expires 9 October 2026</td>
+<td class="center">Expires 10 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1247,12 +1247,12 @@ li > p:last-of-type:only-child {
 <dd class="internet-draft">draft-davis-uuidrev-alt-uuid-encoding-methods-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-04-07" class="published">7 April 2026</time>
+<time datetime="2026-04-08" class="published">8 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-10-09">9 October 2026</time></dd>
+<dd class="expires"><time datetime="2026-10-10">10 October 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1307,7 +1307,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1419,16 +1419,19 @@ li > p:last-of-type:only-child {
                 <p id="section-toc.1-1.4.2.13.1"><a href="#section-4.13" class="auto internal xref">4.13</a>. <a href="#name-application-specific" class="internal xref">Application Specific</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.13.2.1">
-                    <p id="section-toc.1-1.4.2.13.2.1.1"><a href="#section-4.13.1" class="auto internal xref">4.13.1</a>.  <a href="#name-uri-url-urn" class="internal xref">URI, URL, URN</a></p>
+                    <p id="section-toc.1-1.4.2.13.2.1.1"><a href="#section-4.13.1" class="auto internal xref">4.13.1</a>.  <a href="#name-llm-token-efficiency" class="internal xref">LLM Token Efficiency</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.13.2.2">
-                    <p id="section-toc.1-1.4.2.13.2.2.1"><a href="#section-4.13.2" class="auto internal xref">4.13.2</a>.  <a href="#name-dns-record" class="internal xref">DNS Record</a></p>
+                    <p id="section-toc.1-1.4.2.13.2.2.1"><a href="#section-4.13.2" class="auto internal xref">4.13.2</a>.  <a href="#name-uri-url-urn" class="internal xref">URI, URL, URN</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.13.2.3">
-                    <p id="section-toc.1-1.4.2.13.2.3.1"><a href="#section-4.13.3" class="auto internal xref">4.13.3</a>.  <a href="#name-xml-html-css" class="internal xref">XML, HTML, CSS</a></p>
+                    <p id="section-toc.1-1.4.2.13.2.3.1"><a href="#section-4.13.3" class="auto internal xref">4.13.3</a>.  <a href="#name-dns-record" class="internal xref">DNS Record</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.13.2.4">
-                    <p id="section-toc.1-1.4.2.13.2.4.1"><a href="#section-4.13.4" class="auto internal xref">4.13.4</a>.  <a href="#name-database-keys" class="internal xref">Database Keys</a></p>
+                    <p id="section-toc.1-1.4.2.13.2.4.1"><a href="#section-4.13.4" class="auto internal xref">4.13.4</a>.  <a href="#name-xml-html-css" class="internal xref">XML, HTML, CSS</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.13.2.5">
+                    <p id="section-toc.1-1.4.2.13.2.5.1"><a href="#section-4.13.5" class="auto internal xref">4.13.5</a>.  <a href="#name-database-keys" class="internal xref">Database Keys</a></p>
 </li>
                 </ul>
 </li>
@@ -2023,10 +2026,12 @@ Shorter encodings with character exclusions are preferable when values are recit
 <p id="section-4.1-3">Datastores (see <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>]</span>) care about case sensitivity, alphabet ordering, and encoded length because these factors affect sorting, storage, and performance at scale.
 UUIDs transmitted between machines benefit from extremely compact encodings to reduce bytes on the wire and improve behavior on limited-MTU or high-latency networks.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <p id="section-4.1-4">For resource-constrained devices such as IoT endpoints, prefer encodings that are computationally inexpensive to encode and decode.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.1-5">For a given application use case (database key, network transmission, logging, etc.), implementations <span class="bcp14">SHOULD</span> choose exactly one BaseXX encoding and <span class="bcp14">MUST NOT</span> mix different BaseXX encodings for the same purpose.
+<p id="section-4.1-5">For Large Language Model (LLM) applications, UUID encoding directly affects token consumption because each token maps to a variable number of characters and special characters often consume disproportionately more tokens.
+Shorter encodings that avoid special characters generally consume fewer tokens and reduce inference costs; .<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.1-6">For a given application use case (database key, network transmission, logging, etc.), implementations <span class="bcp14">SHOULD</span> choose exactly one BaseXX encoding and <span class="bcp14">MUST NOT</span> mix different BaseXX encodings for the same purpose.
 Mixing encodings breaks assumptions about encoded length and sort order and complicates comparison logic.
-For example, if an application stores UUIDs as Base32 in a database, it should not also accept or produce Base62-encoded UUIDs for the same field.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1-6">The general statement by the authors is as follows: there is no single correct choice to cover every scenario.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+For example, if an application stores UUIDs as Base32 in a database, it should not also accept or produce Base62-encoded UUIDs for the same field.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.1-7">The general statement by the authors is as follows: there is no single correct choice to cover every scenario.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_length">
@@ -3117,58 +3122,453 @@ It is uncommon for two different systems to exchange UUIDs in a way that require
         </h3>
 <p id="section-4.13-1">Some applications have very specific restrictions which may influence the alternate UUID encoding selection.
 This section features a limited list compiling some known restrictions that implementations may consider while working with alternate UUID encodings.<a href="#section-4.13-1" class="pilcrow">¶</a></p>
-<div id="best_practice_uri_url_urn">
+<div id="best_practice_llm_tokens">
 <section id="section-4.13.1">
-          <h4 id="name-uri-url-urn">
-<a href="#section-4.13.1" class="section-number selfRef">4.13.1. </a><a href="#name-uri-url-urn" class="section-name selfRef">URI, URL, URN</a>
+          <h4 id="name-llm-token-efficiency">
+<a href="#section-4.13.1" class="section-number selfRef">4.13.1. </a><a href="#name-llm-token-efficiency" class="section-name selfRef">LLM Token Efficiency</a>
           </h4>
-<p id="section-4.13.1-1">Uniform Resource Identifiers (URIs) have a specific list of reserved characters defined by <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-2.2" class="relref">Section 2.2</a></span> which require percent encoding to be used.<a href="#section-4.13.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.13.1-2">It is advisable to avoid BaseXX alphabets that include these symbols.<a href="#section-4.13.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.13.1-1">Large Language Models (LLMs) process text using tokens: sub-word or character-level units whose boundaries depend on the model's tokenizer.
+Because UUID alternate encodings mix digits, uppercase letters, lowercase letters, and sometimes special characters in patterns that rarely appear in natural language, tokenizers often split them into many small tokens.
+Greater token consumption translates directly to higher inference cost, increased latency, and reduced effective context-window utilization.<a href="#section-4.13.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.13.1-2">Tokenizer behavior varies substantially across vendors and model families.
+The token counts below were measured using the following tokenizers, which were current when this document was prepared:<a href="#section-4.13.1-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-4.13.1-3.1">
+              <p id="section-4.13.1-3.1.1"><a href="https://platform.claude.com/docs/en/build-with-claude/token-counting">Anthropic</a>: Claude OPUS 4.6<a href="#section-4.13.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-3.2">
+              <p id="section-4.13.1-3.2.1"><a href="https://platform.openai.com/tokenizer">OpenAI</a>: GPT5.x &amp; O1/3<a href="#section-4.13.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-3.3">
+              <p id="section-4.13.1-3.3.1"><a href="https://docs.x.ai/developers/rest-api-reference/inference/other#tokenize-text">xAI</a>: grok-4.20-0309-reasoning<a href="#section-4.13.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-3.4">
+              <p id="section-4.13.1-3.4.1"><a href="https://ai.google.dev/api/tokens">Google</a>: Gemini 3.1 Pro Preview<a href="#section-4.13.1-3.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-3.5">
+              <p id="section-4.13.1-3.5.1">Generic: ceil(character_length / 4), the common "1 token ~= 4 characters" heuristic<a href="#section-4.13.1-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-4.13.1-4"><strong>Note:</strong> The token counts in <a href="#tokenTableMax" class="auto internal xref">Table 11</a> use the MAX UUID from <a href="#test_vectors_max_uuid" class="auto internal xref">Appendix C.3</a> which consists largely of repeating characters.
+Repeating characters compress very aggressively in Byte-Pair Encoding based tokenizers, so these values represent a best-case (minimum token) scenario.
+<a href="#tokenTableExample" class="auto internal xref">Table 12</a> uses the Example UUID from <a href="#test_vectors_generic_uuid" class="auto internal xref">Appendix C.1</a> whose mixed characters are more representative of typical UUIDs.
+Real-world token counts will more closely resemble the latter.<a href="#section-4.13.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.13.1-5"><a href="#tokenTableMax" class="auto internal xref">Table 11</a> details the token count for the MAX UUID across various BaseXX Encoding methods and tokenizers.<a href="#section-4.13.1-5" class="pilcrow">¶</a></p>
+<span id="name-alt-uuid-encoding-token-cou"></span><div id="tokenTableMax">
+<table class="center" id="table-11">
+            <caption>
+<a href="#table-11" class="selfRef">Table 11</a>:
+<a href="#name-alt-uuid-encoding-token-cou" class="selfRef">Alt UUID Encoding Token Count: MAX UUID</a>
+            </caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+                <th class="text-left" rowspan="1" colspan="1">Variant</th>
+                <th class="text-left" rowspan="1" colspan="1">Anthropic</th>
+                <th class="text-left" rowspan="1" colspan="1">OpenAI</th>
+                <th class="text-left" rowspan="1" colspan="1">xAI</th>
+                <th class="text-left" rowspan="1" colspan="1">Google</th>
+                <th class="text-left" rowspan="1" colspan="1">Generic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base16</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">9</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base16</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-8" class="relref">Section 8</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">2</td>
+                <td class="text-left" rowspan="1" colspan="1">9</td>
+                <td class="text-left" rowspan="1" colspan="1">8</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">9</td>
+                <td class="text-left" rowspan="1" colspan="1">9</td>
+                <td class="text-left" rowspan="1" colspan="1">27</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">27</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base36</td>
+                <td class="text-left" rowspan="1" colspan="1">---</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">10</td>
+                <td class="text-left" rowspan="1" colspan="1">27</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base52</td>
+                <td class="text-left" rowspan="1" colspan="1">---</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base58</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base62</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">12</td>
+                <td class="text-left" rowspan="1" colspan="1">13</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base62</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">19</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">3</td>
+                <td class="text-left" rowspan="1" colspan="1">3</td>
+                <td class="text-left" rowspan="1" colspan="1">4</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">12</td>
+                <td class="text-left" rowspan="1" colspan="1">11</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+                <td class="text-left" rowspan="1" colspan="1">12</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base85</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Z85" class="cite xref">Z85</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">5</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<p id="section-4.13.1-7"><a href="#tokenTableExample" class="auto internal xref">Table 12</a> details the token count for a typical UUID (<a href="#test_vectors_generic_uuid" class="auto internal xref">Appendix C.1</a>) across various BaseXX Encoding methods and tokenizers.<a href="#section-4.13.1-7" class="pilcrow">¶</a></p>
+<span id="name-alt-uuid-encoding-token-coun"></span><div id="tokenTableExample">
+<table class="center" id="table-12">
+            <caption>
+<a href="#table-12" class="selfRef">Table 12</a>:
+<a href="#name-alt-uuid-encoding-token-coun" class="selfRef">Alt UUID Encoding Token Count: Example UUID</a>
+            </caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Encoding</th>
+                <th class="text-left" rowspan="1" colspan="1">Variant</th>
+                <th class="text-left" rowspan="1" colspan="1">Anthropic</th>
+                <th class="text-left" rowspan="1" colspan="1">OpenAI</th>
+                <th class="text-left" rowspan="1" colspan="1">xAI</th>
+                <th class="text-left" rowspan="1" colspan="1">Google</th>
+                <th class="text-left" rowspan="1" colspan="1">Generic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base16</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC9562" class="cite xref">RFC9562</a>], <a href="https://rfc-editor.org/rfc/rfc9562#section-4" class="relref">Section 4</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">26</td>
+                <td class="text-left" rowspan="1" colspan="1">25</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">33</td>
+                <td class="text-left" rowspan="1" colspan="1">9</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base16</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-8" class="relref">Section 8</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">29</td>
+                <td class="text-left" rowspan="1" colspan="1">8</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-6" class="relref">Section 6</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">19</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-7" class="relref">Section 7</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base32</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base32human" class="cite xref">Base32human</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base36</td>
+                <td class="text-left" rowspan="1" colspan="1">---</td>
+                <td class="text-left" rowspan="1" colspan="1">22</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">7</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base52</td>
+                <td class="text-left" rowspan="1" colspan="1">---</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base58</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base58btc" class="cite xref">Base58btc</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base62</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base62ieee" class="cite xref">Base62ieee</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base62</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base62sort" class="cite xref">Base62sort</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#RFC4648" class="cite xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a></span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">20</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">18</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base64</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Base64sort" class="cite xref">Base64sort</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">21</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">17</td>
+                <td class="text-left" rowspan="1" colspan="1">6</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">Base85</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <span>[<a href="#Z85" class="cite xref">Z85</a>]</span>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">19</td>
+                <td class="text-left" rowspan="1" colspan="1">15</td>
+                <td class="text-left" rowspan="1" colspan="1">14</td>
+                <td class="text-left" rowspan="1" colspan="1">16</td>
+                <td class="text-left" rowspan="1" colspan="1">5</td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+<p id="section-4.13.1-9">Key takeaways:<a href="#section-4.13.1-9" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-4.13.1-10.1">
+              <p id="section-4.13.1-10.1.1">The commonly cited "1 token ~= 4 characters" heuristic severely underestimates real token costs for UUIDs. The generic column predicts 5-9 tokens, but official tokenizers return 14-33 tokens for a typical UUID, a 2-4x underestimate.<a href="#section-4.13.1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-10.2">
+              <p id="section-4.13.1-10.2.1">Higher-base encodings (Base52+) generally produce fewer tokens than lower-base encodings (Base16, Base32) for typical UUIDs because the shorter character length outweighs the added alphabet complexity. For example, Base16 with hyphens costs 21-33 tokens across vendors while Base58-Base85 range from 14-19.<a href="#section-4.13.1-10.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-10.3">
+              <p id="section-4.13.1-10.3.1">Removing the hyphens from the standard Base16 UUID representation saves 4-7 tokens depending on the vendor (e.g., xAI: 21 to 15, Google: 33 to 29 for the example UUID).<a href="#section-4.13.1-10.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-10.4">
+              <p id="section-4.13.1-10.4.1">Base64 standard variants (<span>[<a href="#RFC4648" class="cite xref">RFC4648</a>]</span> Section 4 and 5) are exceptionally efficient for repetitive inputs (3-4 tokens for MAX UUID) but converge with other high-base encodings (14-20 tokens) for typical UUIDs.<a href="#section-4.13.1-10.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="compact" id="section-4.13.1-10.5">
+              <p id="section-4.13.1-10.5.1">Token counts vary substantially across vendors for the same input; for example, the standard Base16 UUID representation ranges from 21 tokens (xAI) to 33 tokens (Google) for the same UUID. Applications sensitive to token costs should measure with their target model's tokenizer.<a href="#section-4.13.1-10.5.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="best_practice_uri_url_urn">
+<section id="section-4.13.2">
+          <h4 id="name-uri-url-urn">
+<a href="#section-4.13.2" class="section-number selfRef">4.13.2. </a><a href="#name-uri-url-urn" class="section-name selfRef">URI, URL, URN</a>
+          </h4>
+<p id="section-4.13.2-1">Uniform Resource Identifiers (URIs) have a specific list of reserved characters defined by <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>], <a href="https://rfc-editor.org/rfc/rfc3986#section-2.2" class="relref">Section 2.2</a></span> which require percent encoding to be used.<a href="#section-4.13.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.13.2-2">It is advisable to avoid BaseXX alphabets that include these symbols.<a href="#section-4.13.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_dns">
-<section id="section-4.13.2">
+<section id="section-4.13.3">
           <h4 id="name-dns-record">
-<a href="#section-4.13.2" class="section-number selfRef">4.13.2. </a><a href="#name-dns-record" class="section-name selfRef">DNS Record</a>
+<a href="#section-4.13.3" class="section-number selfRef">4.13.3. </a><a href="#name-dns-record" class="section-name selfRef">DNS Record</a>
           </h4>
-<p id="section-4.13.2-1">Domain Name Systems (DNS) are case insensitive with the period or dot character (.) being a reserved symbol. <span>[<a href="#RFC9499" class="cite xref">RFC9499</a>], <a href="https://rfc-editor.org/rfc/rfc9499#section-2" class="relref">Section 2</a></span><a href="#section-4.13.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.13.2-2">Thus BaseXX alphabets that utilize this character or use upper and lowercase values as defined by <a href="#best_practice_sensitivity" class="internal xref">Case Sensitivity</a> should be avoided.<a href="#section-4.13.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.13.3-1">Domain Name Systems (DNS) are case insensitive with the period or dot character (.) being a reserved symbol. <span>[<a href="#RFC9499" class="cite xref">RFC9499</a>], <a href="https://rfc-editor.org/rfc/rfc9499#section-2" class="relref">Section 2</a></span><a href="#section-4.13.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.13.3-2">Thus BaseXX alphabets that utilize this character or use upper and lowercase values as defined by <a href="#best_practice_sensitivity" class="internal xref">Case Sensitivity</a> should be avoided.<a href="#section-4.13.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="best_practice_markup">
-<section id="section-4.13.3">
+<section id="section-4.13.4">
           <h4 id="name-xml-html-css">
-<a href="#section-4.13.3" class="section-number selfRef">4.13.3. </a><a href="#name-xml-html-css" class="section-name selfRef">XML, HTML, CSS</a>
+<a href="#section-4.13.4" class="section-number selfRef">4.13.4. </a><a href="#name-xml-html-css" class="section-name selfRef">XML, HTML, CSS</a>
           </h4>
-<p id="section-4.13.3-1">Extensible Markup Language (<span>[<a href="#XML" class="cite xref">XML</a>]</span>) namespaces cannot start with a leading numeric character.<a href="#section-4.13.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.13.3-2">While older versions of Hypertext Markup Language (<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>) had restrictions on element identifiers starting with a leading digit, HTML5 does not have any such restrictions.
-The same goes for Cascading Style Sheet (<span>[<a href="#CSS" class="cite xref">CSS</a>]</span>) selectors identifiers where older versions would have issues when identifiers start with digits.<a href="#section-4.13.3-2" class="pilcrow">¶</a></p>
-<p id="section-4.13.3-3">Thus for XML, HTML, and CSS it is advantageous to use some advanced methods such as:<a href="#section-4.13.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.13.4-1">Extensible Markup Language (<span>[<a href="#XML" class="cite xref">XML</a>]</span>) namespaces cannot start with a leading numeric character.<a href="#section-4.13.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.13.4-2">While older versions of Hypertext Markup Language (<span>[<a href="#HTML" class="cite xref">HTML</a>]</span>) had restrictions on element identifiers starting with a leading digit, HTML5 does not have any such restrictions.
+The same goes for Cascading Style Sheet (<span>[<a href="#CSS" class="cite xref">CSS</a>]</span>) selectors identifiers where older versions would have issues when identifiers start with digits.<a href="#section-4.13.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.13.4-3">Thus for XML, HTML, and CSS it is advantageous to use some advanced methods such as:<a href="#section-4.13.4-3" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.13.3-4.1">
-              <p id="section-4.13.3-4.1.1">Leveraging the alternate UUID encoding technique defined via <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span> (UUID-NCName-32, UUID-NCName-58 or UUID-NCName-64) to ensure that the first digit is always an uppercase alphabet character.<a href="#section-4.13.3-4.1.1" class="pilcrow">¶</a></p>
+<li class="compact" id="section-4.13.4-4.1">
+              <p id="section-4.13.4-4.1.1">Leveraging the alternate UUID encoding technique defined via <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span> (UUID-NCName-32, UUID-NCName-58 or UUID-NCName-64) to ensure that the first digit is always an uppercase alphabet character.<a href="#section-4.13.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="compact" id="section-4.13.3-4.2">
-              <p id="section-4.13.3-4.2.1">An alternative algorithm to the NCNAME method is to prefix a value like <code>b10</code> as seen in <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> to ensure the first character is always a letter.<a href="#section-4.13.3-4.2.1" class="pilcrow">¶</a></p>
+            <li class="compact" id="section-4.13.4-4.2">
+              <p id="section-4.13.4-4.2.1">An alternative algorithm to the NCNAME method is to prefix a value like <code>b10</code> as seen in <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> to ensure the first character is always a letter.<a href="#section-4.13.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="compact" id="section-4.13.3-4.3">
-              <p id="section-4.13.3-4.3.1">Utilize <a href="#Base52" class="auto internal xref">Section 3.3</a> which ensures the output UUID does not start with a special character or digit.<a href="#section-4.13.3-4.3.1" class="pilcrow">¶</a></p>
+            <li class="compact" id="section-4.13.4-4.3">
+              <p id="section-4.13.4-4.3.1">Utilize <a href="#Base52" class="auto internal xref">Section 3.3</a> which ensures the output UUID does not start with a special character or digit.<a href="#section-4.13.4-4.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="compact" id="section-4.13.3-4.4">
-              <p id="section-4.13.3-4.4.1">Simply prefix the first non-digit/non-special character in the given alphabet.
-For example, if uppercase A is available, prefix this character to satisfy the constraints.<a href="#section-4.13.3-4.4.1" class="pilcrow">¶</a></p>
+            <li class="compact" id="section-4.13.4-4.4">
+              <p id="section-4.13.4-4.4.1">Simply prefix the first non-digit/non-special character in the given alphabet.
+For example, if uppercase A is available, prefix this character to satisfy the constraints.<a href="#section-4.13.4-4.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="best_practice_database_keys">
-<section id="section-4.13.4">
+<section id="section-4.13.5">
           <h4 id="name-database-keys">
-<a href="#section-4.13.4" class="section-number selfRef">4.13.4. </a><a href="#name-database-keys" class="section-name selfRef">Database Keys</a>
+<a href="#section-4.13.5" class="section-number selfRef">4.13.5. </a><a href="#name-database-keys" class="section-name selfRef">Database Keys</a>
           </h4>
-<p id="section-4.13.4-1">Databases often have specific requirements for keys such as case sensitivity, sorting, and maximum length.<a href="#section-4.13.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.13.4-2">When using alternate UUID encodings as database keys, it is important to consider these requirements and select an encoding that meets them.<a href="#section-4.13.4-2" class="pilcrow">¶</a></p>
-<p id="section-4.13.4-3">Database implementors should consider <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> when using alternate UUID encodings as database keys to ensure the first character is an uppercase alphabet character and the output is compact.<a href="#section-4.13.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.13.5-1">Databases often have specific requirements for keys such as case sensitivity, sorting, and maximum length.<a href="#section-4.13.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.13.5-2">When using alternate UUID encodings as database keys, it is important to consider these requirements and select an encoding that meets them.<a href="#section-4.13.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.13.5-3">Database implementors should consider <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> when using alternate UUID encodings as database keys to ensure the first character is an uppercase alphabet character and the output is compact.<a href="#section-4.13.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3355,15 +3755,15 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <p id="appendix-C-2">All of the BaseXX Alphabets described in this document and others not described can be viewed at the online tool the Authors are using for prototyping and comparison: https://uuidformattester.yuli.dev/  (Source Code: https://github.com/daegalus/uuid-format-tester)<a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <p id="appendix-C-3">The NCNAME test vectors (UUID-NCName-32, UUID-NCName-58, and UUID-NCName-64) are direct copies from the appendix of <span>[<a href="#NCNAME" class="cite xref">NCNAME</a>]</span>.<a href="#appendix-C-3" class="pilcrow">¶</a></p>
 <p id="appendix-C-4">Each section also includes test vectors for <span>[<a href="#Base62id" class="cite xref">Base62id</a>]</span> which are not included in the main body of the document but are included here for reference.<a href="#appendix-C-4" class="pilcrow">¶</a></p>
-<div id="generic-uuid">
+<div id="test_vectors_generic_uuid">
 <section id="appendix-C.1">
         <h3 id="name-generic-uuid">
 <a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-generic-uuid" class="section-name selfRef">Generic UUID</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc95"></span><div id="exampleUUID">
-<table class="center" id="table-11">
+<table class="center" id="table-13">
           <caption>
-<a href="#table-11" class="selfRef">Table 11</a>:
+<a href="#table-13" class="selfRef">Table 13</a>:
 <a href="#name-uuid-test-vectors-for-rfc95" class="selfRef">UUID Test Vectors for RFC9562, Section 4</a>
           </caption>
 <thead>
@@ -3500,9 +3900,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-v"></span><div id="exampleUUIDprefix">
-<table class="center" id="table-12">
+<table class="center" id="table-14">
           <caption>
-<a href="#table-12" class="selfRef">Table 12</a>:
+<a href="#table-14" class="selfRef">Table 14</a>:
 <a href="#name-uuid-ncname-base62id-test-v" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section 4</a>
           </caption>
 <thead>
@@ -3549,9 +3949,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-nil-uuid" class="section-name selfRef">NIL UUID</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc956"></span><div id="exampleUUIDvNIL">
-<table class="center" id="table-13">
+<table class="center" id="table-15">
           <caption>
-<a href="#table-13" class="selfRef">Table 13</a>:
+<a href="#table-15" class="selfRef">Table 15</a>:
 <a href="#name-uuid-test-vectors-for-rfc956" class="selfRef">UUID Test Vectors for RFC9562, Section 5.9: Nil UUID</a>
           </caption>
 <thead>
@@ -3688,9 +4088,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-ve"></span><div id="exampleUUIDvNILprefix">
-<table class="center" id="table-14">
+<table class="center" id="table-16">
           <caption>
-<a href="#table-14" class="selfRef">Table 14</a>:
+<a href="#table-16" class="selfRef">Table 16</a>:
 <a href="#name-uuid-ncname-base62id-test-ve" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section 5.9: Nil UUID</a>
           </caption>
 <thead>
@@ -3737,9 +4137,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-max-uuid" class="section-name selfRef">MAX UUID</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562"></span><div id="exampleUUIDvMAX">
-<table class="center" id="table-15">
+<table class="center" id="table-17">
           <caption>
-<a href="#table-15" class="selfRef">Table 15</a>:
+<a href="#table-17" class="selfRef">Table 17</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562" class="selfRef">UUID Test Vectors for RFC9562, Section 5.10: MAX UUID</a>
           </caption>
 <thead>
@@ -3876,9 +4276,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vec"></span><div id="exampleUUIDvMAXprefix">
-<table class="center" id="table-16">
+<table class="center" id="table-18">
           <caption>
-<a href="#table-16" class="selfRef">Table 16</a>:
+<a href="#table-18" class="selfRef">Table 18</a>:
 <a href="#name-uuid-ncname-base62id-test-vec" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section 5.10: MAX UUID</a>
           </caption>
 <thead>
@@ -3925,9 +4325,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-uuidv1" class="section-name selfRef">UUIDv1</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-"></span><div id="exampleUUIDv1">
-<table class="center" id="table-17">
+<table class="center" id="table-19">
           <caption>
-<a href="#table-17" class="selfRef">Table 17</a>:
+<a href="#table-19" class="selfRef">Table 19</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-" class="selfRef">UUID Test Vectors for RFC9562, Section A.1: UUIDv1</a>
           </caption>
 <thead>
@@ -4064,9 +4464,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vect"></span><div id="exampleUUIDv1prefix">
-<table class="center" id="table-18">
+<table class="center" id="table-20">
           <caption>
-<a href="#table-18" class="selfRef">Table 18</a>:
+<a href="#table-20" class="selfRef">Table 20</a>:
 <a href="#name-uuid-ncname-base62id-test-vect" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.1: UUIDv1</a>
           </caption>
 <thead>
@@ -4113,9 +4513,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-uuidv2" class="section-name selfRef">UUIDv2</a>
         </h3>
 <span id="name-uuid-test-vectors-for-dce-s"></span><div id="exampleUUIDv2">
-<table class="center" id="table-19">
+<table class="center" id="table-21">
           <caption>
-<a href="#table-19" class="selfRef">Table 19</a>:
+<a href="#table-21" class="selfRef">Table 21</a>:
 <a href="#name-uuid-test-vectors-for-dce-s" class="selfRef">UUID Test Vectors for DCE Security: UUIDv2</a>
           </caption>
 <thead>
@@ -4252,9 +4652,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vecto"></span><div id="exampleUUIDv2prefix">
-<table class="center" id="table-20">
+<table class="center" id="table-22">
           <caption>
-<a href="#table-20" class="selfRef">Table 20</a>:
+<a href="#table-22" class="selfRef">Table 22</a>:
 <a href="#name-uuid-ncname-base62id-test-vecto" class="selfRef">UUID-NCName, Base62id Test Vectors for DCE Security: UUIDv2</a>
           </caption>
 <thead>
@@ -4301,9 +4701,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-uuidv3" class="section-name selfRef">UUIDv3</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-s"></span><div id="exampleUUIDv3">
-<table class="center" id="table-21">
+<table class="center" id="table-23">
           <caption>
-<a href="#table-21" class="selfRef">Table 21</a>:
+<a href="#table-23" class="selfRef">Table 23</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-s" class="selfRef">UUID Test Vectors for RFC9562, Section A.2: UUIDv3</a>
           </caption>
 <thead>
@@ -4440,9 +4840,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vector"></span><div id="exampleUUIDv3prefix">
-<table class="center" id="table-22">
+<table class="center" id="table-24">
           <caption>
-<a href="#table-22" class="selfRef">Table 22</a>:
+<a href="#table-24" class="selfRef">Table 24</a>:
 <a href="#name-uuid-ncname-base62id-test-vector" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.2: UUIDv3</a>
           </caption>
 <thead>
@@ -4489,9 +4889,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-uuidv4" class="section-name selfRef">UUIDv4</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-se"></span><div id="exampleUUIDv4">
-<table class="center" id="table-23">
+<table class="center" id="table-25">
           <caption>
-<a href="#table-23" class="selfRef">Table 23</a>:
+<a href="#table-25" class="selfRef">Table 25</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-se" class="selfRef">UUID Test Vectors for RFC9562, Section A.3: UUIDv4</a>
           </caption>
 <thead>
@@ -4628,9 +5028,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors"></span><div id="exampleUUIDv4prefix">
-<table class="center" id="table-24">
+<table class="center" id="table-26">
           <caption>
-<a href="#table-24" class="selfRef">Table 24</a>:
+<a href="#table-26" class="selfRef">Table 26</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.3: UUIDv4</a>
           </caption>
 <thead>
@@ -4677,9 +5077,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.8" class="section-number selfRef">C.8. </a><a href="#name-uuidv5" class="section-name selfRef">UUIDv5</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-sec"></span><div id="exampleUUIDv5">
-<table class="center" id="table-25">
+<table class="center" id="table-27">
           <caption>
-<a href="#table-25" class="selfRef">Table 25</a>:
+<a href="#table-27" class="selfRef">Table 27</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-sec" class="selfRef">UUID Test Vectors for RFC9562, Section A.4: UUIDv5</a>
           </caption>
 <thead>
@@ -4816,9 +5216,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-"></span><div id="exampleUUIDv5prefix">
-<table class="center" id="table-26">
+<table class="center" id="table-28">
           <caption>
-<a href="#table-26" class="selfRef">Table 26</a>:
+<a href="#table-28" class="selfRef">Table 28</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.4: UUIDv5</a>
           </caption>
 <thead>
@@ -4865,9 +5265,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.9" class="section-number selfRef">C.9. </a><a href="#name-uuidv6" class="section-name selfRef">UUIDv6</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-sect"></span><div id="exampleUUIDv6">
-<table class="center" id="table-27">
+<table class="center" id="table-29">
           <caption>
-<a href="#table-27" class="selfRef">Table 27</a>:
+<a href="#table-29" class="selfRef">Table 29</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-sect" class="selfRef">UUID Test Vectors for RFC9562, Section A.5: UUIDv6</a>
           </caption>
 <thead>
@@ -5004,9 +5404,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-f"></span><div id="exampleUUIDv6prefix">
-<table class="center" id="table-28">
+<table class="center" id="table-30">
           <caption>
-<a href="#table-28" class="selfRef">Table 28</a>:
+<a href="#table-30" class="selfRef">Table 30</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-f" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.5: UUIDv6</a>
           </caption>
 <thead>
@@ -5053,9 +5453,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.10" class="section-number selfRef">C.10. </a><a href="#name-uuidv7" class="section-name selfRef">UUIDv7</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-secti"></span><div id="exampleUUIDv7">
-<table class="center" id="table-29">
+<table class="center" id="table-31">
           <caption>
-<a href="#table-29" class="selfRef">Table 29</a>:
+<a href="#table-31" class="selfRef">Table 31</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti" class="selfRef">UUID Test Vectors for RFC9562, Section A.6: UUIDv7</a>
           </caption>
 <thead>
@@ -5192,9 +5592,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-f-2"></span><div id="exampleUUIDv7prefix">
-<table class="center" id="table-30">
+<table class="center" id="table-32">
           <caption>
-<a href="#table-30" class="selfRef">Table 30</a>:
+<a href="#table-32" class="selfRef">Table 32</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-f-2" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section A.6: UUIDv7</a>
           </caption>
 <thead>
@@ -5241,9 +5641,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <a href="#appendix-C.11" class="section-number selfRef">C.11. </a><a href="#name-uuidv8" class="section-name selfRef">UUIDv8</a>
         </h3>
 <span id="name-uuid-test-vectors-for-rfc9562-secti-2"></span><div id="exampleUUIDv8time">
-<table class="center" id="table-31">
+<table class="center" id="table-33">
           <caption>
-<a href="#table-31" class="selfRef">Table 31</a>:
+<a href="#table-33" class="selfRef">Table 33</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti-2" class="selfRef">UUID Test Vectors for RFC9562, Section B.1: UUIDv8</a>
           </caption>
 <thead>
@@ -5380,9 +5780,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-f-3"></span><div id="exampleUUIDv8timeprefix">
-<table class="center" id="table-32">
+<table class="center" id="table-34">
           <caption>
-<a href="#table-32" class="selfRef">Table 32</a>:
+<a href="#table-34" class="selfRef">Table 34</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-f-3" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section B.1: UUIDv8</a>
           </caption>
 <thead>
@@ -5422,9 +5822,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-test-vectors-for-rfc9562-secti-3"></span><div id="exampleUUIDv8name">
-<table class="center" id="table-33">
+<table class="center" id="table-35">
           <caption>
-<a href="#table-33" class="selfRef">Table 33</a>:
+<a href="#table-35" class="selfRef">Table 35</a>:
 <a href="#name-uuid-test-vectors-for-rfc9562-secti-3" class="selfRef">UUID Test Vectors for RFC9562, Section B.2: UUIDv8</a>
           </caption>
 <thead>
@@ -5561,9 +5961,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-f-4"></span><div id="exampleUUIDv8nameprefix">
-<table class="center" id="table-34">
+<table class="center" id="table-36">
           <caption>
-<a href="#table-34" class="selfRef">Table 34</a>:
+<a href="#table-36" class="selfRef">Table 36</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-f-4" class="selfRef">UUID-NCName, Base62id Test Vectors for RFC9562, Section B.2: UUIDv8</a>
           </caption>
 <thead>
@@ -5611,9 +6011,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </h3>
 <p id="appendix-C.12-1">The following UUID <code>00000013-0000-0000-c000-000000000000</code> is for <code>Microsoft.Azure.Portal</code> and ensures this specification also includes non IETF/DCE variants of UUIDs.<a href="#appendix-C.12-1" class="pilcrow">¶</a></p>
 <span id="name-uuid-test-vectors-for-micro"></span><div id="exampleMicrosoftUUID">
-<table class="center" id="table-35">
+<table class="center" id="table-37">
           <caption>
-<a href="#table-35" class="selfRef">Table 35</a>:
+<a href="#table-37" class="selfRef">Table 37</a>:
 <a href="#name-uuid-test-vectors-for-micro" class="selfRef">UUID Test Vectors for Microsoft.Azure.Portal</a>
           </caption>
 <thead>
@@ -5750,9 +6150,9 @@ For example, if uppercase A is available, prefix this character to satisfy the c
         </table>
 </div>
 <span id="name-uuid-ncname-base62id-test-vectors-f-5"></span><div id="exampleMicrosoftUUIDprefix">
-<table class="center" id="table-36">
+<table class="center" id="table-38">
           <caption>
-<a href="#table-36" class="selfRef">Table 36</a>:
+<a href="#table-38" class="selfRef">Table 38</a>:
 <a href="#name-uuid-ncname-base62id-test-vectors-f-5" class="selfRef">UUID-NCName, Base62id Test Vectors for Microsoft.Azure.Portal</a>
           </caption>
 <thead>
