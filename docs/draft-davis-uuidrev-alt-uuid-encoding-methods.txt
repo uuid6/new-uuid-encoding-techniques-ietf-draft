@@ -4,8 +4,8 @@
 
 uuidrev                                                      K. R. Davis
 Internet-Draft                                             Cisco Systems
-Intended status: Informational                              BGP. Peabody
-Expires: 10 October 2026                                    8 April 2026
+Intended status: Informational                             10 April 2026
+Expires: 12 October 2026
 
 
                     Alternate UUID Encoding Methods
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 1]
+Davis                    Expires 12 October 2026                [Page 1]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -68,7 +68,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 October 2026.
+   This Internet-Draft will expire on 12 October 2026.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 2]
+Davis                    Expires 12 October 2026                [Page 2]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -156,7 +156,8 @@ Internet-Draft              alt-uuid-encoding                 April 2026
      D.7.  Base62  . . . . . . . . . . . . . . . . . . . . . . . . .  53
      D.8.  Base64  . . . . . . . . . . . . . . . . . . . . . . . . .  53
      D.9.  Base85  . . . . . . . . . . . . . . . . . . . . . . . . .  54
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  54
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  54
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  54
 
 
 
@@ -164,8 +165,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-
-Davis & Peabody          Expires 10 October 2026                [Page 3]
+Davis                    Expires 12 October 2026                [Page 3]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -221,7 +221,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 4]
+Davis                    Expires 12 October 2026                [Page 4]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -277,7 +277,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 5]
+Davis                    Expires 12 October 2026                [Page 5]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -333,7 +333,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 6]
+Davis                    Expires 12 October 2026                [Page 6]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -389,7 +389,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 7]
+Davis                    Expires 12 October 2026                [Page 7]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -445,7 +445,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 8]
+Davis                    Expires 12 October 2026                [Page 8]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -501,7 +501,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026                [Page 9]
+Davis                    Expires 12 October 2026                [Page 9]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -557,7 +557,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 10]
+Davis                    Expires 12 October 2026               [Page 10]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -613,7 +613,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 11]
+Davis                    Expires 12 October 2026               [Page 11]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -669,7 +669,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 12]
+Davis                    Expires 12 October 2026               [Page 12]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -725,7 +725,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 13]
+Davis                    Expires 12 October 2026               [Page 13]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -781,7 +781,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 14]
+Davis                    Expires 12 October 2026               [Page 14]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -837,7 +837,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 15]
+Davis                    Expires 12 October 2026               [Page 15]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -893,7 +893,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 16]
+Davis                    Expires 12 October 2026               [Page 16]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -949,7 +949,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 17]
+Davis                    Expires 12 October 2026               [Page 17]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1005,7 +1005,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 18]
+Davis                    Expires 12 October 2026               [Page 18]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1061,7 +1061,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 19]
+Davis                    Expires 12 October 2026               [Page 19]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1117,7 +1117,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 20]
+Davis                    Expires 12 October 2026               [Page 20]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1173,7 +1173,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 21]
+Davis                    Expires 12 October 2026               [Page 21]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1229,7 +1229,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 22]
+Davis                    Expires 12 October 2026               [Page 22]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1285,7 +1285,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 23]
+Davis                    Expires 12 October 2026               [Page 23]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1341,7 +1341,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 24]
+Davis                    Expires 12 October 2026               [Page 24]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1397,7 +1397,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 25]
+Davis                    Expires 12 October 2026               [Page 25]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1453,7 +1453,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 26]
+Davis                    Expires 12 October 2026               [Page 26]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1509,7 +1509,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 27]
+Davis                    Expires 12 October 2026               [Page 27]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1565,7 +1565,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 28]
+Davis                    Expires 12 October 2026               [Page 28]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1621,7 +1621,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 29]
+Davis                    Expires 12 October 2026               [Page 29]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1677,7 +1677,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 30]
+Davis                    Expires 12 October 2026               [Page 30]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1733,7 +1733,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 31]
+Davis                    Expires 12 October 2026               [Page 31]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1754,7 +1754,8 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
    [Base32human]
               Crockford, D. and K. Davis, "Base32 for Humans", April
-              2026, <https://github.com/douglascrockford/Base32>.
+              2026, <https://datatracker.ietf.org/doc/draft-crockford-
+              davis-base32-for-humans/>.
 
    [Base58btc]
               Bitcoin, "Bitcoin Base58 Implementation", commit fae71d3,
@@ -1783,13 +1784,12 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
    [Base64sort]
               Davis, K., "A Sortable Base64 Alphabet", December 2025,
-              <https://github.com/kyzer-davis/base64-sort-ietf-draft>.
+              <https://datatracker.ietf.org/doc/draft-brown-davis-
+              base64-sort/>.
 
 
 
-
-
-Davis & Peabody          Expires 10 October 2026               [Page 32]
+Davis                    Expires 12 October 2026               [Page 32]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1845,7 +1845,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 33]
+Davis                    Expires 12 October 2026               [Page 33]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1901,7 +1901,7 @@ Appendix C.  Test Vectors
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 34]
+Davis                    Expires 12 October 2026               [Page 34]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -1957,7 +1957,7 @@ C.1.  Generic UUID
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 35]
+Davis                    Expires 12 October 2026               [Page 35]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2013,7 +2013,7 @@ C.2.  NIL UUID
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 36]
+Davis                    Expires 12 October 2026               [Page 36]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2069,7 +2069,7 @@ C.3.  MAX UUID
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 37]
+Davis                    Expires 12 October 2026               [Page 37]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2125,7 +2125,7 @@ C.4.  UUIDv1
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 38]
+Davis                    Expires 12 October 2026               [Page 38]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2181,7 +2181,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 39]
+Davis                    Expires 12 October 2026               [Page 39]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2237,7 +2237,7 @@ C.5.  UUIDv2
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 40]
+Davis                    Expires 12 October 2026               [Page 40]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2293,7 +2293,7 @@ C.6.  UUIDv3
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 41]
+Davis                    Expires 12 October 2026               [Page 41]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2349,7 +2349,7 @@ C.7.  UUIDv4
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 42]
+Davis                    Expires 12 October 2026               [Page 42]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2405,7 +2405,7 @@ C.8.  UUIDv5
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 43]
+Davis                    Expires 12 October 2026               [Page 43]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2461,7 +2461,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 44]
+Davis                    Expires 12 October 2026               [Page 44]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2517,7 +2517,7 @@ C.9.  UUIDv6
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 45]
+Davis                    Expires 12 October 2026               [Page 45]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2573,7 +2573,7 @@ C.10.  UUIDv7
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 46]
+Davis                    Expires 12 October 2026               [Page 46]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2629,7 +2629,7 @@ C.11.  UUIDv8
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 47]
+Davis                    Expires 12 October 2026               [Page 47]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2685,7 +2685,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 48]
+Davis                    Expires 12 October 2026               [Page 48]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2741,7 +2741,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 49]
+Davis                    Expires 12 October 2026               [Page 49]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2797,7 +2797,7 @@ C.12.  Microsoft UUID
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 50]
+Davis                    Expires 12 October 2026               [Page 50]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2853,7 +2853,7 @@ Internet-Draft              alt-uuid-encoding                 April 2026
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 51]
+Davis                    Expires 12 October 2026               [Page 51]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2909,7 +2909,7 @@ D.3.  Base32, Crockford
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 52]
+Davis                    Expires 12 October 2026               [Page 52]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2965,7 +2965,7 @@ D.8.  Base64
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 53]
+Davis                    Expires 12 October 2026               [Page 53]
 
 Internet-Draft              alt-uuid-encoding                 April 2026
 
@@ -2992,17 +2992,17 @@ D.9.  Base85
 - https://cjhaas.com/2013/11/12/php-base85-encode-128-bit-integer-guiduuid/
 - https://webpowered.tools/textcodec/
 
-Authors' Addresses
-
-   Kyzer R. Davis
-   Cisco Systems
-   Email: kydavis@cisco.com
-
+Contributors
 
    Brad G. Peabody
    Email: brad@peabody.io
 
 
+Author's Address
+
+   Kyzer R. Davis
+   Cisco Systems
+   Email: kydavis@cisco.com, kyzer.davis@outlook.com
 
 
 
@@ -3021,4 +3021,4 @@ Authors' Addresses
 
 
 
-Davis & Peabody          Expires 10 October 2026               [Page 54]
+Davis                    Expires 12 October 2026               [Page 54]

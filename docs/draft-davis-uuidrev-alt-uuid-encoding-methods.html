@@ -6,13 +6,12 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>Alternate UUID Encoding Methods</title>
 <meta content="Kyzer R. Davis" name="author">
-<meta content="Brad G. Peabody" name="author">
 <meta content="
        This document presents considerations and best practices for alternate Universally Unique Identifier (UUID) encoding methods observed in the industry. 
        This document updates RFC9562 to provide suggested alternate encoding methods, best practices and the various implementation considerations required for choosing the correct encoding for an application. 
        When selected correctly, these alternate UUID encodings perform better on the wire, in a database, or within various other application logics versus the unnecessarily verbose text representation from RFC9562. 
     " name="description">
-<meta content="xml2rfc 3.32.0" name="generator">
+<meta content="xml2rfc 3.33.0" name="generator">
 <meta content="uuid" name="keyword">
 <meta content="encoding" name="keyword">
 <meta content="base02" name="keyword">
@@ -27,19 +26,19 @@
 <meta content="base85" name="keyword">
 <meta content="draft-davis-uuidrev-alt-uuid-encoding-methods-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.32.0
+  xml2rfc 3.33.0
     Python 3.12.3
-    ConfigArgParse 1.7.1
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.9.2
+    platformdirs 4.9.6
     pycountry 26.2.16
     PyYAML 6.0.3
-    requests 2.32.5
+    requests 2.33.1
     wcwidth 0.6.0
-    weasyprint 65.0
+    weasyprint 68.0
 -->
 <link href="draft-davis-uuidrev-alt-uuid-encoding-methods.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1233,8 +1232,8 @@ li > p:last-of-type:only-child {
 <td class="right">April 2026</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Davis &amp; Peabody</td>
-<td class="center">Expires 10 October 2026</td>
+<td class="left">Davis</td>
+<td class="center">Expires 12 October 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1247,20 +1246,17 @@ li > p:last-of-type:only-child {
 <dd class="internet-draft">draft-davis-uuidrev-alt-uuid-encoding-methods-00</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-04-08" class="published">8 April 2026</time>
+<time datetime="2026-04-10" class="published">10 April 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-10-10">10 October 2026</time></dd>
-<dt class="label-authors">Authors:</dt>
+<dd class="expires"><time datetime="2026-10-12">12 October 2026</time></dd>
+<dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">K. R. Davis</div>
 <div class="org">Cisco Systems</div>
-</div>
-<div class="author">
-      <div class="author-name">BGP. Peabody</div>
 </div>
 </dd>
 </dl>
@@ -1307,7 +1303,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 10 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 October 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1534,7 +1530,10 @@ li > p:last-of-type:only-child {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -3630,7 +3629,7 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <dl class="references">
 <dt id="Base32human">[Base32human]</dt>
         <dd>
-<span class="refAuthor">Crockford, D.</span> and <span class="refAuthor">K. Davis</span>, <span class="refTitle">"Base32 for Humans"</span>, <time datetime="2026-04" class="refDate">April 2026</time>, <span>&lt;<a href="https://github.com/douglascrockford/Base32">https://github.com/douglascrockford/Base32</a>&gt;</span>. </dd>
+<span class="refAuthor">Crockford, D.</span> and <span class="refAuthor">K. Davis</span>, <span class="refTitle">"Base32 for Humans"</span>, <time datetime="2026-04" class="refDate">April 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-crockford-davis-base32-for-humans/">https://datatracker.ietf.org/doc/draft-crockford-davis-base32-for-humans/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="Base58btc">[Base58btc]</dt>
         <dd>
@@ -3654,7 +3653,7 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 <dd class="break"></dd>
 <dt id="Base64sort">[Base64sort]</dt>
         <dd>
-<span class="refAuthor">Davis, K.</span>, <span class="refTitle">"A Sortable Base64 Alphabet"</span>, <time datetime="2025-12" class="refDate">December 2025</time>, <span>&lt;<a href="https://github.com/kyzer-davis/base64-sort-ietf-draft">https://github.com/kyzer-davis/base64-sort-ietf-draft</a>&gt;</span>. </dd>
+<span class="refAuthor">Davis, K.</span>, <span class="refTitle">"A Sortable Base64 Alphabet"</span>, <time datetime="2025-12" class="refDate">December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-brown-davis-base64-sort/">https://datatracker.ietf.org/doc/draft-brown-davis-base64-sort/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="CSS">[CSS]</dt>
         <dd>
@@ -6360,24 +6359,31 @@ For example, if uppercase A is available, prefix this character to satisfy the c
 </div>
 </section>
 </div>
-<div id="authors-addresses">
+<div id="contributors">
 <section id="appendix-E">
-      <h2 id="name-authors-addresses">
-<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      <h2 id="name-contributors">
+<a href="#name-contributors" class="section-name selfRef">Contributors</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Brad G. Peabody</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:brad@peabody.io" class="email">brad@peabody.io</a>
+</div>
+</address>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-F">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Kyzer R. Davis</span></div>
 <div dir="auto" class="left"><span class="org">Cisco Systems</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:kydavis@cisco.com" class="email">kydavis@cisco.com</a>
-</div>
-</address>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Brad G. Peabody</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:brad@peabody.io" class="email">brad@peabody.io</a>
+<a href="mailto:kydavis@cisco.com" class="email">kydavis@cisco.com</a>, <a href="mailto:kyzer.davis@outlook.com" class="email">kyzer.davis@outlook.com</a>
 </div>
 </address>
 </section>

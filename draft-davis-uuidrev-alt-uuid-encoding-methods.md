@@ -34,8 +34,12 @@ venue:
 
 author:
   - name: Kyzer R. Davis
-    email: kydavis@cisco.com
+    email:
+    - kydavis@cisco.com
+    - kyzer.davis@outlook.com
     org: Cisco Systems
+
+contributor:
   - initials: BGP.
     name: Brad G. Peabody
     email: brad@peabody.io
@@ -74,7 +78,7 @@ informative:
     - name: Dorian Taylor
     date: 2025-09
   Base32human:
-    target: https://github.com/douglascrockford/Base32
+    target: https://datatracker.ietf.org/doc/draft-crockford-davis-base32-for-humans/
     title: Base32 for Humans
     author:
     - name: Douglas Crockford
@@ -113,7 +117,7 @@ informative:
     - name: Sergey Prokhorenko
     date: 2026-04
   Base64sort:
-    target: https://github.com/kyzer-davis/base64-sort-ietf-draft
+    target: https://datatracker.ietf.org/doc/draft-brown-davis-base64-sort/
     title: A Sortable Base64 Alphabet
     author:
     - name: Kyzer Davis
