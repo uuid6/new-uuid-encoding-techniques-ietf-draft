@@ -903,6 +903,12 @@ draft-00:
 
 - Initial Release
 
+draft-01:
+
+{: spacing="compact"}
+
+- Fix Latest Link in front matter
+
 # Test Vectors {#test_vectors}
 
 The test vectors in the upcoming sections map the UUIDs found in RFC9562 Sections to their appropriate BaseXX Alphabet Encoding without padding.
