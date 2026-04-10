@@ -3,7 +3,7 @@ title: Alternate UUID Encoding Methods
 abbrev: alt-uuid-encoding
 category: info
 
-docname: draft-davis-uuidrev-alt-uuid-encoding-methods-00
+docname: draft-davis-uuidrev-alt-uuid-encoding-methods-01
 submissiontype: IETF
 date: 2026
 consensus: true
@@ -30,7 +30,7 @@ venue:
   mail: uuidrev@ietf.org
   arch: https://mailarchive.ietf.org/arch/browse/uuidrev/
   github: uuid6/new-uuid-encoding-techniques-ietf-draft
-  latest: https://example.com/LATEST
+  latest: https://raw.githubusercontent.com/uuid6/new-uuid-encoding-techniques-ietf-draft/refs/heads/master/draft-davis-uuidrev-alt-uuid-encoding-methods.md
 
 author:
   - name: Kyzer R. Davis
